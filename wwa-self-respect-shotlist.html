@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>WWA - Self Respect</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 1.25rem; min-height: 100vh; }
+.title-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; color: #555; text-transform: uppercase; margin-bottom: 4px; }
+.shoot-title { font-size: 22px; font-weight: 600; color: #f0f0f0; line-height: 1.2; margin-bottom: 0.75rem; }
+.pillar-tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 12px; border-radius: 99px; background: #1a1a2a; color: #7c8fff; border: 1px solid #2a2a3a; margin-bottom: 1.5rem; }
+.meta-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+.meta-pill { font-size: 11px; color: #888; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 99px; padding: 4px 10px; }
+.meta-pill span { color: #c8ff00; }
+.prog-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.prog-row p { font-size: 12px; color: #666; }
+.prog-row strong { font-size: 12px; color: #f0f0f0; }
+.progress-bar { height: 4px; background: #1e1e1e; border-radius: 99px; overflow: hidden; margin-bottom: 1.5rem; }
+.progress-fill { height: 100%; background: #c8ff00; border-radius: 99px; transition: width 0.3s ease; }
+.section-label { font-size: 10px; font-weight: 600; color: #555; text-transform: uppercase; margin: 1.5rem 0 0.75rem; letter-spacing: 0.1em; }
+.arc-bar { display: flex; gap: 4px; margin-bottom: 1.5rem; }
+.arc-block { flex: 1; padding: 8px 10px; border-radius: 8px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; text-align: center; }
+.arc-grit { background: #1a1a14; color: #c8ff00; border: 1px solid #2a2a1a; }
+.arc-life { background: #1a1a2a; color: #7c8fff; border: 1px solid #2a2a3a; }
+.shot { background: #141414; border-radius: 12px; margin-bottom: 10px; border: 1px solid #1e1e1e; overflow: hidden; }
+.shot.done { opacity: 0.4; }
+.shot.done .shot-title { text-decoration: line-through; color: #555; }
+.shot-header { display: flex; align-items: flex-start; gap: 14px; padding: 14px; cursor: pointer; }
+.cb { width: 24px; height: 24px; min-width: 24px; border-radius: 50%; border: 1.5px solid #333; display: flex; align-items: center; justify-content: center; background: transparent; flex-shrink: 0; margin-top: 1px; }
+.shot.done .cb, .complete-row.done .cb { background: #c8ff00; border-color: #c8ff00; }
+.check-icon { width: 13px; height: 13px; stroke: #000; stroke-width: 2.5; fill: none; display: none; }
+.shot.done .check-icon, .complete-row.done .check-icon { display: block; }
+.shot-body { flex: 1; }
+.shot-num { font-size: 10px; color: #555; font-weight: 600; text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.08em; }
+.shot-title { font-size: 15px; font-weight: 600; color: #e0e0e0; margin-bottom: 5px; line-height: 1.3; }
+.shot-detail { font-size: 13px; color: #666; line-height: 1.55; }
+.text-section { border-top: 1px solid #1e1e1e; padding: 12px 14px 14px 52px; }
+.text-label { font-size: 9px; text-transform: uppercase; color: #c8ff00; font-weight: 600; margin-bottom: 8px; letter-spacing: 0.12em; }
+.text-lines { font-size: 13px; color: #777; line-height: 1.9; font-style: italic; }
+.text-lines .key { color: #bbb; font-style: normal; font-weight: 600; }
+.tag { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; margin-right: 4px; margin-top: 6px; }
+.tag-grit { background: #1a1a14; color: #c8ff00; border: 1px solid #2a2a1a; }
+.tag-life { background: #1a1a2a; color: #7c8fff; border: 1px solid #2a2a3a; }
+.divider { height: 1px; background: #1a1a1a; margin: 1.5rem 0; }
+.note-box { background: #111; border-left: 2px solid #c8ff00; border-radius: 0 10px 10px 0; padding: 12px 14px; margin-top: 1rem; }
+.note-box p { font-size: 13px; color: #777; line-height: 1.65; }
+.note-box strong { color: #c8ff00; }
+.script-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px; margin-bottom: 1.5rem; }
+.script-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 10px; }
+.script-line { font-size: 13px; color: #888; line-height: 2; font-style: italic; }
+.script-line .key { color: #ddd; font-style: normal; font-weight: 600; }
+.reset-btn { width: 100%; margin-top: 1.25rem; padding: 14px; background: #141414; border: 1px solid #2a2a2a; border-radius: 12px; color: #555; font-size: 13px; cursor: pointer; font-family: inherit; }
+.complete-section { margin-top: 2rem; background: #141414; border-radius: 12px; border: 1px solid #1e1e1e; padding: 14px; }
+.complete-title { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 12px; }
+.complete-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #1e1e1e; cursor: pointer; }
+.complete-row:last-of-type { border-bottom: none; padding-bottom: 0; }
+.complete-row.done .complete-label { color: #555; text-decoration: line-through; }
+.complete-label { font-size: 14px; color: #bbb; flex: 1; }
+.date-label { font-size: 11px; color: #555; margin: 12px 0 6px; }
+.date-input { width: 100%; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 8px; color: #bbb; font-size: 14px; padding: 10px 12px; font-family: inherit; outline: none; }
+</style>
+</head>
+<body>
+<div class="title-label">WWA - Text On Screen</div>
+<div class="shoot-title">Self Respect</div>
+<div class="pillar-tag">Mindset</div>
+<div class="meta-row">
+<div class="meta-pill">Format: <span>Text On Screen</span></div>
+<div class="meta-pill">Footage: <span>Archive + Fresh</span></div>
+<div class="meta-pill">Operator: <span>Henry</span></div>
+</div>
+<div class="prog-row"><p>Progress</p><strong id="prog-text">0 / 11</strong></div>
+<div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+<div class="section-label">Visual Arc</div>
+<div class="arc-bar"><div class="arc-block arc-grit">Grit - Standard - Cost</div><div class="arc-block arc-life">Release - Reward - Life</div></div>
+<div class="section-label">Full Script</div>
+<div class="script-box"><div class="script-title">Text appears on screen - no voiceover</div><div class="script-line">Waiting for the right moment?<br><span class="key">That's fear disguised as preparation.</span><br><br>Shrinking yourself so others stay comfortable?<br><span class="key">Their comfort is not your problem.</span><br><br>Still explaining your standards to people who don't have any?<br><span class="key">Stop auditioning for respect.</span><br><br>Letting someone who already quit tell you what's possible?<br><span class="key">Losers set the ceiling for other losers.</span><br><br>Loyal to people who aren't loyal to you?<br><span class="key">They're gone. You're just the last to leave.</span><br><br>Outgrowing people who can't match your standard is not ego.<br><span class="key">It's self respect.</span></div></div>
+<div class="divider"></div>
+<div class="section-label">Shot List - Grit Arc</div>
+<div class="shot" data-id="s1"><div class="shot-header" onclick="toggle(this.parentElement)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="shot-body"><div class="shot-num">Clip 1 - Opening</div><div class="shot-title">Mid-set. In the work. No awareness of camera.</div><div class="shot-detail">First frame establishes authority immediately. Heavy weight, controlled form, focused face. Viewer sees the standard before they read a word.</div><div><span class="tag tag-grit">Grit</span></div></div></div><div class="text-section"><div class="text-label">Text On Screen</div><div class="text-lines">Waiting for the right moment?<br><span class="key">That's fear disguised as preparation.</span></div></div></div>
+<div class="shot" data-id="s2"><div class="shot-header" onclick="toggle(this.parentElement)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="shot-body"><div class="shot-num">Clip 2</div><div class="shot-title">The struggle moment. Not the finish - the grind.</div><div class="shot-detail">A rep that costs something. The face of someone who knows what it takes. Visual for someone who doesn't shrink.</div><div><span class="tag tag-grit">Grit</span></div></div></div><div class="text-section"><div class="text-label">Text On Screen</div><div class="text-lines">Shrinking yourself so others stay comfortable?<br><span class="key">Their comfort is not your problem.</span></div></div></div>
+<div class="shot" data-id="s3"><div class="shot-header" onclick="toggle(this.parentElement)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="shot-body"><div class="shot-num">Clip 3</div><div class="shot-title">Physique. Still. Composed. The result of the standard.</div><div class="shot-detail">Not a flex. Stillness where the physical standard is undeniable. Post-workout or getting ready. The body is the proof.</div><div><span class="tag tag-grit">Grit</span></div></div></div><div class="text-section"><div class="text-label">Text On Screen</div><div class="text-lines">Still explaining your standards to people who don't have any?<br><span class="key">Stop auditioning for respect.</span></div></div></div>
+<div class="shot" data-id="s4"><div class="shot-header" onclick="toggle(this.parentElement)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="shot-body"><div class="shot-num">Clip 4</div><div class="shot-title">Solitary. Wide. One person, large environment.</div><div class="shot-detail">Most cinematic shot in the edit. Ash alone, wide frame, small against the environment. The isolation is intentional. This is what operating at a different level looks like.</div><div><span class="tag tag-grit">Grit</span></div></div></div><div class="text-section"><div class="text-label">Text On Screen</div><div class="text-lines">Letting someone who already quit tell you what's possible?<br><span class="key">Losers set the ceiling for other losers.</span></div></div></div>
+<div class="shot" data-id="s5"><div class="shot-header" onclick="toggle(this.parentElement)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="shot-body"><div class="shot-num">Clip 5</div><div class="shot-title">Working. Creating. The standard applied to craft.</div><div class="shot-detail">Atelier, music production, or creative process. Hands doing something deliberate. The standard isn't just physical. Show someone fully invested in their own world.</div><div><span class="tag tag-grit">Grit</span></div></div></div><div class="text-section"><div class="text-label">Text On Screen</div><div class="text-lines">Loyal to people who aren't loyal to you?<br><span class="key">They're gone. You're just the last to leave.</span></div></div></div>
+<div class="divider"></div>
+<div class="section-label">Shot List - Life Arc</div>
+<div class="shot" data-id="s6"><div class="shot-header" onclick="toggle(this.parentElement)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="shot-body"><div class="shot-num">Clip 6 - The Turn</div><div class="shot-title">Transition shot. Bridge. Music climbing here.</div><div class="shot-detail">Quiet domestic moment. Walking outside, making coffee, still morning. Energy drops from intense to peaceful. Grit arc ends, life arc begins. Music building toward chorus as this clip plays.</div><div><span class="tag tag-life">Life</span></div></div></div><div class="text-section"><div class="text-label">Text On Screen</div><div class="text-lines"><span class="key">Outgrowing people who can't match your standard is not ego.</span></div></div></div>
+<div class="shot" data-id="s7"><div class="shot-header" onclick="toggle(this.parentElement)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="shot-body"><div class="shot-num">Clip 7 - Chorus Drop</div><div class="shot-title">With the dog. Genuine, unguarded. Chorus hits here.</div><div class="shot-detail">Uplift lands exactly as this clip appears. Music chorus synchronized with footage energy shift and text reading It's self respect. That sync is the moment people rewatch.</div><div><span class="tag tag-life">Life</span></div></div></div><div class="text-section"><div class="text-label">Text On Screen</div><div class="text-lines"><span class="key">It's self respect.</span></div></div></div>
+<div class="shot" data-id="s8"><div class="shot-header" onclick="toggle(this.parentElement)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="shot-body"><div class="shot-num">Clip 8 - Optional Close</div><div class="shot-title">With people who show up. Real, present, at ease.</div><div class="shot-detail">Wife, close circle, genuine moments. Not posed. The reward the entire script pointed toward. No text. Let the image and chorus close it.</div><div><span class="tag tag-life">Life</span></div></div></div><div class="text-section"><div class="text-label">Text On Screen</div><div class="text-lines">No text. Image and music close it.</div></div></div>
+<div class="note-box"><p><strong>The one thing that makes or breaks this edit:</strong> the turn from grit to life arc has to feel earned. Intensity followed by peace, standard followed by reward. The music carries the emotional weight across that transition.</p></div>
+<div class="divider"></div>
+<div class="section-label">Editing Notes</div>
+<div class="shot" data-id="edit1"><div class="shot-header" onclick="toggle(this.parentElement)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="shot-body"><div class="shot-num">Edit</div><div class="shot-title">Music structure - build, bridge, chorus.</div><div class="shot-detail">Grit arc: low, atmospheric, understated. Clip 6 transition: bridge, music climbing. Clip 7 dog shot: chorus hits synchronized with footage shift and It's self respect. Cinematic over hype.</div></div></div></div>
+<div class="shot" data-id="edit2"><div class="shot-header" onclick="toggle(this.parentElement)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="shot-body"><div class="shot-num">Edit</div><div class="shot-title">Text timing - question first, answer lands with a beat.</div><div class="shot-detail">Question appears. Hold 1 second. Answer hits. That gap is where the viewer fills in their own answer. Never put both lines on screen simultaneously. That half-second is the scroll-stopper.</div></div></div></div>
+<div class="shot" data-id="edit3"><div class="shot-header" onclick="toggle(this.parentElement)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="shot-body"><div class="shot-num">Edit</div><div class="shot-title">Grade: cooler on grit arc, marginally warmer on life arc.</div><div class="shot-detail">Desaturated and cool through training and work footage. Slightly warmer through the lifestyle close. Colour carries the emotional shift so the edit doesn't have to announce it.</div></div></div></div>
+<div class="complete-section"><div class="complete-title">Completion</div>
+<div class="complete-row" data-id="c1" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Archive clips pulled</div></div>
+<div class="complete-row" data-id="c2" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Fresh clips shot if needed</div></div>
+<div class="complete-row" data-id="c3" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Edit complete</div></div>
+<div class="complete-row" data-id="c4" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Posted</div></div>
+<div class="date-label">COMPLETION DATE</div>
+<input type="date" class="date-input" id="completion-date" onchange="saveDate(this.value)">
+</div>
+<button class="reset-btn" onclick="resetAll()">Reset checklist</button>
+<script>
+const KEY='wwa_selfrespect_v1';
+function getState(){try{return JSON.parse(localStorage.getItem(KEY))||{};}catch(e){return{};}}
+function setState(s){try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){}}
+function updateProgress(){const shots=document.querySelectorAll('.shot');const done=document.querySelectorAll('.shot.done').length;document.getElementById('prog-fill').style.width=Math.round((done/shots.length)*100)+'%';document.getElementById('prog-text').textContent=done+' / '+shots.length;}
+function toggle(el){el.classList.toggle('done');const s=getState();s[el.dataset.id]=el.classList.contains('done');setState(s);updateProgress();}
+function toggleComplete(el){el.classList.toggle('done');const s=getState();s[el.dataset.id]=el.classList.contains('done');setState(s);}
+function saveDate(val){const s=getState();s.completion_date=val;setState(s);}
+function resetAll(){document.querySelectorAll('.shot.done,.complete-row.done').forEach(el=>el.classList.remove('done'));document.getElementById('completion-date').value='';setState({});updateProgress();}
+(function(){const s=getState();document.querySelectorAll('.shot,.complete-row').forEach(el=>{if(s[el.dataset.id])el.classList.add('done');});if(s.completion_date)document.getElementById('completion-date').value=s.completion_date;updateProgress();})();
+</script>
+</body>
+</html>
