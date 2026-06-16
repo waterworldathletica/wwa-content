@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>WWA — Master Session</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 1.25rem; min-height: 100vh; }
+.title-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; color: #555; text-transform: uppercase; margin-bottom: 4px; }
+.page-title { font-size: 24px; font-weight: 700; color: #f0f0f0; line-height: 1.2; margin-bottom: 1rem; }
+.directive-box { background: #1a0a0a; border: 1px solid #3a1a1a; border-radius: 12px; padding: 14px; margin-bottom: 1rem; }
+.directive-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ff4444; margin-bottom: 8px; }
+.directive-text { font-size: 13px; color: #cc3333; line-height: 1.7; font-weight: 600; }
+.protocol-box { background: #141414; border: 1px solid #1e1e1e; border-radius: 12px; padding: 14px; margin-bottom: 1.5rem; }
+.protocol-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #c8ff00; margin-bottom: 12px; }
+.protocol-step { font-size: 13px; color: #888; line-height: 2; display: flex; gap: 10px; }
+.protocol-num { color: #444; min-width: 16px; }
+.protocol-active { color: #c8ff00; font-weight: 600; }
+.divider { height: 1px; background: #1a1a1a; margin: 1.5rem 0; }
+.section-label { font-size: 10px; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: 0.12em; margin: 1.5rem 0 0.75rem; }
+.timer-box { background: #141414; border: 1px solid #1e1e1e; border-radius: 12px; padding: 14px; margin-bottom: 1rem; }
+.timer-row { display: flex; align-items: center; gap: 12px; }
+.timer-display { font-size: 32px; font-weight: 700; color: #f0f0f0; font-variant-numeric: tabular-nums; letter-spacing: 0.05em; flex: 1; }
+.timer-display.amber { color: #ffaa00; }
+.timer-display.red { color: #ff4444; }
+.timer-btn { padding: 10px 18px; border-radius: 8px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.timer-start { background: #c8ff00; color: #000; }
+.timer-stop { background: #1e1e1e; color: #888; border: 1px solid #2a2a2a; }
+.timer-sub { font-size: 11px; color: #444; margin-top: 6px; display: flex; align-items: center; gap: 8px; }
+.timer-input { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 6px; color: #888; font-size: 12px; padding: 3px 8px; font-family: inherit; outline: none; width: 50px; text-align: center; }
+.session-header { background: #141414; border-radius: 12px; padding: 14px; border: 1px solid #1e1e1e; margin-bottom: 1rem; }
+.session-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.session-row:last-child { margin-bottom: 0; }
+.session-label { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 0.08em; min-width: 80px; }
+.session-input { flex: 1; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 8px; color: #e0e0e0; font-size: 14px; padding: 8px 12px; font-family: inherit; outline: none; }
+.session-input::placeholder { color: #333; }
+.pill-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.5rem; }
+.pill { font-size: 11px; color: #888; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 99px; padding: 3px 10px; }
+.pill span { color: #c8ff00; }
+.exercise-card { background: #141414; border-radius: 12px; border: 1px solid #1e1e1e; margin-bottom: 10px; overflow: hidden; }
+.exercise-top { display: flex; align-items: center; gap: 12px; padding: 14px; }
+.ex-num { font-size: 10px; color: #555; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; min-width: 28px; }
+.ex-input { flex: 1; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 8px; color: #e0e0e0; font-size: 14px; padding: 8px 12px; font-family: inherit; outline: none; }
+.ex-input::placeholder { color: #333; }
+.ex-checks { border-top: 1px solid #1e1e1e; padding: 10px 14px 12px 54px; }
+.check-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; cursor: pointer; }
+.check-row.done .check-label { color: #555; text-decoration: line-through; }
+.cb { width: 20px; height: 20px; min-width: 20px; border-radius: 50%; border: 1.5px solid #333; display: flex; align-items: center; justify-content: center; background: transparent; flex-shrink: 0; }
+.check-row.done .cb { background: #c8ff00; border-color: #c8ff00; }
+.check-icon { width: 11px; height: 11px; stroke: #000; stroke-width: 2.5; fill: none; display: none; }
+.check-row.done .check-icon { display: block; }
+.check-label { font-size: 13px; color: #777; }
+.add-btn { width: 100%; padding: 12px; background: #111; border: 1px dashed #2a2a2a; border-radius: 12px; color: #444; font-size: 13px; cursor: pointer; font-family: inherit; margin-bottom: 1rem; }
+.collapse-card { background: #141414; border-radius: 12px; border: 1px solid #1e1e1e; margin-bottom: 10px; overflow: hidden; }
+.collapse-header { display: flex; align-items: center; justify-content: space-between; padding: 14px; cursor: pointer; }
+.collapse-title { font-size: 14px; font-weight: 600; color: #e0e0e0; }
+.collapse-arrow { font-size: 12px; color: #555; transition: transform 0.2s; }
+.collapse-arrow.open { transform: rotate(180deg); }
+.collapse-body { padding: 0 14px 14px; display: none; }
+.collapse-body.open { display: block; }
+.ref-line { font-size: 13px; color: #666; line-height: 1.8; margin-bottom: 4px; }
+.ref-line strong { color: #bbb; }
+.angle-seq { background: #0f0f0f; border-radius: 8px; padding: 12px; margin: 10px 0; }
+.angle-step { display: flex; align-items: flex-start; gap: 10px; padding: 5px 0; border-bottom: 1px solid #1a1a1a; }
+.angle-step:last-child { border-bottom: none; padding-bottom: 0; }
+.angle-num { font-size: 10px; font-weight: 700; color: #c8ff00; min-width: 20px; padding-top: 2px; }
+.angle-text { font-size: 12px; color: #777; line-height: 1.5; }
+.note-box { background: #111; border-left: 2px solid #c8ff00; border-radius: 0 8px 8px 0; padding: 10px 12px; margin: 10px 0; }
+.note-box p { font-size: 12px; color: #777; line-height: 1.6; }
+.note-box strong { color: #c8ff00; }
+.shoots-header { background: #0f0f1a; border: 1px solid #2a2a3a; border-radius: 12px; padding: 14px; margin-bottom: 1rem; }
+.shoots-header-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #7c8fff; margin-bottom: 6px; }
+.shoots-header-text { font-size: 13px; color: #7c8fff; font-weight: 600; line-height: 1.6; }
+.shoot-link { display: block; background: #0f0f0f; border: 1px solid #1e1e1e; border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; text-decoration: none; }
+.shoot-link.priority-high { border-left: 3px solid #c8ff00; }
+.shoot-link.priority-mid { border-left: 3px solid #7c8fff; }
+.shoot-link.completed { opacity: 0.4; }
+.shoot-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.shoot-title { font-size: 14px; font-weight: 600; color: #e0e0e0; }
+.shoot-done { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; cursor: pointer; }
+.shoot-done.complete { background: #1a2a1a; color: #4caf50; border: 1px solid #2a3a2a; }
+.shoot-done.pending { background: #1a1a1a; color: #555; border: 1px solid #2a2a2a; }
+.shoot-meta { display: flex; gap: 6px; flex-wrap: wrap; }
+.shoot-tag { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; }
+.tag-mindset { background: #1a1a2a; color: #7c8fff; border: 1px solid #2a2a3a; }
+.tag-physical { background: #1a1a14; color: #c8ff00; border: 1px solid #2a2a1a; }
+.tag-gym { background: #1a2a1a; color: #4caf50; border: 1px solid #2a3a2a; }
+.tag-mixed { background: #1a1a20; color: #aa88ff; border: 1px solid #2a2a30; }
+.shoots-container { display: flex; flex-direction: column; }
+.log-btn { width: 100%; margin-top: 1.5rem; padding: 14px; background: #c8ff00; border: none; border-radius: 12px; color: #000; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; text-transform: uppercase; }
+.session-log { background: #141414; border-radius: 12px; border: 1px solid #1e1e1e; padding: 14px; margin-top: 1.5rem; }
+.log-title { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; margin-bottom: 12px; }
+.log-entry { padding: 12px 0; border-bottom: 1px solid #1a1a1a; }
+.log-entry:last-child { border-bottom: none; padding-bottom: 0; }
+.log-entry-header { font-size: 13px; font-weight: 600; color: #bbb; margin-bottom: 4px; }
+.log-entry-sub { font-size: 12px; color: #555; margin-bottom: 6px; }
+.log-exercises { font-size: 12px; color: #666; line-height: 1.7; }
+.log-shoots { font-size: 12px; color: #7c8fff; margin-top: 4px; }
+.log-empty { font-size: 12px; color: #333; font-style: italic; }
+.options-toggle { text-align: center; margin-top: 1.5rem; }
+.options-link { font-size: 11px; color: #333; cursor: pointer; letter-spacing: 0.06em; text-transform: uppercase; border: none; background: none; font-family: inherit; }
+.options-panel { display: none; background: #0f0f0f; border: 1px solid #1e1e1e; border-radius: 12px; padding: 14px; margin-top: 8px; }
+.options-panel.open { display: block; }
+.danger-btn { width: 100%; padding: 12px; background: #1a0808; border: 1px solid #3a1a1a; border-radius: 10px; color: #ff4444; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.danger-confirm { display: none; margin-top: 8px; font-size: 12px; color: #666; text-align: center; }
+.danger-confirm.open { display: block; }
+.danger-yes { background: #ff4444; color: #000; border: none; border-radius: 8px; padding: 8px 16px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; margin-right: 8px; }
+.danger-no { background: #1e1e1e; color: #888; border: 1px solid #2a2a2a; border-radius: 8px; padding: 8px 16px; font-size: 12px; cursor: pointer; font-family: inherit; }
+</style>
+</head>
+<body>
+<div class="title-label">WWA · Master Session</div>
+<div class="page-title">Session Document</div>
+<div class="directive-box">
+  <div class="directive-label">⚠ Standing Directive</div>
+  <div class="directive-text">Right side priority when composing image — nose ring side. Multiple angles will be used and that is expected. The goal is majority right side across all frames. Adjust lighting and positioning to achieve this wherever possible. It is the default. Deviation is the exception.</div>
+</div>
+<div class="protocol-box">
+  <div class="protocol-label">Session Protocol</div>
+  <div class="protocol-step"><span class="protocol-num">1.</span><span>Rig camera. Connect audio.</span></div>
+  <div class="protocol-step"><span class="protocol-num">2.</span><span>Mobility / stretching.</span></div>
+  <div class="protocol-step"><span class="protocol-num">3.</span><span>Diary frames — one compound set per exercise. Performance is freshest here.</span></div>
+  <div class="protocol-step"><span class="protocol-num">4.</span><span>Remaining sets — aesthetics and B-roll for curated shoots.</span></div>
+  <div class="protocol-step"><span class="protocol-num">5.</span><span>Rest time — scripting and capture for applicable curated shoots. No downtime.</span></div>
+  <div class="protocol-step"><span class="protocol-num">6.</span><span class="protocol-active">Curated shoots are always active. Every session moves them forward.</span></div>
+</div>
+<div class="section-label">Session Timer</div>
+<div class="timer-box">
+  <div class="timer-row">
+    <div class="timer-display" id="timer-display">90:00</div>
+    <button class="timer-btn timer-start" id="timer-btn" onclick="toggleTimer()">Start</button>
+  </div>
+  <div class="timer-sub">Target: <input type="number" class="timer-input" id="timer-target" value="90" min="30" max="180" onchange="resetTimer()"> min · Amber at 60 min · Red at 10 min</div>
+</div>
+<div class="section-label">Session Info</div>
+<div class="session-header">
+  <div class="session-row"><div class="session-label">Name</div><input type="text" class="session-input" id="session-name" placeholder="e.g. Chest Day · June 16 2026" oninput="autosave()"></div>
+  <div class="session-row"><div class="session-label">Date</div><input type="date" class="session-input" id="session-date" oninput="autosave()"></div>
+  <div class="session-row"><div class="session-label">Location</div><input type="text" class="session-input" id="session-location" placeholder="Anytime Fitness" oninput="autosave()"></div>
+  <div class="session-row"><div class="session-label">Camera</div><input type="text" class="session-input" id="session-camera" placeholder="FX3 / A7S3" oninput="autosave()"></div>
+</div>
+<div class="pill-row">
+  <div class="pill">Aspect: <span>4:5 (shoot anamorphic, punch in post)</span></div>
+  <div class="pill">Format: <span>Diary Frames + Curated</span></div>
+</div>
+<div class="section-label">Diary Frames</div>
+<div id="exercise-list"></div>
+<button class="add-btn" onclick="addExercise()">+ Add Exercise</button>
+<div class="collapse-card">
+  <div class="collapse-header" onclick="toggleCollapse(this)"><div class="collapse-title">📐 Compound Set Format</div><div class="collapse-arrow">▾</div></div>
+  <div class="collapse-body">
+    <div class="ref-line" style="margin-bottom:10px">One compound set per exercise, split into two angle halves.</div>
+    <div class="angle-seq">
+      <div class="angle-step"><div class="angle-num">1</div><div class="angle-text"><strong style="color:#bbb">Angle 1</strong> — Mount + 2–3 reps.</div></div>
+      <div class="angle-step"><div class="angle-num">2</div><div class="angle-text"><strong style="color:#bbb">Angle 2</strong> — 2–3 reps.</div></div>
+      <div class="angle-step"><div class="angle-num">3</div><div class="angle-text"><strong style="color:#bbb">Angle 1</strong> — Return, 2–3 reps.</div></div>
+      <div class="angle-step"><div class="angle-num">4</div><div class="angle-text"><strong style="color:#bbb">Angle 2</strong> — Final reps into <span style="color:#c8ff00;font-weight:600">failure</span>. Don't cut early.</div></div>
+      <div class="angle-step"><div class="angle-num">5</div><div class="angle-text"><strong style="color:#bbb">Dismount</strong> — Natural, unposed.</div></div>
+    </div>
+    <div class="note-box"><p><strong>Post note:</strong> DaVinci keyframe — start punched in at +0.30, ease out to full frame by end.</p></div>
+  </div>
+</div>
+<div class="collapse-card">
+  <div class="collapse-header" onclick="toggleCollapse(this)"><div class="collapse-title">🎥 Composition Reference</div><div class="collapse-arrow">▾</div></div>
+  <div class="collapse-body">
+    <div class="ref-line"><strong>Style:</strong> Cinematic diary. Static. No camera movement during set.</div>
+    <div class="ref-line"><strong>Angles:</strong> Majority right side profile. Decided on-site.</div>
+    <div class="ref-line"><strong>Lighting:</strong> Existing gym light only. No ring light.</div>
+    <div class="ref-line"><strong>Audio:</strong> None. Ambient only.</div>
+    <div class="ref-line"><strong>Aspect:</strong> Shoot anamorphic. Deliver 4:5. Punch in post.</div>
+    <div class="ref-line"><strong>Format:</strong> Each exercise = one compiled clip. Min 3 per session carousel.</div>
+    <div class="ref-line"><strong>Feel:</strong> Fly on the wall. No performance for the lens.</div>
+  </div>
+</div>
+<div class="divider"></div>
+<div class="shoots-header">
+  <div class="shoots-header-label">🎬 Curated Shoots — Priority</div>
+  <div class="shoots-header-text">These are the priority. Every session moves at least one forward. 🟢 Full gym shoots first. 🟣 Gym + Archive next. Tap status badge to mark complete. Tap title to open shot list.</div>
+</div>
+<div class="shoots-container" id="shoots-container">
+  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-gym-shotlist.html" target="_blank" data-shoot-id="1">
+    <div class="shoot-top"><div class="shoot-title">The Physique Is A Byproduct</div><div class="shoot-done pending" id="status-1" onclick="event.preventDefault();markShootComplete(1)">Pending</div></div>
+    <div class="shoot-meta"><span class="shoot-tag tag-physical">Physical Standard</span><span class="shoot-tag tag-gym">Full Gym Shoot</span><span class="pill" style="font-size:10px">FX3</span></div>
+  </a>
+  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-nobody-is-coming-shotlist.html" target="_blank" data-shoot-id="2">
+    <div class="shoot-top"><div class="shoot-title">Nobody Is Coming</div><div class="shoot-done pending" id="status-2" onclick="event.preventDefault();markShootComplete(2)">Pending</div></div>
+    <div class="shoot-meta"><span class="shoot-tag tag-mindset">Mindset</span><span class="shoot-tag tag-gym">Full Gym Shoot</span><span class="pill" style="font-size:10px">FX3</span></div>
+  </a>
+  <a class="shoot-link priority-mid" href="https://waterworldathletica.github.io/wwa-content/wwa-social-friction-shotlist.html" target="_blank" data-shoot-id="3">
+    <div class="shoot-top"><div class="shoot-title">Social Friction</div><div class="shoot-done pending" id="status-3" onclick="event.preventDefault();markShootComplete(3)">Pending</div></div>
+    <div class="shoot-meta"><span class="shoot-tag tag-mindset">Mindset</span><span class="shoot-tag tag-mixed">Gym + Archive</span></div>
+  </a>
+  <a class="shoot-link priority-mid" href="https://waterworldathletica.github.io/wwa-content/wwa-self-respect-shotlist.html" target="_blank" data-shoot-id="4">
+    <div class="shoot-top"><div class="shoot-title">Self Respect</div><div class="shoot-done pending" id="status-4" onclick="event.preventDefault();markShootComplete(4)">Pending</div></div>
+    <div class="shoot-meta"><span class="shoot-tag tag-mindset">Mindset</span><span class="shoot-tag tag-mixed">Gym + Archive</span></div>
+  </a>
+</div>
+<button class="log-btn" onclick="saveSession()">Log This Session</button>
+<div class="divider"></div>
+<div class="section-label">Session Log</div>
+<div class="session-log">
+  <div class="log-title">Completed Sessions</div>
+  <div id="log-list"><div class="log-empty">No sessions logged yet.</div></div>
+</div>
+<div class="options-toggle">
+  <button class="options-link" onclick="toggleOptions()">Session Options</button>
+  <div class="options-panel" id="options-panel">
+    <button class="danger-btn" onclick="showConfirm()">Clear Current Session</button>
+    <div class="danger-confirm" id="danger-confirm">
+      Are you sure? This cannot be undone.<br><br>
+      <button class="danger-yes" onclick="clearSession()">Yes, Clear</button>
+      <button class="danger-no" onclick="hideConfirm()">Cancel</button>
+    </div>
+  </div>
+</div>
+<script>
+const KEY='wwa_master_v2';
+let timerInterval=null,timerRunning=false,timerSeconds=0,exCount=0;
+function getState(){try{return JSON.parse(localStorage.getItem(KEY))||{exercises:[],log:[],shoots:{}};}catch(e){return{exercises:[],log:[],shoots:{};};}}
+function setState(s){try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){}}
+function toggleTimer(){if(timerRunning){clearInterval(timerInterval);timerRunning=false;document.getElementById('timer-btn').textContent='Resume';document.getElementById('timer-btn').className='timer-btn timer-stop';}else{timerRunning=true;document.getElementById('timer-btn').textContent='Pause';document.getElementById('timer-btn').className='timer-btn timer-start';timerInterval=setInterval(()=>{timerSeconds++;updateTimerDisplay();},1000);}}
+function updateTimerDisplay(){const target=parseInt(document.getElementById('timer-target').value)*60;const remaining=target-timerSeconds;const display=document.getElementById('timer-display');if(remaining<=0){display.textContent='00:00';display.className='timer-display red';clearInterval(timerInterval);timerRunning=false;document.getElementById('timer-btn').textContent='Done';return;}const mins=Math.floor(remaining/60);const secs=remaining%60;display.textContent=String(mins).padStart(2,'0')+':'+String(secs).padStart(2,'0');if(remaining<=600)display.className='timer-display red';else if(remaining<=3600)display.className='timer-display amber';else display.className='timer-display';}
+function resetTimer(){clearInterval(timerInterval);timerRunning=false;timerSeconds=0;const t=parseInt(document.getElementById('timer-target').value)||90;document.getElementById('timer-display').textContent=String(t).padStart(2,'0')+':00';document.getElementById('timer-display').className='timer-display';document.getElementById('timer-btn').textContent='Start';document.getElementById('timer-btn').className='timer-btn timer-start';}
+function addExercise(name='',checks=[false,false,false,false,false]){exCount++;const list=document.getElementById('exercise-list');const card=document.createElement('div');card.className='exercise-card';card.dataset.exid='ex-'+exCount;const items=['Angle 1 — mount + 2–3 reps','Angle 2 — 2–3 reps','Angle 1 return — 2–3 reps','Angle 2 — failure + dismount','Clip compiled and reviewed'];card.innerHTML=`<div class="exercise-top"><div class="ex-num">EX ${exCount}</div><input type="text" class="ex-input" placeholder="Exercise name..." value="${name}" oninput="autosave()"></div><div class="ex-checks">${items.map((label,i)=>`<div class="check-row${checks[i]?' done':''}" onclick="toggleCheck(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="check-label">${label}</div></div>`).join('')}</div>`;list.appendChild(card);autosave();}
+function toggleCheck(el){el.classList.toggle('done');autosave();}
+function toggleCollapse(h){h.querySelector('.collapse-arrow').classList.toggle('open');h.nextElementSibling.classList.toggle('open');}
+function autosave(){const s=getState();s.exercises=Array.from(document.querySelectorAll('.exercise-card')).map(c=>({name:c.querySelector('.ex-input').value,checks:Array.from(c.querySelectorAll('.check-row')).map(r=>r.classList.contains('done'))}));s.sessionName=document.getElementById('session-name').value;s.sessionDate=document.getElementById('session-date').value;s.sessionLocation=document.getElementById('session-location').value;s.sessionCamera=document.getElementById('session-camera').value;setState(s);}
+function markShootComplete(id){const s=getState();if(!s.shoots)s.shoots={};s.shoots[id]=!s.shoots[id];setState(s);const el=document.getElementById('status-'+id);const link=document.querySelector('[data-shoot-id="'+id+'"]');if(s.shoots[id]){el.textContent='Complete';el.className='shoot-done complete';link.classList.add('completed');}else{el.textContent='Pending';el.className='shoot-done pending';link.classList.remove('completed');}sortShoots();}
+function sortShoots(){const c=document.getElementById('shoots-container');const links=Array.from(c.querySelectorAll('.shoot-link'));links.sort((a,b)=>{const ac=a.classList.contains('completed')?1:0,bc=b.classList.contains('completed')?1:0;if(ac!==bc)return ac-bc;return(a.classList.contains('priority-high')?0:1)-(b.classList.contains('priority-high')?0:1);});links.forEach(l=>c.appendChild(l));}
+function saveSession(){const s=getState();const name=document.getElementById('session-name').value||'Unnamed Session';const date=document.getElementById('session-date').value||'No date';const location=document.getElementById('session-location').value||'';const camera=document.getElementById('session-camera').value||'';const exercises=Array.from(document.querySelectorAll('.exercise-card')).map(c=>({name:c.querySelector('.ex-input').value||'Unnamed',checks:Array.from(c.querySelectorAll('.check-row')).map(r=>r.classList.contains('done'))}));const titles={1:'The Physique Is A Byproduct',2:'Nobody Is Coming',3:'Social Friction',4:'Self Respect'};const completedShoots=Object.keys(s.shoots||{}).filter(id=>s.shoots[id]).map(id=>titles[id]);if(!s.log)s.log=[];const idx=s.log.findIndex(e=>e.name===name);const entry={name,date,location,camera,exercises,completedShoots,saved:new Date().toISOString()};if(idx>=0)s.log[idx]=entry;else s.log.unshift(entry);setState(s);renderLog(s.log);alert('Session logged: '+name);}
+function renderLog(log){const el=document.getElementById('log-list');if(!log||!log.length){el.innerHTML='<div class="log-empty">No sessions logged yet.</div>';return;}el.innerHTML=log.map(e=>`<div class="log-entry"><div class="log-entry-header">${e.name}</div><div class="log-entry-sub">${e.date}${e.location?' · '+e.location:''}${e.camera?' · '+e.camera:''}</div><div class="log-exercises">${(e.exercises||[]).map(ex=>{const d=(ex.checks||[]).filter(Boolean).length,t=(ex.checks||[]).length;return`<span style="color:#bbb">${ex.name}</span> <span style="color:#444">(${d}/${t})</span>`;}).join(' · ')}</div>${e.completedShoots&&e.completedShoots.length?`<div class="log-shoots">✓ ${e.completedShoots.join(' · ')}</div>`:''}</div>`).join('');}
+function toggleOptions(){document.getElementById('options-panel').classList.toggle('open');}
+function showConfirm(){document.getElementById('danger-confirm').classList.add('open');}
+function hideConfirm(){document.getElementById('danger-confirm').classList.remove('open');}
+function clearSession(){document.getElementById('exercise-list').innerHTML='';['session-name','session-date','session-location','session-camera'].forEach(id=>document.getElementById(id).value='');exCount=0;const s=getState();s.exercises=[];s.sessionName='';s.sessionDate='';s.sessionLocation='';s.sessionCamera='';setState(s);addExercise();addExercise();addExercise();hideConfirm();document.getElementById('options-panel').classList.remove('open');resetTimer();}
+(function(){const s=getState();if(s.sessionName)document.getElementById('session-name').value=s.sessionName;if(s.sessionDate)document.getElementById('session-date').value=s.sessionDate;if(s.sessionLocation)document.getElementById('session-location').value=s.sessionLocation;if(s.sessionCamera)document.getElementById('session-camera').value=s.sessionCamera;if(s.exercises&&s.exercises.length>0)s.exercises.forEach(ex=>addExercise(ex.name,ex.checks));else{addExercise();addExercise();addExercise();}if(s.shoots){Object.keys(s.shoots).forEach(id=>{if(s.shoots[id]){const el=document.getElementById('status-'+id);const link=document.querySelector('[data-shoot-id="'+id+'"]');if(el){el.textContent='Complete';el.className='shoot-done complete';}if(link)link.classList.add('completed');}});sortShoots();}renderLog(s.log);updateTimerDisplay();})();
+</script>
+</body>
+</html>
