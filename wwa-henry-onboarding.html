@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>WWA — Henry's Briefing</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 1.25rem; min-height: 100vh; max-width: 680px; margin: 0 auto; }
+
+/* Header */
+.eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; color: #555; text-transform: uppercase; margin-bottom: 4px; }
+.page-title { font-size: 24px; font-weight: 700; color: #f0f0f0; line-height: 1.2; margin-bottom: 8px; }
+.page-subtitle { font-size: 14px; color: #666; line-height: 1.6; margin-bottom: 1.75rem; }
+
+/* Divider */
+.divider { height: 1px; background: #1a1a1a; margin: 1.75rem 0; }
+
+/* Section label */
+.section-label { font-size: 10px; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem; }
+
+/* Intro card */
+.intro-card { background: #111; border-left: 2px solid #c8ff00; border-radius: 0 10px 10px 0; padding: 14px 16px; margin-bottom: 1.75rem; }
+.intro-card p { font-size: 14px; color: #999; line-height: 1.75; }
+.intro-card strong { color: #c8ff00; }
+
+/* Section blocks */
+.block { background: #141414; border-radius: 12px; border: 1px solid #1e1e1e; overflow: hidden; margin-bottom: 10px; }
+.block-header { display: flex; align-items: center; gap: 14px; padding: 16px; cursor: pointer; user-select: none; }
+.block-icon { font-size: 20px; flex-shrink: 0; width: 36px; text-align: center; }
+.block-meta { flex: 1; }
+.block-title { font-size: 15px; font-weight: 600; color: #e0e0e0; line-height: 1.3; margin-bottom: 3px; }
+.block-desc { font-size: 12px; color: #555; line-height: 1.4; }
+.block-chevron { font-size: 11px; color: #444; transition: transform 0.2s ease; flex-shrink: 0; }
+.block.open .block-chevron { transform: rotate(180deg); }
+.block-body { display: none; border-top: 1px solid #1e1e1e; padding: 16px; }
+.block.open .block-body { display: block; }
+.block-body p { font-size: 13px; color: #777; line-height: 1.75; margin-bottom: 10px; }
+.block-body p:last-child { margin-bottom: 0; }
+.block-body strong { color: #bbb; }
+.block-body .accent { color: #c8ff00; }
+
+/* Step list */
+.step-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.step { display: flex; gap: 12px; align-items: flex-start; }
+.step-num { font-size: 10px; font-weight: 700; color: #c8ff00; font-family: 'Courier New', monospace; letter-spacing: 0.08em; min-width: 24px; padding-top: 2px; }
+.step-text { font-size: 13px; color: #777; line-height: 1.65; }
+.step-text strong { color: #bbb; }
+
+/* Pill tags */
+.pill-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.pill { font-size: 11px; color: #888; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 99px; padding: 3px 10px; }
+.pill.green { color: #4caf50; background: #1a2a1a; border-color: #2a3a2a; }
+.pill.blue { color: #7c8fff; background: #1a1a2a; border-color: #2a2a3a; }
+.pill.yellow { color: #c8ff00; background: #141a00; border-color: #2a3a00; }
+
+/* Note box inside block */
+.inner-note { background: #0f0f0f; border-left: 2px solid #2a2a2a; border-radius: 0 8px 8px 0; padding: 10px 12px; margin-top: 12px; }
+.inner-note p { font-size: 12px; color: #555; line-height: 1.65; margin-bottom: 0; }
+.inner-note strong { color: #888; }
+
+/* CTA link card */
+.link-card { display: flex; align-items: center; justify-content: space-between; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px 16px; margin-top: 1.75rem; text-decoration: none; transition: border-color 0.2s; }
+.link-card:hover { border-color: #c8ff00; }
+.link-card-label { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
+.link-card-title { font-size: 14px; font-weight: 600; color: #c8ff00; }
+.link-card-arrow { font-size: 18px; color: #333; }
+
+/* Footer */
+.footer { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #1a1a1a; }
+.footer p { font-size: 12px; color: #444; line-height: 1.7; }
+.footer strong { color: #666; }
+</style>
+</head>
+<body>
+
+<div class="eyebrow">Waterworld Athletica — Internal</div>
+<div class="page-title">Hey Henry. Here's how this works.</div>
+<div class="page-subtitle">A quick rundown of the system we're running — the session doc, the Notion space, and what we're building together. Read this once and you're good.</div>
+
+<div class="intro-card">
+  <p>This system is built around one idea: <strong>every session we do together should produce training results for you and content assets for WWA simultaneously.</strong> You get coached properly. I get content. Nobody wastes a rep or a minute. The Session Master document and the Notion space are what make that possible.</p>
+</div>
+
+<div class="section-label">The Tools</div>
+
+<!-- SESSION MASTER -->
+<div class="block" id="b1">
+  <div class="block-header" onclick="toggleBlock('b1')">
+    <div class="block-icon">📱</div>
+    <div class="block-meta">
+      <div class="block-title">The Session Master</div>
+      <div class="block-desc">Our blueprint for every single session. Open it before we start.</div>
+    </div>
+    <div class="block-chevron">▼</div>
+  </div>
+  <div class="block-body">
+    <p>The Session Master is a live document we run on your phone or iPad during every session. It's the blueprint — it keeps us on protocol, on time, and captures everything we need for the content side. Think of it as the operating system for our sessions.</p>
+    <p><strong>Open it at the start of every session. Don't start without it.</strong></p>
+    <a class="link-card" href="https://waterworldathletica.github.io/wwa-content/wwa-master-session.html" target="_blank" style="margin-top: 10px;">
+      <div>
+        <div class="link-card-label">Live Document</div>
+        <div class="link-card-title">Open Session Master →</div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<!-- TIMER -->
+<div class="block" id="b2">
+  <div class="block-header" onclick="toggleBlock('b2')">
+    <div class="block-icon">⏱</div>
+    <div class="block-meta">
+      <div class="block-title">The Session Timer</div>
+      <div class="block-desc">90 minutes. That's the window. The timer keeps us honest.</div>
+    </div>
+    <div class="block-chevron">▼</div>
+  </div>
+  <div class="block-body">
+    <p>Every session runs on a 90-minute countdown. <strong>The timer starts once mobility is complete</strong> — not when we walk in. That means arriving on time isn't just courteous, it's critical. Every minute lost before the timer starts is a minute taken from the session and the shoot.</p>
+    <p><strong>Why it matters:</strong> 1 hour of precision beats 2 hours of wandering. The timer enforces the standard. When it's running, we move with purpose.</p>
+    <div class="inner-note"><p><strong>For you:</strong> this means your training stays tight and intentional. No dead time between sets. No losing track of the clock.</p></div>
+  </div>
+</div>
+
+<!-- SESSION INFO -->
+<div class="block" id="b3">
+  <div class="block-header" onclick="toggleBlock('b3')">
+    <div class="block-icon">📋</div>
+    <div class="block-meta">
+      <div class="block-title">Session Info</div>
+      <div class="block-desc">Log the basics at the start — date, focus, notes.</div>
+    </div>
+    <div class="block-chevron">▼</div>
+  </div>
+  <div class="block-body">
+    <p>At the top of each session, we log the date, the muscle groups we're hitting, and any notes relevant to that day. Takes 30 seconds. Keeps the session log clean and searchable over time.</p>
+    <div class="inner-note"><p><strong>Your job here:</strong> nothing. I handle this section. You just need to know it exists.</p></div>
+  </div>
+</div>
+
+<!-- DIARY FRAMES -->
+<div class="block" id="b4">
+  <div class="block-header" onclick="toggleBlock('b4')">
+    <div class="block-icon">🎬</div>
+    <div class="block-meta">
+      <div class="block-title">Diary Frames</div>
+      <div class="block-desc">The recurring content captured every session. Two angles per exercise.</div>
+    </div>
+    <div class="block-chevron">▼</div>
+  </div>
+  <div class="block-body">
+    <p>Diary Frames are short cinematic clips captured on the <strong>first working set of each exercise</strong>. No talking, no commentary — just a fly-on-the-wall look at what training actually looks like. Think of them as silent, high quality windows into the session. Music gets added in post.</p>
+    <p>Each diary frame is built from <strong>two locked-off angles</strong> shot back to back, then edited together into one seamless clip. Here's exactly how it flows:</p>
+    <div class="step-list">
+      <div class="step"><div class="step-num">01</div><div class="step-text"><strong>Angle 1 — Mount and capture</strong> 2–3 reps. Lock the camera off, hit record, I perform. Don't follow the movement.</div></div>
+      <div class="step"><div class="step-num">02</div><div class="step-text"><strong>Angle 2 — Reposition and capture</strong> 2–3 reps from the second angle. Different perspective on the same movement.</div></div>
+      <div class="step"><div class="step-num">03</div><div class="step-text"><strong>Back to Angle 1</strong> — 2–3 more reps.</div></div>
+      <div class="step"><div class="step-num">04</div><div class="step-text"><strong>Back to Angle 2</strong> — 2–3 reps to failure. This is the closing shot.</div></div>
+    </div>
+    <p style="margin-top: 12px;">In the edit, these four clips cut together into one fluid sequence — A1, A2, A1, A2. The result is a cinematic multi-angle look at a complete set, from mounting to failure. The goal isn't to show the set exactly as it happened in real time — it's to present the full set from multiple angles so the viewer experiences it as one complete performance. Even if the angles were captured across multiple mini-sets, in the edit it reads as one.</p>
+    <div class="pill-row">
+      <span class="pill green">First working set only</span>
+      <span class="pill">Anamorphic mode</span>
+      <span class="pill">4:5 frame</span>
+      <span class="pill">Locked off — no handheld</span>
+      <span class="pill">No audio</span>
+    </div>
+    <div class="inner-note"><p><strong>For you:</strong> the Session Master has 3 pre-populated diary frame slots per session with a checklist for each. Work through them in order and check each angle off as you capture it. Low barrier — mount, record, move on.</p></div>
+  </div>
+</div>
+
+<!-- CURATED SHOOTS -->
+<div class="block" id="b7">
+  <div class="block-header" onclick="toggleBlock('b7')">
+    <div class="block-icon">🎯</div>
+    <div class="block-meta">
+      <div class="block-title">Curated Shoots</div>
+      <div class="block-desc">Priority content. Separate from diary frames. These are planned in advance.</div>
+    </div>
+    <div class="block-chevron">▼</div>
+  </div>
+  <div class="block-body">
+    <p>Curated Shoots are the most important thing we produce. Above everything else — above diary frames, above pump checks, above anything else on the session plan. <strong>If a curated shoot is scheduled, it gets executed first and it gets executed properly.</strong></p>
+    <p>These are <strong>scripted, planned pieces</strong> — specific Reels with a hook, a script, and a shot list prepared in advance. Talking head pieces, contrast videos, origin story content. The flagship content that drives followers, leads, and clients to WWA. Every session one of these is on the schedule, it is the priority — no exceptions.</p>
+    <p>When a Curated Shoot is on the schedule, we know exactly what we're shooting, where, and why before we walk in. There's no guessing on the day.</p>
+    <div class="pill-row">
+      <span class="pill yellow">Top priority — every session</span>
+      <span class="pill">Scripted in advance</span>
+      <span class="pill">Shot list prepared</span>
+      <span class="pill green">Flagship content</span>
+    </div>
+    <div class="inner-note"><p><strong>How to find them:</strong> each curated shoot has its own interactive shot list document. Open it, read it in full, and we walk through it together for 2 minutes before we start. No surprises on the day.</p></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+<div class="section-label">The Notion Space</div>
+
+<!-- CLIENT TRAINING — HENRY -->
+<div class="block" id="b6">
+  <div class="block-header" onclick="toggleBlock('b6')">
+    <div class="block-icon">🏋️</div>
+    <div class="block-meta">
+      <div class="block-title">Client Training — Your Section</div>
+      <div class="block-desc">Your training gets documented too. Here's how.</div>
+    </div>
+    <div class="block-chevron">▼</div>
+  </div>
+  <div class="block-body">
+    <p>The Session Master has a dedicated section just for your training. When you're working through your sets, we capture coaching clips that document your progress and form. These are your clips — and they're <strong>social proof content for WWA.</strong></p>
+    <p>It's imperative that these clips capture both of us working together — Henry as the client, Ash as the coach. That relationship on camera is the proof that the coaching works. These clips cover physical work — form, sets, reps — as well as mental and communicative moments between us. A coaching cue, a correction, a conversation mid-set. All of it is valid content.</p>
+    <div class="step-list">
+      <div class="step"><div class="step-num">01</div><div class="step-text"><strong>Angle 1 — Coaching clip</strong> — primary angle showing form and coaching cues</div></div>
+      <div class="step"><div class="step-num">02</div><div class="step-text"><strong>Angle 2 — Coaching clip</strong> — secondary angle for a different read on the movement</div></div>
+      <div class="step"><div class="step-num">03</div><div class="step-text"><strong>Clip compiled</strong> — footage filed and ready for edit</div></div>
+    </div>
+    <div class="pill-row">
+      <span class="pill blue">3 exercises pre-populated</span>
+      <span class="pill">2 angles each</span>
+      <span class="pill green">Social proof content</span>
+      <span class="pill">Physical + mental moments</span>
+    </div>
+    <div class="inner-note"><p><strong>The exchange:</strong> you're training properly under a coached program. In return, your sessions contribute to the content machine. Both of us get something real out of every session.</p></div>
+  </div>
+</div>
+
+<!-- PUMP CHECK -->
+<div class="block" id="b5">
+  <div class="block-header" onclick="toggleBlock('b5')">
+    <div class="block-icon">💪</div>
+    <div class="block-meta">
+      <div class="block-title">Pump Check</div>
+      <div class="block-desc">5 shots at peak pump. This is the physique proof content.</div>
+    </div>
+    <div class="block-chevron">▼</div>
+  </div>
+  <div class="block-body">
+    <p>At the end of the session when the pump is at its peak, we capture a 5-shot pump check. These shots serve double duty — they're logged in the session record and they feed directly into the <strong>Proof Physique</strong> content pillar.</p>
+    <div class="step-list">
+      <div class="step"><div class="step-num">01</div><div class="step-text"><strong>Wide full body</strong> — full physique in frame</div></div>
+      <div class="step"><div class="step-num">02</div><div class="step-text"><strong>Torso close-up</strong> — chest, shoulders, core detail</div></div>
+      <div class="step"><div class="step-num">03</div><div class="step-text"><strong>Face and shoulders</strong> — upper body and expression</div></div>
+      <div class="step"><div class="step-num">04</div><div class="step-text"><strong>Hands and arms</strong> — forearms, grip, vascularity</div></div>
+      <div class="step"><div class="step-num">05</div><div class="step-text"><strong>Final wide</strong> — closing full body shot</div></div>
+    </div>
+    <div class="inner-note"><p><strong>Timing is everything here:</strong> these get shot immediately after the last working set while the pump is still full. Don't let 10 minutes pass before we do this.</p></div>
+  </div>
+</div>
+
+
+
+<div class="divider"></div>
+<div class="section-label">The Notion Space</div>
+
+<!-- SHOOTS FOLDER -->
+<div class="block" id="b8">
+  <div class="block-header" onclick="toggleBlock('b8')">
+    <div class="block-icon">📁</div>
+    <div class="block-meta">
+      <div class="block-title">SHOOTS Folder in Notion</div>
+      <div class="block-desc">Every planned shoot lives here with its own shot list.</div>
+    </div>
+    <div class="block-chevron">▼</div>
+  </div>
+  <div class="block-body">
+    <p>The SHOOTS folder in our Notion workspace is where every curated shoot is stored. Each shoot has its own page with a link to an interactive shot list document — that's the page you open on your phone when we're executing a curated shoot.</p>
+    <p>Each shot list shows you the full script, the individual shots in order, exactly what I'm delivering on camera, direction notes for framing and timing, and editing notes for post. Everything Henry needs to execute is in that document.</p>
+    <div class="inner-note"><p><strong>Before any curated shoot:</strong> open the shot list, read it in full, then we talk through it together for 2 minutes before we start. No surprises on the day.</p></div>
+  </div>
+</div>
+
+<!-- VAULT PREP -->
+<div class="block" id="b9">
+  <div class="block-header" onclick="toggleBlock('b9')">
+    <div class="block-icon">🔐</div>
+    <div class="block-meta">
+      <div class="block-title">Vault Preparation</div>
+      <div class="block-desc">The content bank we're building toward. Two weeks of posts at all times.</div>
+    </div>
+    <div class="block-chevron">▼</div>
+  </div>
+  <div class="block-body">
+    <p>The Vault Preparation page tracks where we are against our content target. The goal is simple: <strong>always have two weeks of content ready to post before anything goes live.</strong> That means edits complete, captions ready, nothing rushed.</p>
+    <p>As we shoot and edit, the vault fills up. When it hits the two-week target, we post. The vault keeps us ahead of the algorithm instead of scrambling to feed it.</p>
+    <p>Critically — <strong>we track every piece by which content pillar it falls under.</strong> We cannot afford to edit only one type of content and end up with a vault full of diary frames and nothing else. The vault needs to be balanced across pillars: Contrast, Origin, Mindset, Education, Client, Proof Physique. If we're missing a pillar, that becomes the priority in the next session.</p>
+    <div class="step-list">
+      <div class="step"><div class="step-num">→</div><div class="step-text">Diary frames from each session go into the vault as carousel content</div></div>
+      <div class="step"><div class="step-num">→</div><div class="step-text">Pump checks go in as Proof Physique posts</div></div>
+      <div class="step"><div class="step-num">→</div><div class="step-text">Curated shoots go in as Reels once edited — filed under their pillar</div></div>
+      <div class="step"><div class="step-num">→</div><div class="step-text">Every piece logged with its pillar so we always know what we have and what we're missing</div></div>
+    </div>
+    <div class="inner-note"><p><strong>Your role:</strong> file footage same day or next morning after each session. The vault only works if content moves through quickly after capture.</p></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+<div class="section-label">Editing Expectations</div>
+
+<div class="block" id="b10">
+  <div class="block-header" onclick="toggleBlock('b10')">
+    <div class="block-icon">✂️</div>
+    <div class="block-meta">
+      <div class="block-title">Edit Within the Week. No Exceptions.</div>
+      <div class="block-desc">Everything shot needs a target and a completion date.</div>
+    </div>
+    <div class="block-chevron">▼</div>
+  </div>
+  <div class="block-body">
+    <p>Everything we capture in a session needs to be edited within <strong>one week of the shoot date.</strong> That's the rule. Not a guideline — a rule. And the purpose of that rule is simple: to keep your life moving.</p>
+    <p>In the past, we've sat on footage for weeks. The vault builds up, the backlog compounds, and suddenly we're spending sessions in the gym that produce nothing because editing hasn't kept up with shooting. That ends here. <strong>The output of the content needs to match the output of the training session.</strong> We shoot it, we edit it, we post it. That's the cycle.</p>
+    <p>Diary frames and Henry training clips are straightforward assemblies — two angles, cut together, grade applied, done. These should be the quickest wins in your edit queue. Start there.</p>
+    <div class="step-list">
+      <div class="step"><div class="step-num">→</div><div class="step-text"><strong>Start editing the day after the session.</strong> While the footage is fresh and the context is clear.</div></div>
+      <div class="step"><div class="step-num">→</div><div class="step-text"><strong>Diary frames and training clips first.</strong> These are the quickest wins — get them done and into the vault.</div></div>
+      <div class="step"><div class="step-num">→</div><div class="step-text"><strong>Curated shoots have priority in the edit queue</strong> if they were captured that session.</div></div>
+      <div class="step"><div class="step-num">→</div><div class="step-text"><strong>Every piece of footage gets a completion date</strong> before the next session happens.</div></div>
+    </div>
+    <div class="inner-note"><p><strong>Why this matters:</strong> content sitting in a folder unedited for weeks doesn't just delay posting — it compounds Henry's workload and stalls the vault. Staying one week behind on edits is manageable. Two weeks starts to hurt. Three weeks breaks the system.</p></div>
+  </div>
+</div>
+
+
+  <p>That's the whole system. <strong>Session Master runs the session. Notion tracks the content. The vault builds the bank.</strong> Every session we run this and the machine stays fed. Questions — bring them to the session and we'll sort it out in person.</p>
+</div>
+
+<div class="footer">
+  <p><strong>WATERWORLD ATHLETICA</strong> — Internal document. Session system v1. Last updated June 2026.</p>
+</div>
+
+<script>
+function toggleBlock(id) {
+  var el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+</script>
+</body>
+</html>
