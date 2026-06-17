@@ -34,12 +34,15 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
 .script-label { font-size: 9px; text-transform: uppercase; color: #c8ff00; font-weight: 600; margin-bottom: 8px; letter-spacing: 0.12em; }
 .script-lines { font-size: 13px; color: #777; line-height: 1.9; font-style: italic; }
 .script-lines .key { color: #bbb; font-style: normal; font-weight: 600; }
+.script-lines .bad { color: #ff5c5c; font-style: normal; font-weight: 600; }
+.script-lines .good { color: #4caf50; font-style: normal; font-weight: 600; }
 .tag { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; margin-right: 4px; margin-bottom: 4px; }
 .tag-gym { background: #1a2a1a; color: #4caf50; border: 1px solid #2a3a2a; }
 .tag-split { background: #1a1a2a; color: #7c8fff; border: 1px solid #2a2a3a; }
 .tag-hook { background: #2a1a00; color: #c8ff00; border: 1px solid #3a2a00; }
 .tag-bad { background: #2a1a1a; color: #ff5c5c; border: 1px solid #3a2a2a; }
 .tag-good { background: #1a2a1a; color: #4caf50; border: 1px solid #2a3a2a; }
+.tag-angles { background: #1a1a2a; color: #7c8fff; border: 1px solid #2a2a3a; }
 .divider { height: 1px; background: #1a1a1a; margin: 1.5rem 0; }
 .note-box { background: #111; border-left: 2px solid #c8ff00; border-radius: 0 10px 10px 0; padding: 12px 14px; margin-top: 1rem; }
 .note-box p { font-size: 13px; color: #777; line-height: 1.65; }
@@ -53,26 +56,28 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
 .complete-label { font-size: 14px; color: #bbb; flex: 1; }
 .date-label { font-size: 11px; color: #555; margin: 12px 0 6px; letter-spacing: 0.06em; }
 .date-input { width: 100%; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 8px; color: #bbb; font-size: 14px; padding: 10px 12px; font-family: inherit; outline: none; }
-
-
+.collapsible-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; margin-bottom: 0; user-select: none; }
+.collapsible-header.open { border-radius: 10px 10px 0 0; border-bottom-color: #1a1a1a; }
+.collapsible-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; }
+.collapsible-chevron { font-size: 11px; color: #555; transition: transform 0.2s ease; }
+.collapsible-header.open .collapsible-chevron { transform: rotate(180deg); }
+.collapsible-body { display: none; background: #0f0f0f; border: 1px solid #2a2a2a; border-top: none; border-radius: 0 0 10px 10px; padding: 14px; margin-bottom: 1.5rem; }
+.collapsible-body.open { display: block; }
+.vo-line { font-size: 13px; color: #888; line-height: 2.1; font-style: italic; }
+.vo-line .key { color: #ddd; font-style: normal; font-weight: 600; }
+.vo-line .dim { color: #555; font-style: normal; font-size: 12px; }
+.vo-line .bad { color: #ff5c5c; font-style: normal; font-weight: 600; }
+.vo-line .good { color: #4caf50; font-style: normal; font-weight: 600; }
+.source-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; }
+.source-box-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #555; white-space: nowrap; }
+.source-box a { font-size: 12px; color: #c8ff00; text-decoration: none; word-break: break-all; }
+.source-box a:hover { text-decoration: underline; }
 .caption-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px; margin-bottom: 1.5rem; }
 .caption-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 10px; }
 .caption-text { font-size: 14px; color: #bbb; line-height: 1.7; }
 .caption-text strong { color: #f0f0f0; }
 .assets-note { background: #0f0f0f; border: 1px solid #2a2a2a; border-left: 2px solid #c8ff00; border-radius: 0 10px 10px 0; padding: 10px 14px; margin-bottom: 1.5rem; font-size: 12px; color: #555; line-height: 1.6; }
 .assets-note strong { color: #888; }
-.source-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; }
-.source-box-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #555; white-space: nowrap; }
-.source-box a { font-size: 12px; color: #c8ff00; text-decoration: none; word-break: break-all; }
-.source-box a:hover { text-decoration: underline; }
-.collapsible-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; }
-.collapsible-chevron { font-size: 11px; color: #555; transition: transform 0.2s ease; }
-.collapsible-header.open .collapsible-chevron { transform: rotate(180deg); }
-.collapsible-body { display: none; background: #0f0f0f; border: 1px solid #2a2a2a; border-top: none; border-radius: 0 0 10px 10px; padding: 14px; margin-bottom: 1.5rem; }
-.collapsible-body.open { display: block; }
-.vo-line { font-size: 13px; color: #888; line-height: 2; font-style: italic; }
-.vo-line .key { color: #ddd; font-style: normal; font-weight: 600; }
-.vo-line .dim { color: #555; font-style: normal; font-size: 12px; }
 .split-label { display: flex; gap: 8px; margin-top: 8px; }
 .split-tag { flex: 1; text-align: center; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px; border-radius: 6px; }
 .split-tag.left { background: #2a1a1a; color: #ff5c5c; border: 1px solid #3a2a2a; }
@@ -81,8 +86,8 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
 </head>
 <body>
 
-<div class="title-label">WWA — Split Screen Series / Back Edition</div>
-<div class="shoot-title">You're Not Training Back.</div>
+<div class="title-label">WWA — Split Screen Series / Back Edition v2</div>
+<div class="shoot-title">You're Not Training Back. You're Breaking It.</div>
 
 <div class="meta-row">
   <div class="meta-pill">Format: <span>Silent Split Screen</span></div>
@@ -91,17 +96,21 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
   <div class="meta-pill">Operator: <span>Henry</span></div>
   <div class="meta-pill">Location: <span>Anytime Fitness</span></div>
   <div class="meta-pill">Lens: <span>16mm DZO — Full Body</span></div>
+  <div class="meta-pill">Ash: <span>Shirt Off</span></div>
 </div>
 
 <div class="source-box"><span class="source-box-label">Source</span><a href="https://www.instagram.com/p/DUTUGvHjeXT/" target="_blank">instagram.com/p/DUTUGvHjeXT</a></div>
-<div class="prog-row"><p>Progress</p><strong id="prog-text">0 / 8</strong></div>
-<div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
 
-<div class="assets-note"><strong>WWA Logo:</strong> Download from the Assets folder in Notion under CONTENT → ASSETS. Use the white PNG for the WWA label on the right side of the split frame.</div>
+<div class="assets-note"><strong>WWA Logo:</strong> Download from the Assets folder in Notion under CONTENT → ASSETS. White PNG for the WWA label on the right side of the split frame.</div>
+
 <div class="caption-box">
   <div class="caption-title">Caption — Copy for Post</div>
   <div class="caption-text">Stop being most people. Comment <strong>LOCKED</strong> and I'll send you the WWA Size Starter — free. You've seen the difference.</div>
 </div>
+
+<div class="prog-row"><p>Progress</p><strong id="prog-text">0 / 10</strong></div>
+<div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+
 <div class="section-label">Full Script</div>
 <div class="collapsible-header" id="script-toggle" onclick="toggleScript()">
   <span class="collapsible-title">Read in full before shooting</span>
@@ -111,19 +120,27 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
   <div class="vo-line">
     <span class="dim">[ 1–2 sec flash — split screen preview, one rep each side ]</span><br><br>
     <span class="dim">[ cut to Ash — dead to camera ]</span><br>
-    <span class="key">You're not training back. You're exhausting your arms.</span><br><br>
-    <span class="dim">[ cut back to full split screen — all exercises silent, music only ]</span><br><br>
-    <span class="key">LEFT SIDE LABEL: Most People</span><br>
-    <span class="key">RIGHT SIDE LABEL: WWA</span><br><br>
-    Pull Up — 2–3 reps each side<br>
-    Lat Pulldown — 2–3 reps each side<br>
-    Seated Cable Row — 2–3 reps each side<br>
-    Face Pull — 2–3 reps each side<br><br>
+    <span class="key">You're not training back. You're breaking it.</span><br><br>
+    <span class="dim">[ hard cut back to full split screen — silent, music only ]</span><br><br>
+    <span class="key">LEFT: Most People — RIGHT: WWA</span><br><br>
+
+    <span class="bad">Most People — Pull Up:</span> Knees swinging for momentum. Shoulders doing the work. Fast, sloppy, partial reps. Arms never fully extend. Never sinks into the back.<br>
+    <span class="good">WWA — Pull Up:</span> Arms fully extended overhead. Slow controlled pull. Internal elbow rotation. Core engaged, heels elevated, pelvis forward, slight lean back from the bar. Two pull ups to their five or six. Two angles — side and back.<br><br>
+
+    <span class="bad">Most People — Lat Pulldown:</span> Too upright. Pulling into the shoulders. Wrists bending at the bottom. Body weight momentum flinging the bar. Fast. No range. No contraction.<br>
+    <span class="good">WWA — Lat Pulldown:</span> Proper hand width. Internally rotated elbows exposing the lats. Full range — arms extended overhead to elbows tucking into side pockets. Bar to clavicle. Slow negative. Braced core. Side profile shot both sides.<br><br>
+
+    <span class="bad">Most People — Seated Cable Row:</span> Small A-frame attachment. Body jerking back and forth. Arms and legs doing the work. Fast. No stretch. No contraction. No pause.<br>
+    <span class="good">WWA — Seated Cable Row:</span> Wide attachment. Full protraction at the start — arms lengthened, shoulder blades spread, core braced toward the load. Low shoulders, low elbows pulling into chest. Full retraction at the top. Pause. Elbows scoop down toward side pockets. Slow controlled return to full stretch.<br><br>
+
+    <span class="bad">Most People — Face Pull:</span> Rope attachment, poor stance, no core. Leaning back with bodyweight to pull. Fast. Messy. No range.<br>
+    <span class="good">WWA — Face Pull:</span> Braced core, proper foot stance. Full arm extension with protracted shoulder blades into the stretch. Elbows wide and high, rope overhead at the top. Flex and hold 1–1.5 seconds. Slow controlled return to full stretch.<br><br>
+
     <span class="dim">[ no CTA — ToF content, follow is the action ]</span>
   </div>
   <div class="split-label">
-    <div class="split-tag left">Most People — Bad Form</div>
-    <div class="split-tag right">WWA — Technically Sound</div>
+    <div class="split-tag left">Most People — Breaking It</div>
+    <div class="split-tag right">WWA — Building It</div>
   </div>
 </div>
 
@@ -135,8 +152,8 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
     <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
     <div class="shot-body">
       <div class="shot-num">Shot 1 — Flash Preview</div>
-      <div class="shot-title">1–2 second split screen tease. One rep each side.</div>
-      <div class="shot-detail">Opens the video. Both sides visible immediately. Pull-up recommended for the flash — the contrast between arm-dominant pulling and lat-led pulling is immediately readable. Cut away before the rep completes. Leave them mid-movement.</div>
+      <div class="shot-title">1–2 second split screen tease. Pull-up recommended.</div>
+      <div class="shot-detail">Opens the video. Both sides visible immediately. Pull-up is the strongest flash — the speed contrast between sloppy kipping reps and a slow controlled pull is readable in under two seconds. Cut before the rep completes. Leave them mid-movement.</div>
       <div style="margin-top:8px"><span class="tag tag-split">Split Screen</span><span class="tag tag-hook">Hook</span></div>
     </div>
   </div>
@@ -152,13 +169,13 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
     <div class="shot-body">
       <div class="shot-num">Shot 2 — Hook Interruption</div>
       <div class="shot-title">Cut to Ash. Dead to camera. One line. Two seconds.</div>
-      <div class="shot-detail">Single frame. Ash facing camera, shirt off. Interrupts the split screen before the viewer is satisfied. Deadpan. No build-up. Deliver it like a verdict. Cut straight back to split screen immediately after.</div>
+      <div class="shot-detail">Single frame. Ash shirt off, pumped, dead to camera. Interrupts the split screen before the viewer is satisfied. Deadpan. No smile. Deliver it like a verdict. Hard cut back to split screen immediately after.</div>
       <div style="margin-top:8px"><span class="tag tag-hook">Hook</span><span class="tag tag-gym">Gym</span></div>
     </div>
   </div>
   <div class="script-section">
     <div class="script-label">On-Camera Delivery — Ash</div>
-    <div class="script-lines"><span class="key">You're not training back. You're exhausting your arms.</span></div>
+    <div class="script-lines"><span class="key">You're not training back. You're breaking it.</span></div>
   </div>
 </div>
 
@@ -166,15 +183,15 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
   <div class="shot-header" onclick="toggle(this.parentElement)">
     <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
     <div class="shot-body">
-      <div class="shot-num">Shot 3 — Pull Up</div>
-      <div class="shot-title">Bad: chin leading, arms pulling, no lat engagement. Good: chest up, scapula depressed, lat-led pull.</div>
-      <div class="shot-detail">Bad form — chin jutting forward, elbows pulling straight down, arms doing all the work, no chest elevation. Good form — chest up and forward, shoulders depressed before the pull begins, elbows drive down and back, lats visibly engaged. Full dead hang at the bottom both sides. 2–3 reps each side.</div>
-      <div style="margin-top:8px"><span class="tag tag-bad">Most People</span><span class="tag tag-good">WWA</span><span class="tag tag-split">Split Screen</span></div>
+      <div class="shot-num">Shot 3 — Pull Up (Side Angle)</div>
+      <div class="shot-title">Bad: kipping, shoulders, partial. Good: slow, full extension, lat-led.</div>
+      <div class="shot-detail">Side angle for both sides. Bad — knees swinging for momentum, shoulders shrugging, partial range, fast. 5–6 sloppy reps. Good — arms fully extended at the bottom, slight lean back from the bar, internal elbow rotation, core engaged, heels elevated, pelvis forward. Slow. 2 reps maximum. The pacing difference alone tells the whole story.</div>
+      <div style="margin-top:8px"><span class="tag tag-bad">Most People</span><span class="tag tag-good">WWA</span><span class="tag tag-angles">Side Angle</span></div>
     </div>
   </div>
   <div class="script-section">
     <div class="script-label">On-Screen</div>
-    <div class="script-lines">Silent. Music only. Labels persistent throughout.</div>
+    <div class="script-lines">Silent. Music only. Labels persistent.</div>
   </div>
 </div>
 
@@ -182,10 +199,10 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
   <div class="shot-header" onclick="toggle(this.parentElement)">
     <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
     <div class="shot-body">
-      <div class="shot-num">Shot 4 — Lat Pulldown</div>
-      <div class="shot-title">Bad: leaning back, bicep curl motion. Good: upright, elbows driving down, full lat stretch.</div>
-      <div class="shot-detail">Bad form — excessive lean back, pulling with biceps, bar coming to chin instead of upper chest, no lat engagement. Good form — slight natural lean, elbows driving straight down toward hips, bar to upper chest, full stretch at the top of every rep. 2–3 reps each side.</div>
-      <div style="margin-top:8px"><span class="tag tag-bad">Most People</span><span class="tag tag-good">WWA</span><span class="tag tag-split">Split Screen</span></div>
+      <div class="shot-num">Shot 4 — Pull Up (Back Angle)</div>
+      <div class="shot-title">Same exercise, second angle. Back visible — lats either fire or they don't.</div>
+      <div class="shot-detail">Shoot from directly behind both sides. Bad — no lat engagement visible, upper traps and shoulders doing everything. Good — lats visibly flaring as Ash pulls, the V-taper activating in real time. This is the angle that makes the difference undeniable. Same rep counts as Shot 3.</div>
+      <div style="margin-top:8px"><span class="tag tag-bad">Most People</span><span class="tag tag-good">WWA</span><span class="tag tag-angles">Back Angle</span></div>
     </div>
   </div>
   <div class="script-section">
@@ -198,9 +215,9 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
   <div class="shot-header" onclick="toggle(this.parentElement)">
     <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
     <div class="shot-body">
-      <div class="shot-num">Shot 5 — Seated Cable Row</div>
-      <div class="shot-title">Bad: rounding forward, arms leading. Good: chest tall, elbows driving back, scapula squeeze.</div>
-      <div class="shot-detail">Bad form — rounding forward on the stretch, jerking back with momentum, arms leading the pull. Good form — chest tall and proud throughout, hinge at the hips slightly, elbows drive back past the torso, scapula actively squeezes at the end of every rep. 2–3 reps each side.</div>
+      <div class="shot-num">Shot 5 — Lat Pulldown</div>
+      <div class="shot-title">Bad: upright, wrists bent, momentum. Good: lat-led, full range, slow negative.</div>
+      <div class="shot-detail">Side profile both sides. Bad — torso too upright, wrists bending at the bottom, body rocking back to create momentum, bar nowhere near clavicle, no range at the top or bottom. Fast. Good — slight natural lean, proper hand width, elbows internally rotated and driving down toward side pockets, bar to clavicle, full arm extension at the top. Slow controlled negative back to stretch. Braced core throughout.</div>
       <div style="margin-top:8px"><span class="tag tag-bad">Most People</span><span class="tag tag-good">WWA</span><span class="tag tag-split">Split Screen</span></div>
     </div>
   </div>
@@ -214,9 +231,9 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
   <div class="shot-header" onclick="toggle(this.parentElement)">
     <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
     <div class="shot-body">
-      <div class="shot-num">Shot 6 — Face Pull</div>
-      <div class="shot-title">Bad: pulling to neck, arms straight. Good: elbows high, pulling to face, external rotation.</div>
-      <div class="shot-detail">Bad form — pulling straight to the neck with no elbow elevation, arms driving the movement with no rear delt engagement. Good form — elbows elevated and flared, rope pulls to face height, hands finishing beside the ears, full external rotation at the end position. 2–3 reps each side.</div>
+      <div class="shot-num">Shot 6 — Seated Cable Row</div>
+      <div class="shot-title">Bad: A-frame, jerking, arms only. Good: wide attachment, full protraction, pause contraction.</div>
+      <div class="shot-detail">Bad — small A-frame attachment, body jerking violently back and forth, arms and legs driving the movement, no stretch at the front, no contraction at the back. Fast and chaotic. Good — wide attachment, start position with full arm extension and protracted shoulder blades, core braced toward load, low shoulders, low elbows pulling into chest, full retraction and pause at top, elbows scooping toward side pockets, slow return to full stretch and protraction.</div>
       <div style="margin-top:8px"><span class="tag tag-bad">Most People</span><span class="tag tag-good">WWA</span><span class="tag tag-split">Split Screen</span></div>
     </div>
   </div>
@@ -226,7 +243,23 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
   </div>
 </div>
 
-<div class="note-box"><p><strong>Camera setup — critical:</strong> 16mm DZO lens. Camera set far enough back that full body is visible on each half of the split frame. Vertical format. Both sides shot from the exact same distance and angle. Bad form must be exaggerated enough to read clearly on a small screen — subtle differences disappear in a split frame. Pull-up bar area gives the best backdrop and natural framing for back exercises.</p></div>
+<div class="shot" data-id="s7">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 7 — Face Pull</div>
+      <div class="shot-title">Bad: leaning back, fast, no range. Good: braced, elbows wide and high, slow hold.</div>
+      <div class="shot-detail">Bad — staggered stance, leaning back with bodyweight to generate momentum, fast reps, no control, rope barely reaching face height, no contraction. Good — square stance, core braced, arms fully extended and shoulder blades protracted into the stretch, elbows flare wide and high as rope pulls toward face and overhead, flex and hold 1–1.5 seconds at the top, slow controlled return to full stretch. Every rep deliberate.</div>
+      <div style="margin-top:8px"><span class="tag tag-bad">Most People</span><span class="tag tag-good">WWA</span><span class="tag tag-split">Split Screen</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Screen</div>
+    <div class="script-lines">Silent. Music only.</div>
+  </div>
+</div>
+
+<div class="note-box"><p><strong>The pacing contrast is the entire video.</strong> The bad side should look exhausting and chaotic. The good side should look almost meditative. If both sides move at the same speed the split loses its power. Exaggerate the bad. Slow the good down even further than feels natural.</p></div>
 
 <div class="divider"></div>
 <div class="section-label">Editing Notes</div>
@@ -237,7 +270,7 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
     <div class="shot-body">
       <div class="shot-num">Edit</div>
       <div class="shot-title">Split screen — persistent labels throughout</div>
-      <div class="shot-detail">"Most People" label top left. "WWA" label top right. Both visible from first frame to last. Clean minimal font, white. Never remove the labels mid-video.</div>
+      <div class="shot-detail">"Most People" top left, "WWA" top right. Both visible from first frame to last. Clean minimal font, white. Never remove the labels.</div>
     </div>
   </div>
 </div>
@@ -247,8 +280,8 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
     <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
     <div class="shot-body">
       <div class="shot-num">Edit</div>
-      <div class="shot-title">Hook interruption — cut before the rep completes</div>
-      <div class="shot-detail">The flash preview cuts away before the first rep is finished. Leave them mid-movement. That's what creates the pull back into the video after the hook line lands.</div>
+      <div class="shot-title">Pull-up — show both angles back to back</div>
+      <div class="shot-detail">Side angle split screen first, then back angle split screen. Both for the pull-up only. Every other exercise is one angle. The pull-up gets two because the lat engagement on the back angle is the most powerful visual in the whole video.</div>
     </div>
   </div>
 </div>
@@ -258,8 +291,8 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
     <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
     <div class="shot-body">
       <div class="shot-num">Edit</div>
-      <div class="shot-title">Music — drives pacing, no voiceover after hook</div>
-      <div class="shot-detail">Everything after the hook line is silent except music. Strong beat — cut each exercise change to the beat. The rhythm keeps people watching through four exercises.</div>
+      <div class="shot-title">Music — strong beat, cut exercise changes to it</div>
+      <div class="shot-detail">Silent except music throughout. Each exercise transition lands on a beat. The rhythm keeps people watching through five exercises.</div>
     </div>
   </div>
 </div>
@@ -269,8 +302,8 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
     <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
     <div class="shot-body">
       <div class="shot-num">Edit</div>
-      <div class="shot-title">Grade — match both sides exactly</div>
-      <div class="shot-detail">Both sides graded identically. WWA palette — crushed blacks, cooler midtones. If the two sides look different, the split reads as two different videos. One frame, one world.</div>
+      <div class="shot-title">Grade — match both sides identically</div>
+      <div class="shot-detail">WWA palette — crushed blacks, cooler midtones. Both sides graded identically. One frame, one world.</div>
     </div>
   </div>
 </div>
@@ -288,7 +321,7 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
 <button class="reset-btn" onclick="resetAll()">Reset checklist</button>
 
 <script>
-const KEY='wwa_back_v1';
+const KEY='wwa_back_v2';
 function getState(){try{return JSON.parse(localStorage.getItem(KEY))||{};}catch(e){return{};}}
 function setState(s){try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){}}
 function updateProgress(){const shots=document.querySelectorAll('.shot');const done=document.querySelectorAll('.shot.done').length;document.getElementById('prog-fill').style.width=Math.round((done/shots.length)*100)+'%';document.getElementById('prog-text').textContent=done+' / '+shots.length;}
