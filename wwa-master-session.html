@@ -174,9 +174,64 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
   <div class="pill">Format: <span>Diary Frames + Curated</span></div>
 </div>
 
+<div class="shoots-header">
+  <div class="shoots-header-label">🎬 Curated Shoots — Top Priority</div>
+  <div class="shoots-header-text">These are the priority above everything else. Every session moves at least one forward. 🟢 Full gym shoots first. 🟣 Gym + Archive next. Tap status badge to mark complete. Tap title to open shot list.</div>
+</div>
+<div id="shoots-container">
+  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-gym-shotlist.html" target="_blank" data-shoot-id="1">
+    <div class="shoot-top">
+      <div class="shoot-title">The Physique Is A Byproduct</div>
+      <button class="shoot-done pending" id="status-1">Pending</button>
+    </div>
+    <div class="shoot-meta"><span class="shoot-tag tag-physical">Physical Standard</span><span class="shoot-tag tag-gym">Full Gym Shoot</span></div>
+  </a>
+  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-nobody-is-coming-shotlist.html" target="_blank" data-shoot-id="2">
+    <div class="shoot-top">
+      <div class="shoot-title">Nobody Is Coming</div>
+      <button class="shoot-done pending" id="status-2">Pending</button>
+    </div>
+    <div class="shoot-meta"><span class="shoot-tag tag-mindset">Mindset</span><span class="shoot-tag tag-gym">Full Gym Shoot</span></div>
+  </a>
+  <a class="shoot-link priority-mid" href="https://waterworldathletica.github.io/wwa-content/wwa-social-friction-shotlist.html" target="_blank" data-shoot-id="3">
+    <div class="shoot-top">
+      <div class="shoot-title">Social Friction</div>
+      <button class="shoot-done pending" id="status-3">Pending</button>
+    </div>
+    <div class="shoot-meta"><span class="shoot-tag tag-mindset">Mindset</span><span class="shoot-tag tag-mixed">Gym + Archive</span></div>
+  </a>
+  <a class="shoot-link priority-mid" href="https://waterworldathletica.github.io/wwa-content/wwa-self-respect-shotlist.html" target="_blank" data-shoot-id="4">
+    <div class="shoot-top">
+      <div class="shoot-title">Self Respect</div>
+      <button class="shoot-done pending" id="status-4">Pending</button>
+    </div>
+    <div class="shoot-meta"><span class="shoot-tag tag-mindset">Mindset</span><span class="shoot-tag tag-mixed">Gym + Archive</span></div>
+  </a>
+  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-ab-routine-shotlist.html" target="_blank" data-shoot-id="5">
+    <div class="shoot-top">
+      <div class="shoot-title">I Don't Train Abs</div>
+      <button class="shoot-done pending" id="status-5">Pending</button>
+    </div>
+    <div class="shoot-meta"><span class="shoot-tag tag-physical">The Contrast</span><span class="shoot-tag tag-gym">Full Gym Shoot</span></div>
+  </a>
+  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-14-months-shotlist.html" target="_blank" data-shoot-id="6">
+    <div class="shoot-top">
+      <div class="shoot-title">14 Months Later</div>
+      <button class="shoot-done pending" id="status-6">Pending</button>
+    </div>
+    <div class="shoot-meta"><span class="shoot-tag tag-physical">The Contrast</span><span class="shoot-tag tag-gym">Full Gym Shoot</span></div>
+  </a>
+</div>
+
+<div class="divider"></div>
+
 <div class="section-label">Diary Frames</div>
 <div id="exercise-list"></div>
 <button class="add-btn" id="add-exercise-btn">+ Add Exercise</button>
+
+<div class="section-label">Client Training [Henry]</div>
+<div id="henry-list"></div>
+<button class="add-btn" id="add-henry-btn">+ Add Exercise</button>
 
 <div class="section-label">Pump Check</div>
 <div class="pump-check-box">
@@ -186,10 +241,6 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
     ✳ <span>Pump check footage doubles for Proof — Physique showcase posts.</span> Capture at peak pump immediately after final working set. Ambient light only. No posing — presence.
   </div>
 </div>
-
-<div class="section-label">Client Training [Henry]</div>
-<div id="henry-list"></div>
-<button class="add-btn" id="add-henry-btn">+ Add Exercise</button>
 
 <div class="collapse-card">
   <div class="collapse-header" id="hdr-compound">
@@ -223,43 +274,6 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
     <div class="ref-line"><strong>Format:</strong> Each exercise = one compiled clip. Min 3 per session carousel.</div>
     <div class="ref-line"><strong>Feel:</strong> Fly on the wall. No performance for the lens.</div>
   </div>
-</div>
-
-<div class="divider"></div>
-
-<div class="shoots-header">
-  <div class="shoots-header-label">🎬 Curated Shoots — Priority</div>
-  <div class="shoots-header-text">These are the priority. Every session moves at least one forward. 🟢 Full gym shoots first. 🟣 Gym + Archive next. Tap status badge to mark complete. Tap title to open shot list.</div>
-</div>
-<div id="shoots-container">
-  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-gym-shotlist.html" target="_blank" data-shoot-id="1">
-    <div class="shoot-top">
-      <div class="shoot-title">The Physique Is A Byproduct</div>
-      <button class="shoot-done pending" id="status-1">Pending</button>
-    </div>
-    <div class="shoot-meta"><span class="shoot-tag tag-physical">Physical Standard</span><span class="shoot-tag tag-gym">Full Gym Shoot</span></div>
-  </a>
-  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-nobody-is-coming-shotlist.html" target="_blank" data-shoot-id="2">
-    <div class="shoot-top">
-      <div class="shoot-title">Nobody Is Coming</div>
-      <button class="shoot-done pending" id="status-2">Pending</button>
-    </div>
-    <div class="shoot-meta"><span class="shoot-tag tag-mindset">Mindset</span><span class="shoot-tag tag-gym">Full Gym Shoot</span></div>
-  </a>
-  <a class="shoot-link priority-mid" href="https://waterworldathletica.github.io/wwa-content/wwa-social-friction-shotlist.html" target="_blank" data-shoot-id="3">
-    <div class="shoot-top">
-      <div class="shoot-title">Social Friction</div>
-      <button class="shoot-done pending" id="status-3">Pending</button>
-    </div>
-    <div class="shoot-meta"><span class="shoot-tag tag-mindset">Mindset</span><span class="shoot-tag tag-mixed">Gym + Archive</span></div>
-  </a>
-  <a class="shoot-link priority-mid" href="https://waterworldathletica.github.io/wwa-content/wwa-self-respect-shotlist.html" target="_blank" data-shoot-id="4">
-    <div class="shoot-top">
-      <div class="shoot-title">Self Respect</div>
-      <button class="shoot-done pending" id="status-4">Pending</button>
-    </div>
-    <div class="shoot-meta"><span class="shoot-tag tag-mindset">Mindset</span><span class="shoot-tag tag-mixed">Gym + Archive</span></div>
-  </a>
 </div>
 
 <div class="section-label" style="margin-top:1.5rem">Session Notes</div>
