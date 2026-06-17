@@ -114,6 +114,33 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
 .danger-confirm.open { display: block; }
 .danger-yes { background: #ff4444; color: #000; border: none; border-radius: 8px; padding: 8px 16px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; margin-right: 8px; }
 .danger-no { background: #1e1e1e; color: #888; border: 1px solid #2a2a2a; border-radius: 8px; padding: 8px 16px; font-size: 12px; cursor: pointer; font-family: inherit; }
+
+.shoots-section-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; margin-bottom: 0.75rem; }
+.shoots-collapse-chevron { font-size: 13px; color: #555; transition: transform 0.2s ease; }
+.shoots-collapse-chevron.open { transform: rotate(180deg); }
+.shoots-list { }
+.shoots-list.collapsed { display: none; }
+.shoot-link { display: block; background: #141414; border-radius: 10px; border: 1px solid #1e1e1e; padding: 12px 14px; margin-bottom: 8px; text-decoration: none; transition: border-color 0.15s; }
+.shoot-link:hover { border-color: #2a2a2a; }
+.shoot-link.starred { border-color: #c8ff00; background: #0d1200; }
+.shoot-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+.shoot-title { font-size: 14px; font-weight: 600; color: #e0e0e0; flex: 1; }
+.shoot-link.starred .shoot-title { color: #c8ff00; }
+.shoot-controls { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.shoot-star { font-size: 16px; cursor: pointer; opacity: 0.3; transition: opacity 0.15s; line-height: 1; background: none; border: none; padding: 0; }
+.shoot-star.active { opacity: 1; }
+.shoot-day-input { font-size: 11px; font-family: inherit; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 6px; color: #888; padding: 4px 8px; width: 90px; outline: none; }
+.shoot-link.starred .shoot-day-input { border-color: #3a4a00; color: #c8ff00; background: #0a1000; }
+.shoot-day-input::placeholder { color: #444; }
+.shoot-done { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: 99px; border: none; cursor: pointer; font-family: inherit; }
+.shoot-done.pending { background: #1a1a1a; color: #555; border: 1px solid #2a2a2a; }
+.shoot-done.complete { background: #1a2a1a; color: #4caf50; border: 1px solid #2a3a2a; }
+.shoot-meta { display: flex; flex-wrap: wrap; gap: 6px; }
+.shoot-tag { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; }
+.tag-physical { background: #1a2a1a; color: #4caf50; border: 1px solid #2a3a2a; }
+.tag-mindset { background: #1a1a2a; color: #7c8fff; border: 1px solid #2a2a3a; }
+.tag-gym { background: #2a1f1a; color: #ff9c5c; border: 1px solid #3a2f2a; }
+.tag-mixed { background: #2a1a2a; color: #ce7cff; border: 1px solid #3a2a3a; }
 </style>
 </head>
 <body>
@@ -174,92 +201,141 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
   <div class="pill">Format: <span>Diary Frames + Curated</span></div>
 </div>
 
-<div class="shoots-header">
+<div class="shoots-section-header" onclick="toggleShoots()">
   <div class="shoots-header-label">🎬 Curated Shoots — Top Priority</div>
-  <div class="shoots-header-text">These are the priority above everything else. Every session moves at least one forward. 🟢 Full gym shoots first. 🟣 Gym + Archive next. Tap status badge to mark complete. Tap title to open shot list.</div>
+  <div class="shoots-collapse-chevron open" id="shoots-chevron">▾</div>
 </div>
-<div id="shoots-container">
-  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-gym-shotlist.html" target="_blank" data-shoot-id="1">
+<div class="shoots-header-text" style="font-size:12px;color:#555;margin-bottom:0.75rem;">Priority above everything else. ⭐ Star to target for this session. Set shoot day. Tap title to open shot list. Tap badge to mark complete.</div>
+<div id="shoots-container" class="shoots-list">
+  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-gym-shotlist.html" target="_blank" data-shoot-id="1" id="shoot-card-1">
     <div class="shoot-top">
       <div class="shoot-title">The Physique Is A Byproduct</div>
-      <button class="shoot-done pending" id="status-1">Pending</button>
+      <div class="shoot-controls">
+        <button class="shoot-star" id="star-1" onclick="toggleStar(event, '1')" title="Target this session">⭐</button>
+        <input class="shoot-day-input" id="day-1" type="text" placeholder="Shoot day" onclick="event.preventDefault()" oninput="saveShootDay('1', this.value)" />
+        <button class="shoot-done pending" id="status-1" onclick="toggleShootStatus(event, '1', this)">Pending</button>
+      </div>
     </div>
     <div class="shoot-meta"><span class="shoot-tag tag-physical">Physical Standard</span><span class="shoot-tag tag-gym">Full Gym Shoot</span></div>
   </a>
-  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-nobody-is-coming-shotlist.html" target="_blank" data-shoot-id="2">
+  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-nobody-is-coming-shotlist.html" target="_blank" data-shoot-id="2" id="shoot-card-2">
     <div class="shoot-top">
       <div class="shoot-title">Nobody Is Coming</div>
-      <button class="shoot-done pending" id="status-2">Pending</button>
+      <div class="shoot-controls">
+        <button class="shoot-star" id="star-2" onclick="toggleStar(event, '2')" title="Target this session">⭐</button>
+        <input class="shoot-day-input" id="day-2" type="text" placeholder="Shoot day" onclick="event.preventDefault()" oninput="saveShootDay('2', this.value)" />
+        <button class="shoot-done pending" id="status-2" onclick="toggleShootStatus(event, '2', this)">Pending</button>
+      </div>
     </div>
     <div class="shoot-meta"><span class="shoot-tag tag-mindset">Mindset</span><span class="shoot-tag tag-gym">Full Gym Shoot</span></div>
   </a>
-  <a class="shoot-link priority-mid" href="https://waterworldathletica.github.io/wwa-content/wwa-social-friction-shotlist.html" target="_blank" data-shoot-id="3">
+  <a class="shoot-link priority-mid" href="https://waterworldathletica.github.io/wwa-content/wwa-social-friction-shotlist.html" target="_blank" data-shoot-id="3" id="shoot-card-3">
     <div class="shoot-top">
       <div class="shoot-title">Social Friction</div>
-      <button class="shoot-done pending" id="status-3">Pending</button>
+      <div class="shoot-controls">
+        <button class="shoot-star" id="star-3" onclick="toggleStar(event, '3')" title="Target this session">⭐</button>
+        <input class="shoot-day-input" id="day-3" type="text" placeholder="Shoot day" onclick="event.preventDefault()" oninput="saveShootDay('3', this.value)" />
+        <button class="shoot-done pending" id="status-3" onclick="toggleShootStatus(event, '3', this)">Pending</button>
+      </div>
     </div>
     <div class="shoot-meta"><span class="shoot-tag tag-mindset">Mindset</span><span class="shoot-tag tag-mixed">Gym + Archive</span></div>
   </a>
-  <a class="shoot-link priority-mid" href="https://waterworldathletica.github.io/wwa-content/wwa-self-respect-shotlist.html" target="_blank" data-shoot-id="4">
+  <a class="shoot-link priority-mid" href="https://waterworldathletica.github.io/wwa-content/wwa-self-respect-shotlist.html" target="_blank" data-shoot-id="4" id="shoot-card-4">
     <div class="shoot-top">
       <div class="shoot-title">Self Respect</div>
-      <button class="shoot-done pending" id="status-4">Pending</button>
+      <div class="shoot-controls">
+        <button class="shoot-star" id="star-4" onclick="toggleStar(event, '4')" title="Target this session">⭐</button>
+        <input class="shoot-day-input" id="day-4" type="text" placeholder="Shoot day" onclick="event.preventDefault()" oninput="saveShootDay('4', this.value)" />
+        <button class="shoot-done pending" id="status-4" onclick="toggleShootStatus(event, '4', this)">Pending</button>
+      </div>
     </div>
     <div class="shoot-meta"><span class="shoot-tag tag-mindset">Mindset</span><span class="shoot-tag tag-mixed">Gym + Archive</span></div>
   </a>
-  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-ab-routine-shotlist.html" target="_blank" data-shoot-id="5">
+  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-ab-routine-shotlist.html" target="_blank" data-shoot-id="5" id="shoot-card-5">
     <div class="shoot-top">
       <div class="shoot-title">I Don't Train Abs</div>
-      <button class="shoot-done pending" id="status-5">Pending</button>
+      <div class="shoot-controls">
+        <button class="shoot-star" id="star-5" onclick="toggleStar(event, '5')" title="Target this session">⭐</button>
+        <input class="shoot-day-input" id="day-5" type="text" placeholder="Shoot day" onclick="event.preventDefault()" oninput="saveShootDay('5', this.value)" />
+        <button class="shoot-done pending" id="status-5" onclick="toggleShootStatus(event, '5', this)">Pending</button>
+      </div>
     </div>
     <div class="shoot-meta"><span class="shoot-tag tag-physical">The Contrast</span><span class="shoot-tag tag-gym">Full Gym Shoot</span></div>
   </a>
-  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-14-months-shotlist.html" target="_blank" data-shoot-id="6">
+  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-14-months-shotlist.html" target="_blank" data-shoot-id="6" id="shoot-card-6">
     <div class="shoot-top">
       <div class="shoot-title">14 Months Later</div>
-      <button class="shoot-done pending" id="status-6">Pending</button>
+      <div class="shoot-controls">
+        <button class="shoot-star" id="star-6" onclick="toggleStar(event, '6')" title="Target this session">⭐</button>
+        <input class="shoot-day-input" id="day-6" type="text" placeholder="Shoot day" onclick="event.preventDefault()" oninput="saveShootDay('6', this.value)" />
+        <button class="shoot-done pending" id="status-6" onclick="toggleShootStatus(event, '6', this)">Pending</button>
+      </div>
     </div>
     <div class="shoot-meta"><span class="shoot-tag tag-physical">The Contrast</span><span class="shoot-tag tag-gym">Full Gym Shoot</span></div>
   </a>
-  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-chest-edition-shotlist.html" target="_blank" data-shoot-id="7">
+  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-chest-edition-shotlist.html" target="_blank" data-shoot-id="7" id="shoot-card-7">
     <div class="shoot-top">
       <div class="shoot-title">Chest Edition — Split Screen</div>
-      <button class="shoot-done pending" id="status-7">Pending</button>
+      <div class="shoot-controls">
+        <button class="shoot-star" id="star-7" onclick="toggleStar(event, '7')" title="Target this session">⭐</button>
+        <input class="shoot-day-input" id="day-7" type="text" placeholder="Shoot day" onclick="event.preventDefault()" oninput="saveShootDay('7', this.value)" />
+        <button class="shoot-done pending" id="status-7" onclick="toggleShootStatus(event, '7', this)">Pending</button>
+      </div>
     </div>
     <div class="shoot-meta"><span class="shoot-tag tag-physical">The Contrast</span><span class="shoot-tag tag-gym">Split Screen</span></div>
   </a>
-  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-chest-mistakes-shotlist.html" target="_blank" data-shoot-id="8">
+  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-chest-mistakes-shotlist.html" target="_blank" data-shoot-id="8" id="shoot-card-8">
     <div class="shoot-top">
       <div class="shoot-title">Chest Mistakes — Coaching</div>
-      <button class="shoot-done pending" id="status-8">Pending</button>
+      <div class="shoot-controls">
+        <button class="shoot-star" id="star-8" onclick="toggleStar(event, '8')" title="Target this session">⭐</button>
+        <input class="shoot-day-input" id="day-8" type="text" placeholder="Shoot day" onclick="event.preventDefault()" oninput="saveShootDay('8', this.value)" />
+        <button class="shoot-done pending" id="status-8" onclick="toggleShootStatus(event, '8', this)">Pending</button>
+      </div>
     </div>
     <div class="shoot-meta"><span class="shoot-tag tag-physical">The Contrast</span><span class="shoot-tag tag-gym">Coaching Format</span></div>
   </a>
-  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-back-edition-shotlist.html" target="_blank" data-shoot-id="9">
+  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-back-edition-shotlist.html" target="_blank" data-shoot-id="9" id="shoot-card-9">
     <div class="shoot-top">
       <div class="shoot-title">Back Edition — Split Screen</div>
-      <button class="shoot-done pending" id="status-9">Pending</button>
+      <div class="shoot-controls">
+        <button class="shoot-star" id="star-9" onclick="toggleStar(event, '9')" title="Target this session">⭐</button>
+        <input class="shoot-day-input" id="day-9" type="text" placeholder="Shoot day" onclick="event.preventDefault()" oninput="saveShootDay('9', this.value)" />
+        <button class="shoot-done pending" id="status-9" onclick="toggleShootStatus(event, '9', this)">Pending</button>
+      </div>
     </div>
     <div class="shoot-meta"><span class="shoot-tag tag-physical">The Contrast</span><span class="shoot-tag tag-gym">Split Screen</span></div>
   </a>
-  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-back-mistakes-shotlist.html" target="_blank" data-shoot-id="10">
+  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-back-mistakes-shotlist.html" target="_blank" data-shoot-id="10" id="shoot-card-10">
     <div class="shoot-top">
       <div class="shoot-title">Back Mistakes — Coaching</div>
-      <button class="shoot-done pending" id="status-10">Pending</button>
+      <div class="shoot-controls">
+        <button class="shoot-star" id="star-10" onclick="toggleStar(event, '10')" title="Target this session">⭐</button>
+        <input class="shoot-day-input" id="day-10" type="text" placeholder="Shoot day" onclick="event.preventDefault()" oninput="saveShootDay('10', this.value)" />
+        <button class="shoot-done pending" id="status-10" onclick="toggleShootStatus(event, '10', this)">Pending</button>
+      </div>
     </div>
     <div class="shoot-meta"><span class="shoot-tag tag-physical">The Contrast</span><span class="shoot-tag tag-gym">Coaching Format</span></div>
   </a>
-  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-legs-edition-shotlist.html" target="_blank" data-shoot-id="11">
+  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-legs-edition-shotlist.html" target="_blank" data-shoot-id="11" id="shoot-card-11">
     <div class="shoot-top">
       <div class="shoot-title">Legs Edition — Split Screen</div>
-      <button class="shoot-done pending" id="status-11">Pending</button>
+      <div class="shoot-controls">
+        <button class="shoot-star" id="star-11" onclick="toggleStar(event, '11')" title="Target this session">⭐</button>
+        <input class="shoot-day-input" id="day-11" type="text" placeholder="Shoot day" onclick="event.preventDefault()" oninput="saveShootDay('11', this.value)" />
+        <button class="shoot-done pending" id="status-11" onclick="toggleShootStatus(event, '11', this)">Pending</button>
+      </div>
     </div>
     <div class="shoot-meta"><span class="shoot-tag tag-physical">The Contrast</span><span class="shoot-tag tag-gym">Split Screen</span></div>
   </a>
-  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-legs-mistakes-shotlist.html" target="_blank" data-shoot-id="12">
+  <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-legs-mistakes-shotlist.html" target="_blank" data-shoot-id="12" id="shoot-card-12">
     <div class="shoot-top">
       <div class="shoot-title">Legs Mistakes — Coaching</div>
-      <button class="shoot-done pending" id="status-12">Pending</button>
+      <div class="shoot-controls">
+        <button class="shoot-star" id="star-12" onclick="toggleStar(event, '12')" title="Target this session">⭐</button>
+        <input class="shoot-day-input" id="day-12" type="text" placeholder="Shoot day" onclick="event.preventDefault()" oninput="saveShootDay('12', this.value)" />
+        <button class="shoot-done pending" id="status-12" onclick="toggleShootStatus(event, '12', this)">Pending</button>
+      </div>
     </div>
     <div class="shoot-meta"><span class="shoot-tag tag-physical">The Contrast</span><span class="shoot-tag tag-gym">Coaching Format</span></div>
   </a>
