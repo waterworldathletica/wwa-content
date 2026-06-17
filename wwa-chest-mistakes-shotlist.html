@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>WWA - Chest Mistakes</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 1.25rem; min-height: 100vh; }
+.title-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; color: #555; text-transform: uppercase; margin-bottom: 4px; }
+.shoot-title { font-size: 22px; font-weight: 600; color: #f0f0f0; line-height: 1.2; margin-bottom: 1.5rem; }
+.meta-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+.meta-pill { font-size: 11px; color: #888; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 99px; padding: 4px 10px; }
+.meta-pill span { color: #c8ff00; }
+.prog-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.prog-row p { font-size: 12px; color: #666; }
+.prog-row strong { font-size: 12px; color: #f0f0f0; }
+.progress-bar { height: 4px; background: #1e1e1e; border-radius: 99px; overflow: hidden; margin-bottom: 1.5rem; }
+.progress-fill { height: 100%; background: #c8ff00; border-radius: 99px; transition: width 0.3s ease; }
+.section-label { font-size: 10px; font-weight: 600; color: #555; text-transform: uppercase; margin: 1.5rem 0 0.75rem; letter-spacing: 0.1em; }
+.shot { background: #141414; border-radius: 12px; margin-bottom: 10px; border: 1px solid #1e1e1e; overflow: hidden; }
+.shot.done { opacity: 0.4; }
+.shot.done .shot-title { text-decoration: line-through; color: #555; }
+.shot-header { display: flex; align-items: flex-start; gap: 14px; padding: 14px; cursor: pointer; }
+.cb { width: 24px; height: 24px; min-width: 24px; border-radius: 50%; border: 1.5px solid #333; display: flex; align-items: center; justify-content: center; background: transparent; flex-shrink: 0; margin-top: 1px; }
+.shot.done .cb, .complete-row.done .cb { background: #c8ff00; border-color: #c8ff00; }
+.check-icon { width: 13px; height: 13px; stroke: #000; stroke-width: 2.5; fill: none; display: none; }
+.shot.done .check-icon, .complete-row.done .check-icon { display: block; }
+.shot-body { flex: 1; }
+.shot-num { font-size: 10px; color: #555; font-weight: 600; text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.08em; }
+.shot-title { font-size: 15px; font-weight: 600; color: #e0e0e0; margin-bottom: 5px; line-height: 1.3; }
+.shot-detail { font-size: 13px; color: #666; line-height: 1.55; }
+.script-section { border-top: 1px solid #1e1e1e; padding: 12px 14px 14px 52px; }
+.script-label { font-size: 9px; text-transform: uppercase; color: #c8ff00; font-weight: 600; margin-bottom: 8px; letter-spacing: 0.12em; }
+.script-lines { font-size: 13px; color: #777; line-height: 1.9; font-style: italic; }
+.script-lines .key { color: #bbb; font-style: normal; font-weight: 600; }
+.script-lines .bad { color: #ff5c5c; font-style: normal; font-weight: 600; }
+.script-lines .good { color: #4caf50; font-style: normal; font-weight: 600; }
+.tag { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; margin-right: 4px; margin-bottom: 4px; }
+.tag-gym { background: #1a2a1a; color: #4caf50; border: 1px solid #2a3a2a; }
+.tag-hook { background: #2a1a00; color: #c8ff00; border: 1px solid #3a2a00; }
+.tag-bad { background: #2a1a1a; color: #ff5c5c; border: 1px solid #3a2a2a; }
+.tag-good { background: #1a2a1a; color: #4caf50; border: 1px solid #2a3a2a; }
+.tag-close { background: #1a1a2a; color: #7c8fff; border: 1px solid #2a2a3a; }
+.tag-coaching { background: #2a1a2a; color: #ce7cff; border: 1px solid #3a2a3a; }
+.divider { height: 1px; background: #1a1a1a; margin: 1.5rem 0; }
+.note-box { background: #111; border-left: 2px solid #c8ff00; border-radius: 0 10px 10px 0; padding: 12px 14px; margin-top: 1rem; }
+.note-box p { font-size: 13px; color: #777; line-height: 1.65; }
+.note-box strong { color: #c8ff00; }
+.reset-btn { width: 100%; margin-top: 1.25rem; padding: 14px; background: #141414; border: 1px solid #2a2a2a; border-radius: 12px; color: #555; font-size: 13px; cursor: pointer; font-family: inherit; }
+.complete-section { margin-top: 2rem; background: #141414; border-radius: 12px; border: 1px solid #1e1e1e; padding: 14px; }
+.complete-title { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 12px; }
+.complete-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #1e1e1e; cursor: pointer; }
+.complete-row:last-of-type { border-bottom: none; padding-bottom: 0; }
+.complete-row.done .complete-label { color: #555; text-decoration: line-through; }
+.complete-label { font-size: 14px; color: #bbb; flex: 1; }
+.date-label { font-size: 11px; color: #555; margin: 12px 0 6px; letter-spacing: 0.06em; }
+.date-input { width: 100%; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 8px; color: #bbb; font-size: 14px; padding: 10px 12px; font-family: inherit; outline: none; }
+.collapsible-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; margin-bottom: 0; user-select: none; }
+.collapsible-header.open { border-radius: 10px 10px 0 0; border-bottom-color: #1a1a1a; }
+.collapsible-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; }
+.collapsible-chevron { font-size: 11px; color: #555; transition: transform 0.2s ease; }
+.collapsible-header.open .collapsible-chevron { transform: rotate(180deg); }
+.collapsible-body { display: none; background: #0f0f0f; border: 1px solid #2a2a2a; border-top: none; border-radius: 0 0 10px 10px; padding: 14px; margin-bottom: 1.5rem; }
+.collapsible-body.open { display: block; }
+.vo-line { font-size: 13px; color: #888; line-height: 2.1; font-style: italic; }
+.vo-line .key { color: #ddd; font-style: normal; font-weight: 600; }
+.vo-line .dim { color: #555; font-style: normal; font-size: 12px; }
+.vo-line .bad { color: #ff5c5c; font-style: normal; font-weight: 600; }
+.vo-line .good { color: #4caf50; font-style: normal; font-weight: 600; }
+.source-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; }
+.source-box-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #555; white-space: nowrap; }
+.source-box a { font-size: 12px; color: #c8ff00; text-decoration: none; word-break: break-all; }
+.source-box a:hover { text-decoration: underline; }
+.caption-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px; margin-bottom: 1.5rem; }
+.caption-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 10px; }
+.caption-text { font-size: 14px; color: #bbb; line-height: 1.7; }
+.caption-text strong { color: #f0f0f0; }
+.assets-note { background: #0f0f0f; border: 1px solid #2a2a2a; border-left: 2px solid #c8ff00; border-radius: 0 10px 10px 0; padding: 10px 14px; margin-bottom: 1.5rem; font-size: 12px; color: #555; line-height: 1.6; }
+.assets-note strong { color: #888; }
+</style>
+</head>
+<body>
+
+<div class="title-label">WWA — Gym Shoot / Coaching Format</div>
+<div class="shoot-title">You've Been Training Chest Wrong.</div>
+
+<div class="meta-row">
+  <div class="meta-pill">Format: <span>Coaching Corrections — Silent</span></div>
+  <div class="meta-pill">Funnel: <span>ToF / MoF</span></div>
+  <div class="meta-pill">Pattern: <span>Contrast Rhythm</span></div>
+  <div class="meta-pill">Operator: <span>Henry</span></div>
+  <div class="meta-pill">Location: <span>Anytime Fitness</span></div>
+  <div class="meta-pill">Ash: <span>Shirt Off</span></div>
+  <div class="meta-pill">Henry: <span>Performing</span></div>
+</div>
+
+<div class="source-box"><span class="source-box-label">Source</span><a href="https://www.instagram.com/p/DS2e6INDLB-/" target="_blank">instagram.com/p/DS2e6INDLB-</a></div>
+
+<div class="assets-note"><strong>WWA Logo:</strong> Download from the Assets folder in Notion under CONTENT → ASSETS. Use the white PNG for any branding overlays.</div>
+
+<div class="caption-box">
+  <div class="caption-title">Caption — Copy for Post</div>
+  <div class="caption-text">You've seen what's wrong. Now fix it. Comment <strong>LOCKED</strong> and I'll send you the WWA Size Starter — free.</div>
+</div>
+
+<div class="prog-row"><p>Progress</p><strong id="prog-text">0 / 15</strong></div>
+<div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+
+<div class="section-label">Full Script</div>
+<div class="collapsible-header" id="script-toggle" onclick="toggleScript()">
+  <span class="collapsible-title">Read in full before shooting</span>
+  <span class="collapsible-chevron">▼</span>
+</div>
+<div class="collapsible-body" id="script-body">
+  <div class="vo-line">
+    <span class="dim">[ Hook — Ash to camera, shirt off, camera pushes in slowly ]</span><br>
+    <span class="key">You've been benching for years. Your chest still hasn't noticed. Here's why.</span><br><br>
+    <span class="dim">[ Hard cut — silent from here. Music only. Text overlays carry everything. ]</span><br><br>
+
+    <span class="dim">— INCLINE DUMBBELL PRESS —</span><br>
+    <span class="bad">❌ No range of motion</span> → Henry pressing with half reps, no stretch at bottom<br>
+    <span class="good">✅ Full range of motion</span> → Controlled descent to full stretch, chest loaded<br>
+    <span class="bad">❌ Elbows flared out</span> → Elbows pointing straight out, shoulders taking the load<br>
+    <span class="good">✅ Elbows tucked in slightly</span> → Ash corrects elbow path, chest engaged<br><br>
+
+    <span class="dim">— CHEST FLY (MACHINE) —</span><br>
+    <span class="bad">❌ Handle not in line with chest</span> → Seat too high, handle above chest line<br>
+    <span class="good">✅ Handle in line with chest</span> → Ash adjusts seat, handle drops to chest height<br>
+    <span class="bad">❌ Elbows wrong</span> → Arms too straight, joint loading<br>
+    <span class="good">✅ Elbows in line with chest</span> → Soft bend, arc motion, chest stretch<br><br>
+
+    <span class="dim">— SMITH MACHINE PRESS —</span><br>
+    <span class="bad">❌ Throwing the weight</span> → Bouncing, momentum, no control<br>
+    <span class="good">✅ Controlling the weight</span> → Slow eccentric, chest-led press<br>
+    <span class="bad">❌ Elbows flared</span> → Elbows wide under the bar<br>
+    <span class="good">✅ Elbows tucked under bar</span> → Ash adjusts grip and elbow path<br><br>
+
+    <span class="dim">— WIDE CABLE FLY —</span><br>
+    <span class="bad">❌ Handle height wrong + elbows wrong</span> → Cables too high, arms pulling down<br>
+    <span class="good">✅ Handle at chest height + elbows in line</span> → Arc motion, full chest stretch<br><br>
+
+    <span class="dim">— DIPS —</span><br>
+    <span class="bad">❌ Upright torso</span> → Straight up and down, tricep dominant<br>
+    <span class="good">✅ Leaning forward to engage chest</span> → Forward lean, chest stretch at bottom<br>
+    <span class="bad">❌ Elbows neutral</span> → Arms tucked straight<br>
+    <span class="good">✅ Elbows slightly flared</span> → Opens chest, more pec engagement<br><br>
+
+    <span class="dim">[ Closing shots — no text, no music cut ]</span><br>
+    <span class="dim">Wide portrait — Ash, abs and core visible</span><br>
+    <span class="dim">Punch in — side chest pose, striations visible. Hold.</span>
+  </div>
+</div>
+
+<div class="divider"></div>
+<div class="section-label">Shot List</div>
+
+<div class="shot" data-id="s1">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 1 — Hook</div>
+      <div class="shot-title">Ash to camera. Camera pushes in. One line.</div>
+      <div class="shot-detail">Ash shirt off, pumped, dead to camera. Camera starts 2 metres back — chest and core fully visible. As Ash delivers the line, Henry slowly pushes the camera in. Tighter by the end. Deadpan delivery. No smile. Hard cut after the last word.</div>
+      <div style="margin-top:8px"><span class="tag tag-hook">Hook</span><span class="tag tag-gym">Gym</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines"><span class="key">You've been benching for years. Your chest still hasn't noticed. Here's why.</span></div>
+  </div>
+</div>
+
+<div class="shot" data-id="s2">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 2 — Incline Press: Range of Motion</div>
+      <div class="shot-title">❌ Half reps → ✅ Full stretch. Henry performs, Ash corrects.</div>
+      <div class="shot-detail">Henry on incline bench pressing with no range of motion — dumbbells barely moving, zero stretch at the bottom. Ash steps in, cues him to lower fully. Henry performs again — controlled descent, full chest stretch at the bottom, loaded position held for a beat. Two angles if possible.</div>
+      <div style="margin-top:8px"><span class="tag tag-bad">Mistake</span><span class="tag tag-good">Correction</span><span class="tag tag-coaching">Coaching</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Screen Text</div>
+    <div class="script-lines"><span class="bad">❌ No Range Of Motion</span> → <span class="good">✅ Full Range Of Motion</span>. Silent. Music only.</div>
+  </div>
+</div>
+
+<div class="shot" data-id="s3">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 3 — Incline Press: Elbow Path</div>
+      <div class="shot-title">❌ Elbows flared → ✅ Elbows tucked in slightly.</div>
+      <div class="shot-detail">Same incline bench. Henry pressing with elbows flaring straight out — shoulders visible taking the load. Ash physically adjusts Henry's elbows to the correct 45-degree path. Henry performs again with corrected elbow angle. Chest visibly more engaged.</div>
+      <div style="margin-top:8px"><span class="tag tag-bad">Mistake</span><span class="tag tag-good">Correction</span><span class="tag tag-coaching">Coaching</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Screen Text</div>
+    <div class="script-lines"><span class="bad">❌ Elbows Flared</span> → <span class="good">✅ Elbows Tucked In Slightly</span>. Silent. Music only.</div>
+  </div>
+</div>
+
+<div class="shot" data-id="s4">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 4 — Chest Fly: Seat Height</div>
+      <div class="shot-title">❌ Handle above chest → ✅ Handle in line with chest.</div>
+      <div class="shot-detail">Henry on chest fly machine with seat too high — handle sitting above chest line, loading the wrong angle. Ash adjusts the seat down so the handle aligns with mid-chest. Henry performs again — stretch is immediately more visible through the chest. Ash cues chest out, shoulders back before the rep.</div>
+      <div style="margin-top:8px"><span class="tag tag-bad">Mistake</span><span class="tag tag-good">Correction</span><span class="tag tag-coaching">Coaching</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Screen Text</div>
+    <div class="script-lines"><span class="bad">❌ Handle Not In Line With Chest</span> → <span class="good">✅ Handle In Line With Chest</span>. Silent. Music only.</div>
+  </div>
+</div>
+
+<div class="shot" data-id="s5">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 5 — Chest Fly: Elbow Position</div>
+      <div class="shot-title">❌ Elbows wrong → ✅ Elbows in line with chest.</div>
+      <div class="shot-detail">Same machine. Henry with arms too straight — elbow joint loading, arc motion lost. Ash adjusts the bend at the elbow, ensures elbows track in line with chest throughout the arc. Henry performs — full chest stretch at the open position, arc motion correct.</div>
+      <div style="margin-top:8px"><span class="tag tag-bad">Mistake</span><span class="tag tag-good">Correction</span><span class="tag tag-coaching">Coaching</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Screen Text</div>
+    <div class="script-lines"><span class="bad">❌ Elbow In Line With Chest</span> → <span class="good">✅ Elbow In Line With Chest</span>. Silent. Music only.</div>
+  </div>
+</div>
+
+<div class="shot" data-id="s6">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 6 — Smith Machine: Weight Control</div>
+      <div class="shot-title">❌ Throwing the weight → ✅ Controlling the weight.</div>
+      <div class="shot-detail">Henry on Smith machine bench press — bouncing the bar, using momentum, no eccentric control. Ash cues him to slow it down. Henry performs again — slow controlled descent, pauses at the chest, chest-led press back up. The difference in muscle engagement should be visibly obvious.</div>
+      <div style="margin-top:8px"><span class="tag tag-bad">Mistake</span><span class="tag tag-good">Correction</span><span class="tag tag-coaching">Coaching</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Screen Text</div>
+    <div class="script-lines"><span class="bad">❌ Controlling The Weight</span> → <span class="good">✅ Controlling The Weight</span>. Silent. Music only.</div>
+  </div>
+</div>
+
+<div class="shot" data-id="s7">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 7 — Smith Machine: Elbow Path</div>
+      <div class="shot-title">❌ Elbows flared under bar → ✅ Elbows tucked under bar.</div>
+      <div class="shot-detail">Same Smith machine. Henry with elbows flaring wide under the bar — shoulders and triceps dominant. Ash adjusts grip width and elbow path so elbows track under the bar. Henry performs again — chest takes the load immediately.</div>
+      <div style="margin-top:8px"><span class="tag tag-bad">Mistake</span><span class="tag tag-good">Correction</span><span class="tag tag-coaching">Coaching</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Screen Text</div>
+    <div class="script-lines"><span class="bad">❌ Elbows Tucked In Slightly</span> → <span class="good">✅ Elbows Tucked In Slightly</span>. Silent. Music only.</div>
+  </div>
+</div>
+
+<div class="shot" data-id="s8">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 8 — Wide Cable Fly: Handle Height + Elbows</div>
+      <div class="shot-title">❌ Wrong height + wrong elbows → ✅ Handle at chest, elbows in line.</div>
+      <div class="shot-detail">Henry on cable fly — cables set too high, pulling down instead of arcing, arms too straight. Ash adjusts cable height to chest level and corrects elbow bend. Henry performs again — true arc motion, full chest stretch at the start of every rep, elbows tracking in line with chest throughout.</div>
+      <div style="margin-top:8px"><span class="tag tag-bad">Mistake</span><span class="tag tag-good">Correction</span><span class="tag tag-coaching">Coaching</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Screen Text</div>
+    <div class="script-lines"><span class="bad">❌ Elbows In Line With Chest</span> → <span class="good">✅ Elbows In Line With Chest</span>. Silent. Music only.</div>
+  </div>
+</div>
+
+<div class="shot" data-id="s9">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 9 — Dips: Forward Lean</div>
+      <div class="shot-title">❌ Upright torso → ✅ Leaning forward to engage chest.</div>
+      <div class="shot-detail">Henry on dips — torso completely upright, tricep dominant, no chest involvement. Ash pushes Henry's torso slightly forward into the correct lean angle. Henry performs again — forward lean maintained throughout, chest stretch visible at the bottom of every rep.</div>
+      <div style="margin-top:8px"><span class="tag tag-bad">Mistake</span><span class="tag tag-good">Correction</span><span class="tag tag-coaching">Coaching</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Screen Text</div>
+    <div class="script-lines"><span class="bad">❌ Leaning Forward To Engage Chest</span> → <span class="good">✅ Leaning Forward To Engage Chest</span>. Silent. Music only.</div>
+  </div>
+</div>
+
+<div class="shot" data-id="s10">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 10 — Dips: Elbow Flare</div>
+      <div class="shot-title">❌ Elbows neutral → ✅ Elbows slightly turned out.</div>
+      <div class="shot-detail">Same dip station. Henry with elbows tucked straight in — limits chest engagement. Ash adjusts elbow position slightly outward. Henry performs again — combined with the forward lean, the chest is now fully loaded. This is the closing correction before the physique reveal.</div>
+      <div style="margin-top:8px"><span class="tag tag-bad">Mistake</span><span class="tag tag-good">Correction</span><span class="tag tag-coaching">Coaching</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Screen Text</div>
+    <div class="script-lines"><span class="bad">❌ Elbows Slightly Turned Out</span> → <span class="good">✅ Elbows Slightly Turned Out</span>. Silent. Music only.</div>
+  </div>
+</div>
+
+<div class="shot" data-id="s11">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 11 — Closing: Wide Physique</div>
+      <div class="shot-title">Ash. Wide portrait. Abs and core visible. No text.</div>
+      <div class="shot-detail">Clean wide portrait shot of Ash — full upper body in frame, abs and core visible, chest pumped. No text overlay. No movement. Just the result. Hold for 2–3 seconds. This is the proof the entire video has been building toward.</div>
+      <div style="margin-top:8px"><span class="tag tag-close">Closing</span><span class="tag tag-gym">Gym</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Screen</div>
+    <div class="script-lines">No text. No music change. Just the physique.</div>
+  </div>
+</div>
+
+<div class="shot" data-id="s12">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 12 — Closing: Side Chest Pose</div>
+      <div class="shot-title">Punch in tight. Side chest engaged. Striations visible.</div>
+      <div class="shot-detail">Punch in from the wide shot to a tight frame on Ash's chest — side chest pose, fully engaged, striations and muscle detail visible. This is the target muscle. The viewer just watched five exercises corrected. Now they see what correct training builds. Hold. Let it land.</div>
+      <div style="margin-top:8px"><span class="tag tag-close">Closing</span><span class="tag tag-gym">Gym</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Screen</div>
+    <div class="script-lines">No text. This is the final frame. Caption does the rest.</div>
+  </div>
+</div>
+
+<div class="note-box"><p><strong>The one thing that makes or breaks this shoot:</strong> Henry's bad form has to be genuinely wrong — not subtly off. Exaggerated enough to be readable immediately. And Ash's corrections have to be hands-on, visible, real. The coaching relationship on camera is the authority. If it looks staged it loses everything.</p></div>
+
+<div class="divider"></div>
+<div class="section-label">Editing Notes</div>
+
+<div class="shot" data-id="edit1">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Hook to corrections — hard cut, no transition</div>
+      <div class="shot-detail">The hook line ends. Hard cut straight into the first correction. No fade, no wipe. The abruptness is intentional — it signals the video is shifting gears and keeps the viewer engaged.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit2">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Text overlays — ❌ red, ✅ green. One at a time.</div>
+      <div class="shot-detail">Every mistake and correction labelled on screen. Red X for the mistake, green tick for the correction. Clean minimal font. Text appears as the action happens — not before. Never two labels simultaneously.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit3">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Closing shots — no text, no cut</div>
+      <div class="shot-detail">Wide physique shot holds for 2–3 seconds. Then punch in to the chest. No text on either closing shot. No music change. The silence and stillness after all the corrections is what makes these frames hit. Don't fill them.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit4">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Grade — WWA palette throughout</div>
+      <div class="shot-detail">Crushed blacks, cooler midtones. Gym lighting runs warm — correct it. The physique shots at the end especially need to be sharp and defined. That's the proof frame. It can't look washed out.</div>
+    </div>
+  </div>
+</div>
+
+<div class="complete-section">
+  <div class="complete-title">Completion</div>
+  <div class="complete-row" data-id="c1" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">All corrections shot</div></div>
+  <div class="complete-row" data-id="c2" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Hook line recorded</div></div>
+  <div class="complete-row" data-id="c3" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Closing physique shots captured</div></div>
+  <div class="complete-row" data-id="c4" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Edit complete</div></div>
+  <div class="complete-row" data-id="c5" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Posted</div></div>
+  <div class="date-label">COMPLETION DATE</div>
+  <input type="date" class="date-input" id="completion-date" onchange="saveDate(this.value)">
+</div>
+
+<button class="reset-btn" onclick="resetAll()">Reset checklist</button>
+
+<script>
+const KEY='wwa_chest_mistakes_v1';
+function getState(){try{return JSON.parse(localStorage.getItem(KEY))||{};}catch(e){return{};}}
+function setState(s){try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){}}
+function updateProgress(){const shots=document.querySelectorAll('.shot');const done=document.querySelectorAll('.shot.done').length;document.getElementById('prog-fill').style.width=Math.round((done/shots.length)*100)+'%';document.getElementById('prog-text').textContent=done+' / '+shots.length;}
+function toggle(el){el.classList.toggle('done');const s=getState();s[el.dataset.id]=el.classList.contains('done');setState(s);updateProgress();}
+function toggleComplete(el){el.classList.toggle('done');const s=getState();s[el.dataset.id]=el.classList.contains('done');setState(s);}
+function saveDate(val){const s=getState();s.completion_date=val;setState(s);}
+function resetAll(){document.querySelectorAll('.shot.done,.complete-row.done').forEach(el=>el.classList.remove('done'));document.getElementById('completion-date').value='';setState({});updateProgress();}
+function toggleScript(){const header=document.getElementById('script-toggle');const body=document.getElementById('script-body');header.classList.toggle('open');body.classList.toggle('open');}
+(function(){const s=getState();document.querySelectorAll('.shot,.complete-row').forEach(el=>{if(s[el.dataset.id])el.classList.add('done');});if(s.completion_date)document.getElementById('completion-date').value=s.completion_date;updateProgress();})();
+</script>
+</body>
+</html>
