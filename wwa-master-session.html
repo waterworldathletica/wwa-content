@@ -14,8 +14,8 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
 .directive-text { font-size: 13px; color: #cc3333; line-height: 1.7; font-weight: 600; }
 .protocol-box { background: #141414; border: 1px solid #1e1e1e; border-radius: 12px; padding: 14px; margin-bottom: 1.5rem; }
 .protocol-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #c8ff00; margin-bottom: 12px; }
-.protocol-step { font-size: 13px; color: #c8ff00; font-weight: 600; line-height: 2; display: flex; gap: 10px; }
-.protocol-num { color: #c8ff00; min-width: 16px; }
+.protocol-step { font-size: 13px; color: #c8ff00; font-weight: 600; line-height: 2.2; display: flex; gap: 10px; }
+.protocol-num { min-width: 16px; }
 .divider { height: 1px; background: #1a1a1a; margin: 1.5rem 0; }
 .section-label { font-size: 10px; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: 0.12em; margin: 1.5rem 0 0.75rem; }
 .timer-box { background: #141414; border: 1px solid #1e1e1e; border-radius: 12px; padding: 14px; margin-bottom: 1rem; }
@@ -25,12 +25,12 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
 .timer-display.red { color: #ff4444; }
 .timer-btn { padding: 10px 18px; border-radius: 8px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; background: #c8ff00; color: #000; }
 .timer-btn.paused { background: #1e1e1e; color: #888; border: 1px solid #2a2a2a; }
-.timer-sub { font-size: 11px; color: #444; margin-top: 6px; display: flex; align-items: center; gap: 8px; }
+.timer-sub { font-size: 11px; color: #444; margin-top: 6px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .timer-input { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 6px; color: #888; font-size: 12px; padding: 3px 8px; font-family: inherit; outline: none; width: 50px; text-align: center; }
 .session-header { background: #141414; border-radius: 12px; padding: 14px; border: 1px solid #1e1e1e; margin-bottom: 1rem; }
 .session-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
 .session-row:last-child { margin-bottom: 0; }
-.session-label { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 0.08em; min-width: 80px; }
+.session-lbl { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 0.08em; min-width: 80px; }
 .session-input { flex: 1; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 8px; color: #e0e0e0; font-size: 14px; padding: 8px 12px; font-family: inherit; outline: none; }
 .session-input::placeholder { color: #333; }
 .pill-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.5rem; }
@@ -46,10 +46,14 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
 .check-row.done .check-label { color: #555; text-decoration: line-through; }
 .cb { width: 20px; height: 20px; min-width: 20px; border-radius: 50%; border: 1.5px solid #333; display: flex; align-items: center; justify-content: center; background: transparent; flex-shrink: 0; }
 .check-row.done .cb { background: #c8ff00; border-color: #c8ff00; }
-.check-icon { width: 11px; height: 11px; stroke: #000; stroke-width: 2.5; fill: none; display: none; }
+.check-icon { width: 11px; height: 11px; display: none; }
 .check-row.done .check-icon { display: block; }
 .check-label { font-size: 13px; color: #777; }
 .add-btn { width: 100%; padding: 12px; background: #111; border: 1px dashed #2a2a2a; border-radius: 12px; color: #c8ff00; font-size: 13px; cursor: pointer; font-family: inherit; margin-bottom: 1rem; }
+.pump-check-box { background: #0f0f14; border: 1px solid #2a2a3a; border-radius: 12px; padding: 14px; margin-bottom: 1rem; }
+.pump-check-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #7c8fff; margin-bottom: 12px; }
+.pump-check-note { font-size: 11px; color: #555; font-style: italic; margin-top: 10px; line-height: 1.6; border-top: 1px solid #1e1e1e; padding-top: 10px; }
+.pump-check-note span { color: #7c8fff; font-style: normal; font-weight: 600; }
 .collapse-card { background: #141414; border-radius: 12px; border: 1px solid #1e1e1e; margin-bottom: 10px; overflow: hidden; }
 .collapse-header { display: flex; align-items: center; justify-content: space-between; padding: 14px; cursor: pointer; user-select: none; }
 .collapse-title { font-size: 14px; font-weight: 600; color: #e0e0e0; }
@@ -74,7 +78,7 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
 .shoot-link.completed { opacity: 0.4; }
 .shoot-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
 .shoot-title { font-size: 14px; font-weight: 600; color: #e0e0e0; }
-.shoot-done { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; cursor: pointer; }
+.shoot-done { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; cursor: pointer; border: none; font-family: inherit; }
 .shoot-done.complete { background: #1a2a1a; color: #4caf50; border: 1px solid #2a3a2a; }
 .shoot-done.pending { background: #1a1a1a; color: #555; border: 1px solid #2a2a2a; }
 .shoot-meta { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -85,7 +89,7 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
 .tag-mixed { background: #1a1a20; color: #aa88ff; border: 1px solid #2a2a30; }
 .notes-textarea { width: 100%; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 12px; color: #e0e0e0; font-size: 13px; padding: 12px; font-family: inherit; outline: none; resize: vertical; min-height: 100px; line-height: 1.6; }
 .notes-textarea::placeholder { color: #333; }
-.log-btn { width: 100%; margin-top: 1.5rem; padding: 14px; background: #c8ff00; border: none; border-radius: 12px; color: #000; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; text-transform: uppercase; }
+.log-btn { width: 100%; margin-top: 1.5rem; padding: 14px; background: #c8ff00; border: none; border-radius: 12px; color: #000; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; text-transform: uppercase; letter-spacing: 0.06em; }
 .session-log { background: #141414; border-radius: 12px; border: 1px solid #1e1e1e; padding: 14px; margin-top: 1.5rem; }
 .log-title { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; margin-bottom: 12px; }
 .log-entry { border-bottom: 1px solid #1a1a1a; }
@@ -93,10 +97,8 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
 .log-entry-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 12px 0; cursor: pointer; user-select: none; }
 .log-entry-name { font-size: 13px; font-weight: 600; color: #bbb; }
 .log-entry-sub { font-size: 11px; color: #555; margin-top: 2px; }
-.log-chevron { font-size: 11px; color: #444; transition: transform 0.2s; display: inline-block; margin-top: 3px; }
-.log-chevron.open { transform: rotate(180deg); }
+.log-chevron { font-size: 11px; color: #444; transition: transform 0.2s; display: inline-block; margin-top: 3px; flex-shrink: 0; }
 .log-detail { display: none; padding-bottom: 12px; }
-.log-detail.open { display: block; }
 .log-detail-label { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; margin: 10px 0 6px; }
 .log-detail-row { font-size: 12px; color: #666; line-height: 1.8; display: flex; justify-content: space-between; border-bottom: 1px solid #111; padding: 3px 0; }
 .log-detail-row span { color: #bbb; }
@@ -108,7 +110,7 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
 .options-panel { display: none; background: #0f0f0f; border: 1px solid #1e1e1e; border-radius: 12px; padding: 14px; margin-top: 8px; }
 .options-panel.open { display: block; }
 .danger-btn { width: 100%; padding: 12px; background: #1a0808; border: 1px solid #3a1a1a; border-radius: 10px; color: #ff4444; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
-.danger-confirm { display: none; margin-top: 8px; font-size: 12px; color: #666; text-align: center; }
+.danger-confirm { display: none; margin-top: 8px; font-size: 12px; color: #666; text-align: center; line-height: 2; }
 .danger-confirm.open { display: block; }
 .danger-yes { background: #ff4444; color: #000; border: none; border-radius: 8px; padding: 8px 16px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; margin-right: 8px; }
 .danger-no { background: #1e1e1e; color: #888; border: 1px solid #2a2a2a; border-radius: 8px; padding: 8px 16px; font-size: 12px; cursor: pointer; font-family: inherit; }
@@ -141,15 +143,30 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
     <div class="timer-display" id="timer-display">90:00</div>
     <button class="timer-btn" id="timer-btn">Start</button>
   </div>
-  <div class="timer-sub">Target: <input type="number" class="timer-input" id="timer-target" value="90" min="30" max="180"> min &middot; Amber at 60 min remaining &middot; Red at 10 min remaining</div>
+  <div class="timer-sub">
+    Target: <input type="number" class="timer-input" id="timer-target" value="90" min="30" max="180"> min
+    &middot; Amber at 60 min remaining &middot; Red at 10 min remaining
+  </div>
 </div>
 
 <div class="section-label">Session Info</div>
 <div class="session-header">
-  <div class="session-row"><div class="session-label">Name</div><input type="text" class="session-input" id="session-name" placeholder="e.g. Chest Day · June 16 2026"></div>
-  <div class="session-row"><div class="session-label">Date</div><input type="date" class="session-input" id="session-date"></div>
-  <div class="session-row"><div class="session-label">Location</div><input type="text" class="session-input" id="session-location" placeholder="Anytime Fitness"></div>
-  <div class="session-row"><div class="session-label">Camera</div><input type="text" class="session-input" id="session-camera" placeholder="FX3 / A7S3"></div>
+  <div class="session-row">
+    <div class="session-lbl">Name</div>
+    <input type="text" class="session-input" id="session-name" placeholder="e.g. Chest Day · June 16 2026">
+  </div>
+  <div class="session-row">
+    <div class="session-lbl">Date</div>
+    <input type="date" class="session-input" id="session-date">
+  </div>
+  <div class="session-row">
+    <div class="session-lbl">Location</div>
+    <input type="text" class="session-input" id="session-location" placeholder="Anytime Fitness">
+  </div>
+  <div class="session-row">
+    <div class="session-lbl">Camera</div>
+    <input type="text" class="session-input" id="session-camera" placeholder="FX3 / A7S3">
+  </div>
 </div>
 
 <div class="pill-row">
@@ -161,7 +178,16 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
 <div id="exercise-list"></div>
 <button class="add-btn" id="add-exercise-btn">+ Add Exercise</button>
 
-<div class="section-label" style="margin-top:1.5rem">Client Training [Henry]</div>
+<div class="section-label">Pump Check</div>
+<div class="pump-check-box">
+  <div class="pump-check-label">End of Session — Physique Showcase</div>
+  <div id="pump-check-list"></div>
+  <div class="pump-check-note">
+    ✳ <span>Pump check footage doubles for Proof — Physique showcase posts.</span> Capture at peak pump immediately after final working set. Ambient light only. No posing — presence.
+  </div>
+</div>
+
+<div class="section-label">Client Training [Henry]</div>
 <div id="henry-list"></div>
 <button class="add-btn" id="add-henry-btn">+ Add Exercise</button>
 
@@ -207,19 +233,31 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
 </div>
 <div id="shoots-container">
   <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-gym-shotlist.html" target="_blank" data-shoot-id="1">
-    <div class="shoot-top"><div class="shoot-title">The Physique Is A Byproduct</div><div class="shoot-done pending" id="status-1">Pending</div></div>
+    <div class="shoot-top">
+      <div class="shoot-title">The Physique Is A Byproduct</div>
+      <button class="shoot-done pending" id="status-1">Pending</button>
+    </div>
     <div class="shoot-meta"><span class="shoot-tag tag-physical">Physical Standard</span><span class="shoot-tag tag-gym">Full Gym Shoot</span></div>
   </a>
   <a class="shoot-link priority-high" href="https://waterworldathletica.github.io/wwa-content/wwa-nobody-is-coming-shotlist.html" target="_blank" data-shoot-id="2">
-    <div class="shoot-top"><div class="shoot-title">Nobody Is Coming</div><div class="shoot-done pending" id="status-2">Pending</div></div>
+    <div class="shoot-top">
+      <div class="shoot-title">Nobody Is Coming</div>
+      <button class="shoot-done pending" id="status-2">Pending</button>
+    </div>
     <div class="shoot-meta"><span class="shoot-tag tag-mindset">Mindset</span><span class="shoot-tag tag-gym">Full Gym Shoot</span></div>
   </a>
   <a class="shoot-link priority-mid" href="https://waterworldathletica.github.io/wwa-content/wwa-social-friction-shotlist.html" target="_blank" data-shoot-id="3">
-    <div class="shoot-top"><div class="shoot-title">Social Friction</div><div class="shoot-done pending" id="status-3">Pending</div></div>
+    <div class="shoot-top">
+      <div class="shoot-title">Social Friction</div>
+      <button class="shoot-done pending" id="status-3">Pending</button>
+    </div>
     <div class="shoot-meta"><span class="shoot-tag tag-mindset">Mindset</span><span class="shoot-tag tag-mixed">Gym + Archive</span></div>
   </a>
   <a class="shoot-link priority-mid" href="https://waterworldathletica.github.io/wwa-content/wwa-self-respect-shotlist.html" target="_blank" data-shoot-id="4">
-    <div class="shoot-top"><div class="shoot-title">Self Respect</div><div class="shoot-done pending" id="status-4">Pending</div></div>
+    <div class="shoot-top">
+      <div class="shoot-title">Self Respect</div>
+      <button class="shoot-done pending" id="status-4">Pending</button>
+    </div>
     <div class="shoot-meta"><span class="shoot-tag tag-mindset">Mindset</span><span class="shoot-tag tag-mixed">Gym + Archive</span></div>
   </a>
 </div>
@@ -237,11 +275,11 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
 </div>
 
 <div class="options-toggle">
-  <button class="options-link" id="options-link">Session Options</button>
+  <button class="options-link" id="options-link">⚙ Session Options</button>
   <div class="options-panel" id="options-panel">
     <button class="danger-btn" id="clear-btn">Clear Current Session</button>
     <div class="danger-confirm" id="danger-confirm">
-      Are you sure? This cannot be undone.<br><br>
+      Are you sure? This cannot be undone.<br>
       <button class="danger-yes" id="confirm-yes">Yes, Clear</button>
       <button class="danger-no" id="confirm-no">Cancel</button>
     </div>
@@ -249,14 +287,21 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
 </div>
 
 <script>
-var KEY = 'wwa_master_v4';
+var STORE_KEY = 'wwa_master_v4';
 var exCount = 0;
 var henryCount = 0;
 var timerInterval = null;
 var timerRunning = false;
 var timerSeconds = 0;
 
-var DIARY_ITEMS = [
+var SHOOT_TITLES = {
+  '1': 'The Physique Is A Byproduct',
+  '2': 'Nobody Is Coming',
+  '3': 'Social Friction',
+  '4': 'Self Respect'
+};
+
+var DIARY_STEPS = [
   'Angle 1 — mount + 2-3 reps',
   'Angle 2 — 2-3 reps',
   'Angle 1 return — 2-3 reps',
@@ -264,34 +309,37 @@ var DIARY_ITEMS = [
   'Clip compiled and reviewed'
 ];
 
-var HENRY_ITEMS = [
+var HENRY_STEPS = [
   'Henry performs set — Ash coaching, Angle 1',
   'Henry performs set — Ash coaching, Angle 2',
   'Clip compiled and reviewed'
 ];
 
-var SHOOT_TITLES = { '1': 'The Physique Is A Byproduct', '2': 'Nobody Is Coming', '3': 'Social Friction', '4': 'Self Respect' };
+var PUMP_STEPS = [
+  'Wide full body',
+  'Torso close-up — muscle detail',
+  'Face + shoulders — presence',
+  'Hands / arms detail',
+  'Final wide — clip compiled'
+];
 
-// STATE
+// ── STATE ──
 function getState() {
   try {
-    var raw = localStorage.getItem(KEY);
+    var raw = localStorage.getItem(STORE_KEY);
     if (raw) return JSON.parse(raw);
   } catch(e) {}
-  return { exercises: [], henryExercises: [], log: [], shoots: {}, notes: '' };
+  return { exercises: [], henryExercises: [], pumpChecks: [], log: [], shoots: {}, notes: '' };
 }
 function setState(s) {
-  try { localStorage.setItem(KEY, JSON.stringify(s)); } catch(e) {}
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(s)); } catch(e) {}
 }
 
-// TIMER
-function pad(n) { return String(n).padStart(2, '0'); }
+// ── TIMER ──
+function pad2(n) { return String(n).padStart(2, '0'); }
+function getTargetSecs() { return (parseInt(document.getElementById('timer-target').value) || 90) * 60; }
 
-function getTargetSecs() {
-  return (parseInt(document.getElementById('timer-target').value) || 90) * 60;
-}
-
-function renderTimer() {
+function renderTimerDisplay() {
   var remaining = getTargetSecs() - timerSeconds;
   var el = document.getElementById('timer-display');
   if (remaining <= 0) {
@@ -300,10 +348,12 @@ function renderTimer() {
     clearInterval(timerInterval);
     timerInterval = null;
     timerRunning = false;
-    document.getElementById('timer-btn').textContent = 'Done';
+    var btn = document.getElementById('timer-btn');
+    btn.textContent = 'Done';
+    btn.className = 'timer-btn paused';
     return;
   }
-  el.textContent = pad(Math.floor(remaining / 60)) + ':' + pad(remaining % 60);
+  el.textContent = pad2(Math.floor(remaining / 60)) + ':' + pad2(remaining % 60);
   if (remaining <= 600) el.className = 'timer-display red';
   else if (remaining <= 3600) el.className = 'timer-display amber';
   else el.className = 'timer-display';
@@ -315,11 +365,10 @@ function resetTimer() {
   timerRunning = false;
   timerSeconds = 0;
   var t = parseInt(document.getElementById('timer-target').value) || 90;
-  document.getElementById('timer-display').textContent = pad(t) + ':00';
+  document.getElementById('timer-display').textContent = pad2(t) + ':00';
   document.getElementById('timer-display').className = 'timer-display';
-  var btn = document.getElementById('timer-btn');
-  btn.textContent = 'Start';
-  btn.className = 'timer-btn';
+  document.getElementById('timer-btn').textContent = 'Start';
+  document.getElementById('timer-btn').className = 'timer-btn';
 }
 
 document.getElementById('timer-btn').addEventListener('click', function() {
@@ -335,26 +384,30 @@ document.getElementById('timer-btn').addEventListener('click', function() {
     timerRunning = true;
     btn.textContent = 'Pause';
     btn.className = 'timer-btn paused';
-    timerInterval = setInterval(function() { timerSeconds++; renderTimer(); }, 1000);
+    timerInterval = setInterval(function() { timerSeconds++; renderTimerDisplay(); }, 1000);
   }
 });
 
 document.getElementById('timer-target').addEventListener('change', resetTimer);
 
-// CHECKLIST BUILDER
-function buildChecklist(items, checks) {
+// ── CHECKLIST ──
+function buildChecklist(steps, checks) {
   var html = '';
-  for (var i = 0; i < items.length; i++) {
-    var done = checks && checks[i] ? ' done' : '';
+  for (var i = 0; i < steps.length; i++) {
+    var done = (checks && checks[i]) ? ' done' : '';
     html += '<div class="check-row' + done + '">' +
-      '<div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3" style="stroke:#000;stroke-width:2.5;fill:none"/></svg></div>' +
-      '<div class="check-label">' + items[i] + '</div>' +
-      '</div>';
+      '<div class="cb">' +
+        '<svg class="check-icon" viewBox="0 0 13 13" width="11" height="11">' +
+          '<polyline points="2,6.5 5.5,10 11,3" style="stroke:#000;stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round"/>' +
+        '</svg>' +
+      '</div>' +
+      '<div class="check-label">' + steps[i] + '</div>' +
+    '</div>';
   }
   return html;
 }
 
-function attachCheckListeners(card) {
+function wireChecklist(card) {
   card.querySelectorAll('.check-row').forEach(function(row) {
     row.addEventListener('click', function() {
       row.classList.toggle('done');
@@ -363,7 +416,7 @@ function attachCheckListeners(card) {
   });
 }
 
-// ADD EXERCISE
+// ── ADD DIARY EXERCISE ──
 function addExercise(name, checks) {
   exCount++;
   var card = document.createElement('div');
@@ -374,13 +427,35 @@ function addExercise(name, checks) {
       '<div class="ex-num">EX ' + exCount + '</div>' +
       '<input type="text" class="ex-input" placeholder="Exercise name...">' +
     '</div>' +
-    '<div class="ex-checks">' + buildChecklist(DIARY_ITEMS, checks) + '</div>';
+    '<div class="ex-checks">' + buildChecklist(DIARY_STEPS, checks) + '</div>';
   if (name) card.querySelector('.ex-input').value = name;
   card.querySelector('.ex-input').addEventListener('input', autosave);
-  attachCheckListeners(card);
+  wireChecklist(card);
   document.getElementById('exercise-list').appendChild(card);
 }
 
+document.getElementById('add-exercise-btn').addEventListener('click', function() {
+  addExercise();
+  autosave();
+});
+
+// ── PUMP CHECK ──
+function addPumpCheck(checks) {
+  var card = document.createElement('div');
+  card.className = 'exercise-card';
+  card.setAttribute('data-type', 'pump');
+  card.style.marginBottom = '10px';
+  card.innerHTML =
+    '<div class="exercise-top">' +
+      '<div class="ex-num" style="color:#7c8fff">PUMP</div>' +
+      '<div style="font-size:13px;color:#666">End of session — capture at peak pump</div>' +
+    '</div>' +
+    '<div class="ex-checks">' + buildChecklist(PUMP_STEPS, checks) + '</div>';
+  wireChecklist(card);
+  document.getElementById('pump-check-list').appendChild(card);
+}
+
+// ── ADD HENRY EXERCISE ──
 function addHenryExercise(name, checks) {
   henryCount++;
   var card = document.createElement('div');
@@ -391,43 +466,43 @@ function addHenryExercise(name, checks) {
       '<div class="ex-num">EX ' + henryCount + '</div>' +
       '<input type="text" class="ex-input" placeholder="Exercise name...">' +
     '</div>' +
-    '<div class="ex-checks">' + buildChecklist(HENRY_ITEMS, checks) + '</div>';
+    '<div class="ex-checks">' + buildChecklist(HENRY_STEPS, checks) + '</div>';
   if (name) card.querySelector('.ex-input').value = name;
   card.querySelector('.ex-input').addEventListener('input', autosave);
-  attachCheckListeners(card);
+  wireChecklist(card);
   document.getElementById('henry-list').appendChild(card);
 }
 
-document.getElementById('add-exercise-btn').addEventListener('click', function() {
-  addExercise();
-  autosave();
-});
 document.getElementById('add-henry-btn').addEventListener('click', function() {
   addHenryExercise();
   autosave();
 });
 
-// COLLAPSE
+// ── COLLAPSE ──
 document.getElementById('hdr-compound').addEventListener('click', function() {
-  document.getElementById('bod-compound').style.display =
-    document.getElementById('bod-compound').style.display === 'block' ? 'none' : 'block';
+  var body = document.getElementById('bod-compound');
   var arr = document.getElementById('arr-compound');
-  arr.style.transform = arr.style.transform === 'rotate(180deg)' ? '' : 'rotate(180deg)';
-});
-document.getElementById('hdr-comp').addEventListener('click', function() {
-  document.getElementById('bod-comp').style.display =
-    document.getElementById('bod-comp').style.display === 'block' ? 'none' : 'block';
-  var arr = document.getElementById('arr-comp');
-  arr.style.transform = arr.style.transform === 'rotate(180deg)' ? '' : 'rotate(180deg)';
+  var open = body.style.display === 'block';
+  body.style.display = open ? 'none' : 'block';
+  arr.style.transform = open ? '' : 'rotate(180deg)';
 });
 
-// SHOOTS
+document.getElementById('hdr-comp').addEventListener('click', function() {
+  var body = document.getElementById('bod-comp');
+  var arr = document.getElementById('arr-comp');
+  var open = body.style.display === 'block';
+  body.style.display = open ? 'none' : 'block';
+  arr.style.transform = open ? '' : 'rotate(180deg)';
+});
+
+// ── SHOOTS ──
 document.querySelectorAll('.shoot-done').forEach(function(badge) {
   badge.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
     var id = badge.closest('.shoot-link').getAttribute('data-shoot-id');
     var s = getState();
+    if (!s.shoots) s.shoots = {};
     s.shoots[id] = !s.shoots[id];
     setState(s);
     if (s.shoots[id]) {
@@ -455,7 +530,7 @@ function sortShoots() {
   links.forEach(function(l) { c.appendChild(l); });
 }
 
-// AUTOSAVE
+// ── AUTOSAVE ──
 function autosave() {
   var s = getState();
   s.exercises = Array.from(document.querySelectorAll('[data-type="diary"]')).map(function(c) {
@@ -463,6 +538,9 @@ function autosave() {
       name: c.querySelector('.ex-input').value,
       checks: Array.from(c.querySelectorAll('.check-row')).map(function(r) { return r.classList.contains('done'); })
     };
+  });
+  s.pumpChecks = Array.from(document.querySelectorAll('[data-type="pump"]')).map(function(c) {
+    return { checks: Array.from(c.querySelectorAll('.check-row')).map(function(r) { return r.classList.contains('done'); }) };
   });
   s.henryExercises = Array.from(document.querySelectorAll('[data-type="henry"]')).map(function(c) {
     return {
@@ -478,12 +556,11 @@ function autosave() {
   setState(s);
 }
 
-['session-name','session-date','session-location','session-camera'].forEach(function(id) {
+['session-name','session-date','session-location','session-camera','session-notes'].forEach(function(id) {
   document.getElementById(id).addEventListener('input', autosave);
 });
-document.getElementById('session-notes').addEventListener('input', autosave);
 
-// LOG SESSION
+// ── LOG SESSION ──
 document.getElementById('log-btn').addEventListener('click', function() {
   var s = getState();
   var name = document.getElementById('session-name').value || 'Unnamed Session';
@@ -494,20 +571,24 @@ document.getElementById('log-btn').addEventListener('click', function() {
   var exercises = Array.from(document.querySelectorAll('[data-type="diary"]')).map(function(c) {
     return { name: c.querySelector('.ex-input').value || 'Unnamed', checks: Array.from(c.querySelectorAll('.check-row')).map(function(r) { return r.classList.contains('done'); }) };
   });
+  var pumpChecks = Array.from(document.querySelectorAll('[data-type="pump"]')).map(function(c) {
+    return { checks: Array.from(c.querySelectorAll('.check-row')).map(function(r) { return r.classList.contains('done'); }) };
+  });
   var henryExercises = Array.from(document.querySelectorAll('[data-type="henry"]')).map(function(c) {
     return { name: c.querySelector('.ex-input').value || 'Unnamed', checks: Array.from(c.querySelectorAll('.check-row')).map(function(r) { return r.classList.contains('done'); }) };
   });
   var completedShoots = Object.keys(s.shoots || {}).filter(function(id) { return s.shoots[id]; }).map(function(id) { return SHOOT_TITLES[id]; });
   if (!s.log) s.log = [];
-  var entry = { name: name, date: date, location: location, camera: camera, notes: notes, exercises: exercises, henryExercises: henryExercises, completedShoots: completedShoots, saved: new Date().toISOString() };
-  var idx = s.log.findIndex(function(e) { return e.name === name; });
+  var entry = { name: name, date: date, location: location, camera: camera, notes: notes, exercises: exercises, pumpChecks: pumpChecks, henryExercises: henryExercises, completedShoots: completedShoots, saved: new Date().toISOString() };
+  var idx = -1;
+  for (var i = 0; i < s.log.length; i++) { if (s.log[i].name === name) { idx = i; break; } }
   if (idx >= 0) s.log[idx] = entry; else s.log.unshift(entry);
   setState(s);
   renderLog(s.log);
   alert('Session logged: ' + name);
 });
 
-// RENDER LOG
+// ── RENDER LOG ──
 function renderLog(log) {
   var el = document.getElementById('log-list');
   if (!log || !log.length) {
@@ -515,7 +596,7 @@ function renderLog(log) {
     return;
   }
   el.innerHTML = '';
-  log.forEach(function(entry, i) {
+  log.forEach(function(entry) {
     var div = document.createElement('div');
     div.className = 'log-entry';
 
@@ -525,16 +606,24 @@ function renderLog(log) {
       return '<div class="log-detail-row"><span>' + (ex.name || 'Unnamed') + '</span><span style="color:#444">' + d + '/' + t + '</span></div>';
     }).join('');
 
+    var pumpRow = '';
+    if (entry.pumpChecks && entry.pumpChecks.length) {
+      var pc = entry.pumpChecks[0];
+      var pd = (pc.checks || []).filter(Boolean).length;
+      var pt = (pc.checks || []).length;
+      pumpRow = '<div class="log-detail-label">Pump Check</div><div class="log-detail-row"><span>End of session</span><span style="color:#444">' + pd + '/' + pt + '</span></div>';
+    }
+
     var henryRows = (entry.henryExercises || []).map(function(ex) {
       var d = (ex.checks || []).filter(Boolean).length;
       var t = (ex.checks || []).length;
       return '<div class="log-detail-row"><span>' + (ex.name || 'Unnamed') + '</span><span style="color:#444">' + d + '/' + t + '</span></div>';
     }).join('');
 
-    var shootsStr = entry.completedShoots && entry.completedShoots.length
+    var shootsStr = (entry.completedShoots && entry.completedShoots.length)
       ? '<div class="log-shoots">✓ ' + entry.completedShoots.join(' · ') + '</div>' : '';
     var notesStr = entry.notes
-      ? '<div class="log-notes">' + entry.notes.replace(/</g,'&lt;').replace(/\n/g,'<br>') + '</div>' : '';
+      ? '<div class="log-notes">' + entry.notes.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\n/g,'<br>') + '</div>' : '';
 
     div.innerHTML =
       '<div class="log-entry-header">' +
@@ -546,6 +635,7 @@ function renderLog(log) {
       '</div>' +
       '<div class="log-detail">' +
         (exRows ? '<div class="log-detail-label">Diary Frames</div>' + exRows : '') +
+        pumpRow +
         (henryRows ? '<div class="log-detail-label">Client Training [Henry]</div>' + henryRows : '') +
         shootsStr + notesStr +
       '</div>';
@@ -553,16 +643,16 @@ function renderLog(log) {
     div.querySelector('.log-entry-header').addEventListener('click', function() {
       var detail = div.querySelector('.log-detail');
       var chevron = div.querySelector('.log-chevron');
-      var open = detail.style.display === 'block';
-      detail.style.display = open ? 'none' : 'block';
-      chevron.style.transform = open ? '' : 'rotate(180deg)';
+      var isOpen = detail.style.display === 'block';
+      detail.style.display = isOpen ? 'none' : 'block';
+      chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
     });
 
     el.appendChild(div);
   });
 }
 
-// OPTIONS
+// ── OPTIONS ──
 document.getElementById('options-link').addEventListener('click', function() {
   document.getElementById('options-panel').classList.toggle('open');
 });
@@ -574,45 +664,54 @@ document.getElementById('confirm-no').addEventListener('click', function() {
 });
 document.getElementById('confirm-yes').addEventListener('click', function() {
   document.getElementById('exercise-list').innerHTML = '';
+  document.getElementById('pump-check-list').innerHTML = '';
   document.getElementById('henry-list').innerHTML = '';
-  ['session-name','session-date','session-location','session-camera'].forEach(function(id) {
+  ['session-name','session-date','session-location','session-camera','session-notes'].forEach(function(id) {
     document.getElementById(id).value = '';
   });
-  document.getElementById('session-notes').value = '';
   exCount = 0;
   henryCount = 0;
   addExercise(); addExercise(); addExercise();
+  addPumpCheck();
   addHenryExercise(); addHenryExercise(); addHenryExercise();
   var s = getState();
-  s.exercises = []; s.henryExercises = []; s.sessionName = ''; s.sessionDate = '';
-  s.sessionLocation = ''; s.sessionCamera = ''; s.notes = '';
+  s.exercises = []; s.pumpChecks = []; s.henryExercises = [];
+  s.sessionName = ''; s.sessionDate = ''; s.sessionLocation = ''; s.sessionCamera = ''; s.notes = '';
   setState(s);
   document.getElementById('danger-confirm').classList.remove('open');
   document.getElementById('options-panel').classList.remove('open');
   resetTimer();
 });
 
-// INIT
-var initState = getState();
-if (initState.sessionName) document.getElementById('session-name').value = initState.sessionName;
-if (initState.sessionDate) document.getElementById('session-date').value = initState.sessionDate;
-if (initState.sessionLocation) document.getElementById('session-location').value = initState.sessionLocation;
-if (initState.sessionCamera) document.getElementById('session-camera').value = initState.sessionCamera;
-if (initState.notes) document.getElementById('session-notes').value = initState.notes;
+// ── INIT ──
+var S = getState();
+if (S.sessionName) document.getElementById('session-name').value = S.sessionName;
+if (S.sessionDate) document.getElementById('session-date').value = S.sessionDate;
+if (S.sessionLocation) document.getElementById('session-location').value = S.sessionLocation;
+if (S.sessionCamera) document.getElementById('session-camera').value = S.sessionCamera;
+if (S.notes) document.getElementById('session-notes').value = S.notes;
 
-if (initState.exercises && initState.exercises.length > 0) {
-  initState.exercises.forEach(function(ex) { addExercise(ex.name, ex.checks); });
+if (S.exercises && S.exercises.length) {
+  S.exercises.forEach(function(ex) { addExercise(ex.name, ex.checks); });
 } else {
   addExercise(); addExercise(); addExercise();
 }
-if (initState.henryExercises && initState.henryExercises.length > 0) {
-  initState.henryExercises.forEach(function(ex) { addHenryExercise(ex.name, ex.checks); });
+
+if (S.pumpChecks && S.pumpChecks.length) {
+  S.pumpChecks.forEach(function(p) { addPumpCheck(p.checks); });
+} else {
+  addPumpCheck();
+}
+
+if (S.henryExercises && S.henryExercises.length) {
+  S.henryExercises.forEach(function(ex) { addHenryExercise(ex.name, ex.checks); });
 } else {
   addHenryExercise(); addHenryExercise(); addHenryExercise();
 }
-if (initState.shoots) {
-  Object.keys(initState.shoots).forEach(function(id) {
-    if (initState.shoots[id]) {
+
+if (S.shoots) {
+  Object.keys(S.shoots).forEach(function(id) {
+    if (S.shoots[id]) {
       var badge = document.getElementById('status-' + id);
       var link = document.querySelector('[data-shoot-id="' + id + '"]');
       if (badge) { badge.textContent = 'Complete'; badge.className = 'shoot-done complete'; }
@@ -621,8 +720,9 @@ if (initState.shoots) {
   });
   sortShoots();
 }
-renderLog(initState.log);
-renderTimer();
+
+renderLog(S.log);
+renderTimerDisplay();
 </script>
 </body>
 </html>
