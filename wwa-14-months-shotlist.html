@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>WWA - 14 Months Later</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 1.25rem; min-height: 100vh; }
+.title-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; color: #555; text-transform: uppercase; margin-bottom: 4px; }
+.shoot-title { font-size: 22px; font-weight: 600; color: #f0f0f0; line-height: 1.2; margin-bottom: 1.5rem; }
+.meta-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+.meta-pill { font-size: 11px; color: #888; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 99px; padding: 4px 10px; }
+.meta-pill span { color: #c8ff00; }
+.prog-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.prog-row p { font-size: 12px; color: #666; }
+.prog-row strong { font-size: 12px; color: #f0f0f0; }
+.progress-bar { height: 4px; background: #1e1e1e; border-radius: 99px; overflow: hidden; margin-bottom: 1.5rem; }
+.progress-fill { height: 100%; background: #c8ff00; border-radius: 99px; transition: width 0.3s ease; }
+.section-label { font-size: 10px; font-weight: 600; color: #555; text-transform: uppercase; margin: 1.5rem 0 0.75rem; letter-spacing: 0.1em; }
+.shot { background: #141414; border-radius: 12px; margin-bottom: 10px; border: 1px solid #1e1e1e; overflow: hidden; }
+.shot.done { opacity: 0.4; }
+.shot.done .shot-title { text-decoration: line-through; color: #555; }
+.shot-header { display: flex; align-items: flex-start; gap: 14px; padding: 14px; cursor: pointer; }
+.cb { width: 24px; height: 24px; min-width: 24px; border-radius: 50%; border: 1.5px solid #333; display: flex; align-items: center; justify-content: center; background: transparent; flex-shrink: 0; margin-top: 1px; }
+.shot.done .cb, .complete-row.done .cb { background: #c8ff00; border-color: #c8ff00; }
+.check-icon { width: 13px; height: 13px; stroke: #000; stroke-width: 2.5; fill: none; display: none; }
+.shot.done .check-icon, .complete-row.done .check-icon { display: block; }
+.shot-body { flex: 1; }
+.shot-num { font-size: 10px; color: #555; font-weight: 600; text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.08em; }
+.shot-title { font-size: 15px; font-weight: 600; color: #e0e0e0; margin-bottom: 5px; line-height: 1.3; }
+.shot-detail { font-size: 13px; color: #666; line-height: 1.55; }
+.script-section { border-top: 1px solid #1e1e1e; padding: 12px 14px 14px 52px; }
+.script-label { font-size: 9px; text-transform: uppercase; color: #c8ff00; font-weight: 600; margin-bottom: 8px; letter-spacing: 0.12em; }
+.script-lines { font-size: 13px; color: #777; line-height: 1.9; font-style: italic; }
+.script-lines .key { color: #bbb; font-style: normal; font-weight: 600; }
+.tag { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; margin-right: 4px; margin-bottom: 4px; }
+.tag-gym { background: #1a2a1a; color: #4caf50; border: 1px solid #2a3a2a; }
+.tag-overlay { background: #1a1a2a; color: #7c8fff; border: 1px solid #2a2a3a; }
+.tag-cutaway { background: #2a1f1a; color: #ff9c5c; border: 1px solid #3a2f2a; }
+.divider { height: 1px; background: #1a1a1a; margin: 1.5rem 0; }
+.note-box { background: #111; border-left: 2px solid #c8ff00; border-radius: 0 10px 10px 0; padding: 12px 14px; margin-top: 1rem; }
+.note-box p { font-size: 13px; color: #777; line-height: 1.65; }
+.note-box strong { color: #c8ff00; }
+.reset-btn { width: 100%; margin-top: 1.25rem; padding: 14px; background: #141414; border: 1px solid #2a2a2a; border-radius: 12px; color: #555; font-size: 13px; cursor: pointer; font-family: inherit; }
+.complete-section { margin-top: 2rem; background: #141414; border-radius: 12px; border: 1px solid #1e1e1e; padding: 14px; }
+.complete-title { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 12px; }
+.complete-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #1e1e1e; cursor: pointer; }
+.complete-row:last-of-type { border-bottom: none; padding-bottom: 0; }
+.complete-row.done .complete-label { color: #555; text-decoration: line-through; }
+.complete-label { font-size: 14px; color: #bbb; flex: 1; }
+.date-label { font-size: 11px; color: #555; margin: 12px 0 6px; letter-spacing: 0.06em; }
+.date-input { width: 100%; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 8px; color: #bbb; font-size: 14px; padding: 10px 12px; font-family: inherit; outline: none; }
+.collapsible-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; margin-bottom: 0; user-select: none; }
+.collapsible-header.open { border-radius: 10px 10px 0 0; border-bottom-color: #1a1a1a; }
+.collapsible-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; }
+.collapsible-chevron { font-size: 11px; color: #555; transition: transform 0.2s ease; }
+.collapsible-header.open .collapsible-chevron { transform: rotate(180deg); }
+.collapsible-body { display: none; background: #0f0f0f; border: 1px solid #2a2a2a; border-top: none; border-radius: 0 0 10px 10px; padding: 14px; margin-bottom: 1.5rem; }
+.collapsible-body.open { display: block; }
+.vo-line { font-size: 13px; color: #888; line-height: 2; font-style: italic; }
+.vo-line .key { color: #ddd; font-style: normal; font-weight: 600; }
+.vo-line .dim { color: #555; font-style: normal; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<div class="title-label">WWA — Gym Shoot / Talking Head</div>
+<div class="shoot-title">14 Months Later.</div>
+
+<div class="meta-row">
+  <div class="meta-pill">Format: <span>Talking Head + Photo Overlay</span></div>
+  <div class="meta-pill">Funnel: <span>ToF</span></div>
+  <div class="meta-pill">Pattern: <span>Contrast Rhythm</span></div>
+  <div class="meta-pill">Operator: <span>Henry</span></div>
+  <div class="meta-pill">Location: <span>Anytime Fitness</span></div>
+  <div class="meta-pill">Ash: <span>Shirt Off</span></div>
+</div>
+
+<div class="prog-row"><p>Progress</p><strong id="prog-text">0 / 11</strong></div>
+<div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+
+<div class="section-label">Full Script</div>
+<div class="collapsible-header" id="script-toggle" onclick="toggleScript()">
+  <span class="collapsible-title">Read in full before shooting</span>
+  <span class="collapsible-chevron">▼</span>
+</div>
+<div class="collapsible-body" id="script-body">
+  <div class="vo-line">
+    <span class="key">This is me. Two hours in the gym.</span><br>
+    <span class="key">No structure. No direction.</span><br>
+    <span class="key">Assuming that just showing up will give you something to show off.</span><br>
+    <span class="dim">[ skinny fat photo on screen ]</span><br><br>
+    <span class="key">This is also me. 14 months later.</span><br>
+    <span class="key">One hour. Six days a week. With structure and understanding.</span><br>
+    <span class="dim">[ current physique on screen ]</span><br><br>
+    Same person. Different direction.<br><br>
+    There are millions of people showing up to the gym right now<br>
+    who look exactly like that first photo.<br>
+    Some of them have been at it for years.<br>
+    <span class="key">This might even be you.</span><br><br>
+    You know why gym memberships get cancelled?<br>
+    It's not laziness.<br>
+    <span class="key">It's because spinning your wheels long enough can trick you into thinking you have motion.</span><br><br>
+    Two hours of misdirection will always lose to one hour of precision.<br><br>
+    You don't have a dedication problem.<br>
+    <span class="key">You have a direction problem.</span><br><br>
+    <span class="key">Comment LOCKED and I'll personally send you the WWA Size Starter — free. That's where your direction starts.</span>
+  </div>
+</div>
+
+<div class="divider"></div>
+<div class="section-label">Shot List</div>
+
+<div class="shot" data-id="s1">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 1 — Hook: Before</div>
+      <div class="shot-title">Dead to camera. Skinny fat photo drops on screen.</div>
+      <div class="shot-detail">Ash talking head, shirt off, pull-up bar area. Deliver the first three lines flat and matter-of-fact — no drama. The photo does the work. Henry drops the before photo as an overlay on the cut after "something to show off."</div>
+      <div style="margin-top:8px"><span class="tag tag-gym">Gym</span><span class="tag tag-overlay">Photo Overlay</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">This is me. Two hours in the gym. No structure. No direction. <span class="key">Assuming that just showing up will give you something to show off.</span></div>
+  </div>
+</div>
+
+<div class="shot" data-id="s2">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 2 — Hook: After</div>
+      <div class="shot-title">14 months later. Current physique on screen.</div>
+      <div class="shot-detail">Continue talking head — same frame. Henry drops current physique photo as overlay on "14 months later." Let it sit for a beat before Ash continues. The contrast between the two photos is the entire hook.</div>
+      <div style="margin-top:8px"><span class="tag tag-gym">Gym</span><span class="tag tag-overlay">Photo Overlay</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines"><span class="key">This is also me. 14 months later.</span> One hour. Six days a week. With structure and understanding.</div>
+  </div>
+</div>
+
+<div class="shot" data-id="s3">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 3 — Same Person. Different Direction.</div>
+      <div class="shot-title">Hard stop. Let it breathe.</div>
+      <div class="shot-detail">Back to clean talking head, no overlay. Short lines — one breath each. Pause after "Different direction." before moving on. This is the pivot point of the whole video.</div>
+      <div style="margin-top:8px"><span class="tag tag-gym">Gym</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines"><span class="key">Same person. Different direction.</span></div>
+  </div>
+</div>
+
+<div class="shot" data-id="s4">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 4 — This Might Even Be You</div>
+      <div class="shot-title">Direct address. Land it.</div>
+      <div class="shot-detail">Talking head continues. Slight lean in or step closer to camera on "This might even be you." That line needs to feel pointed — like Ash is talking to one specific person, not a crowd.</div>
+      <div style="margin-top:8px"><span class="tag tag-gym">Gym</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">There are millions of people showing up to the gym right now who look exactly like that first photo. Some of them have been at it for years. <span class="key">This might even be you.</span></div>
+  </div>
+</div>
+
+<div class="shot" data-id="s5">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 5 — Spinning Wheels Cutaway</div>
+      <div class="shot-title">Ash on the bike. Phone out. Barely pedalling.</div>
+      <div class="shot-detail">Cut from talking head to Ash on a stationary bike — phone in hand, scrolling, slow casual pedal. Completely checked out. This is the visual gag that makes the line land. Henry shoots from the side so the pedalling is visible. Hold for the full line, then cut back to talking head.</div>
+      <div style="margin-top:8px"><span class="tag tag-gym">Gym</span><span class="tag tag-cutaway">Cutaway</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">You know why gym memberships get cancelled? It's not laziness. <span class="key">It's because spinning your wheels long enough can trick you into thinking you have motion.</span></div>
+  </div>
+</div>
+
+<div class="shot" data-id="s6">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 6 — Precision Cutaway</div>
+      <div class="shot-title">One perfect pull-up. Full range. No rush.</div>
+      <div class="shot-detail">Cut to Ash on the pull-up bar. Full dead hang at the bottom — arms completely extended. Slow, controlled pull all the way to chin over bar. Henry shoots from the side to capture full range of motion. This is the proof of precision in one rep. No voiceover needed — the movement speaks. Cut back to talking head after the rep.</div>
+      <div style="margin-top:8px"><span class="tag tag-gym">Gym</span><span class="tag tag-cutaway">Cutaway</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines"><span class="key">Two hours of misdirection will always lose to one hour of precision.</span></div>
+  </div>
+</div>
+
+<div class="shot" data-id="s7">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 7 — Direction Problem</div>
+      <div class="shot-title">Close frame. Hard stop on the last line.</div>
+      <div class="shot-detail">Back to talking head, push in slightly closer. Short punchy delivery — one breath per line. "You have a direction problem." lands as a full stop. No trailing off. Hold the frame after it lands before moving to CTA.</div>
+      <div style="margin-top:8px"><span class="tag tag-gym">Gym</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">You don't have a dedication problem. <span class="key">You have a direction problem.</span></div>
+  </div>
+</div>
+
+<div class="shot" data-id="s8">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 8 — CTA</div>
+      <div class="shot-title">Direct. Personal. No energy drop.</div>
+      <div class="shot-detail">Same close frame. Direct eye contact. "Personally" gets a slight emphasis — this isn't automated, it's Ash. Deliver it like it's obvious, not like a pitch.</div>
+      <div style="margin-top:8px"><span class="tag tag-gym">Gym</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines"><span class="key">Comment LOCKED and I'll personally send you the WWA Size Starter — free. That's where your direction starts.</span></div>
+  </div>
+</div>
+
+<div class="note-box"><p><strong>The one thing that makes or breaks this shoot:</strong> the before photo has to actually look bad. If the contrast isn't stark the whole video loses its punch. Pull the most unflattering, most honest skinny fat photo in the archive. That's the hook.</p></div>
+
+<div class="divider"></div>
+<div class="section-label">Editing Notes</div>
+
+<div class="shot" data-id="edit1">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Photo overlays — before and after timed to delivery</div>
+      <div class="shot-detail">Before photo drops on "assuming that just showing up will give you something to show off." After photo drops on "14 months later." Each holds for 2–3 seconds minimum. Don't rush the reveal — that's the scroll-stop moment.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit2">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Text overlay — every line on screen as it's spoken</div>
+      <div class="shot-detail">One line at a time. Clean minimal font, white or off-white. Never two lines simultaneously. Muted viewers need to follow the full script through text alone.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit3">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Grade — WWA palette, cool and sharp</div>
+      <div class="shot-detail">Gym lighting runs warm. Correct it. Crushed blacks, cooler midtones. Consistent across talking head and both cutaways.</div>
+    </div>
+  </div>
+</div>
+
+<div class="complete-section">
+  <div class="complete-title">Completion</div>
+  <div class="complete-row" data-id="c1" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Shot and footage captured</div></div>
+  <div class="complete-row" data-id="c2" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Before photo sourced</div></div>
+  <div class="complete-row" data-id="c3" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Edit complete</div></div>
+  <div class="complete-row" data-id="c4" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Posted</div></div>
+  <div class="date-label">COMPLETION DATE</div>
+  <input type="date" class="date-input" id="completion-date" onchange="saveDate(this.value)">
+</div>
+
+<button class="reset-btn" onclick="resetAll()">Reset checklist</button>
+
+<script>
+const KEY='wwa_14months_v1';
+function getState(){try{return JSON.parse(localStorage.getItem(KEY))||{};}catch(e){return{};}}
+function setState(s){try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){}}
+function updateProgress(){const shots=document.querySelectorAll('.shot');const done=document.querySelectorAll('.shot.done').length;document.getElementById('prog-fill').style.width=Math.round((done/shots.length)*100)+'%';document.getElementById('prog-text').textContent=done+' / '+shots.length;}
+function toggle(el){el.classList.toggle('done');const s=getState();s[el.dataset.id]=el.classList.contains('done');setState(s);updateProgress();}
+function toggleComplete(el){el.classList.toggle('done');const s=getState();s[el.dataset.id]=el.classList.contains('done');setState(s);}
+function saveDate(val){const s=getState();s.completion_date=val;setState(s);}
+function resetAll(){document.querySelectorAll('.shot.done,.complete-row.done').forEach(el=>el.classList.remove('done'));document.getElementById('completion-date').value='';setState({});updateProgress();}
+function toggleScript(){const header=document.getElementById('script-toggle');const body=document.getElementById('script-body');header.classList.toggle('open');body.classList.toggle('open');}
+(function(){const s=getState();document.querySelectorAll('.shot,.complete-row').forEach(el=>{if(s[el.dataset.id])el.classList.add('done');});if(s.completion_date)document.getElementById('completion-date').value=s.completion_date;updateProgress();})();
+</script>
+</body>
+</html>
