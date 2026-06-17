@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>WWA - Legs Edition</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 1.25rem; min-height: 100vh; }
+.title-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; color: #555; text-transform: uppercase; margin-bottom: 4px; }
+.shoot-title { font-size: 22px; font-weight: 600; color: #f0f0f0; line-height: 1.2; margin-bottom: 1.5rem; }
+.meta-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+.meta-pill { font-size: 11px; color: #888; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 99px; padding: 4px 10px; }
+.meta-pill span { color: #c8ff00; }
+.prog-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.prog-row p { font-size: 12px; color: #666; }
+.prog-row strong { font-size: 12px; color: #f0f0f0; }
+.progress-bar { height: 4px; background: #1e1e1e; border-radius: 99px; overflow: hidden; margin-bottom: 1.5rem; }
+.progress-fill { height: 100%; background: #c8ff00; border-radius: 99px; transition: width 0.3s ease; }
+.section-label { font-size: 10px; font-weight: 600; color: #555; text-transform: uppercase; margin: 1.5rem 0 0.75rem; letter-spacing: 0.1em; }
+.shot { background: #141414; border-radius: 12px; margin-bottom: 10px; border: 1px solid #1e1e1e; overflow: hidden; }
+.shot.done { opacity: 0.4; }
+.shot.done .shot-title { text-decoration: line-through; color: #555; }
+.shot-header { display: flex; align-items: flex-start; gap: 14px; padding: 14px; cursor: pointer; }
+.cb { width: 24px; height: 24px; min-width: 24px; border-radius: 50%; border: 1.5px solid #333; display: flex; align-items: center; justify-content: center; background: transparent; flex-shrink: 0; margin-top: 1px; }
+.shot.done .cb, .complete-row.done .cb { background: #c8ff00; border-color: #c8ff00; }
+.check-icon { width: 13px; height: 13px; stroke: #000; stroke-width: 2.5; fill: none; display: none; }
+.shot.done .check-icon, .complete-row.done .check-icon { display: block; }
+.shot-body { flex: 1; }
+.shot-num { font-size: 10px; color: #555; font-weight: 600; text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.08em; }
+.shot-title { font-size: 15px; font-weight: 600; color: #e0e0e0; margin-bottom: 5px; line-height: 1.3; }
+.shot-detail { font-size: 13px; color: #666; line-height: 1.55; }
+.script-section { border-top: 1px solid #1e1e1e; padding: 12px 14px 14px 52px; }
+.script-label { font-size: 9px; text-transform: uppercase; color: #c8ff00; font-weight: 600; margin-bottom: 8px; letter-spacing: 0.12em; }
+.script-lines { font-size: 13px; color: #777; line-height: 1.9; font-style: italic; }
+.script-lines .key { color: #bbb; font-style: normal; font-weight: 600; }
+.script-lines .bad { color: #ff5c5c; font-style: normal; font-weight: 600; }
+.script-lines .good { color: #4caf50; font-style: normal; font-weight: 600; }
+.tag { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; margin-right: 4px; margin-bottom: 4px; }
+.tag-gym { background: #1a2a1a; color: #4caf50; border: 1px solid #2a3a2a; }
+.tag-split { background: #1a1a2a; color: #7c8fff; border: 1px solid #2a2a3a; }
+.tag-hook { background: #2a1a00; color: #c8ff00; border: 1px solid #3a2a00; }
+.tag-bad { background: #2a1a1a; color: #ff5c5c; border: 1px solid #3a2a2a; }
+.tag-good { background: #1a2a1a; color: #4caf50; border: 1px solid #2a3a2a; }
+.tag-close { background: #1a1a2a; color: #7c8fff; border: 1px solid #2a2a3a; }
+.divider { height: 1px; background: #1a1a1a; margin: 1.5rem 0; }
+.note-box { background: #111; border-left: 2px solid #c8ff00; border-radius: 0 10px 10px 0; padding: 12px 14px; margin-top: 1rem; }
+.note-box p { font-size: 13px; color: #777; line-height: 1.65; }
+.note-box strong { color: #c8ff00; }
+.reset-btn { width: 100%; margin-top: 1.25rem; padding: 14px; background: #141414; border: 1px solid #2a2a2a; border-radius: 12px; color: #555; font-size: 13px; cursor: pointer; font-family: inherit; }
+.complete-section { margin-top: 2rem; background: #141414; border-radius: 12px; border: 1px solid #1e1e1e; padding: 14px; }
+.complete-title { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 12px; }
+.complete-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #1e1e1e; cursor: pointer; }
+.complete-row:last-of-type { border-bottom: none; padding-bottom: 0; }
+.complete-row.done .complete-label { color: #555; text-decoration: line-through; }
+.complete-label { font-size: 14px; color: #bbb; flex: 1; }
+.date-label { font-size: 11px; color: #555; margin: 12px 0 6px; letter-spacing: 0.06em; }
+.date-input { width: 100%; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 8px; color: #bbb; font-size: 14px; padding: 10px 12px; font-family: inherit; outline: none; }
+.collapsible-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; margin-bottom: 0; user-select: none; }
+.collapsible-header.open { border-radius: 10px 10px 0 0; border-bottom-color: #1a1a1a; }
+.collapsible-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; }
+.collapsible-chevron { font-size: 11px; color: #555; transition: transform 0.2s ease; }
+.collapsible-header.open .collapsible-chevron { transform: rotate(180deg); }
+.collapsible-body { display: none; background: #0f0f0f; border: 1px solid #2a2a2a; border-top: none; border-radius: 0 0 10px 10px; padding: 14px; margin-bottom: 1.5rem; }
+.collapsible-body.open { display: block; }
+.vo-line { font-size: 13px; color: #888; line-height: 2.1; font-style: italic; }
+.vo-line .key { color: #ddd; font-style: normal; font-weight: 600; }
+.vo-line .dim { color: #555; font-style: normal; font-size: 12px; }
+.vo-line .bad { color: #ff5c5c; font-style: normal; font-weight: 600; }
+.vo-line .good { color: #4caf50; font-style: normal; font-weight: 600; }
+.source-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; }
+.source-box-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #555; white-space: nowrap; }
+.source-box a { font-size: 12px; color: #c8ff00; text-decoration: none; word-break: break-all; }
+.source-box a:hover { text-decoration: underline; }
+.caption-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px; margin-bottom: 1.5rem; }
+.caption-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 10px; }
+.caption-text { font-size: 14px; color: #bbb; line-height: 1.7; }
+.caption-text strong { color: #f0f0f0; }
+.assets-note { background: #0f0f0f; border: 1px solid #2a2a2a; border-left: 2px solid #c8ff00; border-radius: 0 10px 10px 0; padding: 10px 14px; margin-bottom: 1.5rem; font-size: 12px; color: #555; line-height: 1.6; }
+.assets-note strong { color: #888; }
+.split-label { display: flex; gap: 8px; margin-top: 8px; }
+.split-tag { flex: 1; text-align: center; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px; border-radius: 6px; }
+.split-tag.left { background: #2a1a1a; color: #ff5c5c; border: 1px solid #3a2a2a; }
+.split-tag.right { background: #1a2a1a; color: #4caf50; border: 1px solid #2a3a2a; }
+</style>
+</head>
+<body>
+
+<div class="title-label">WWA — Split Screen Series / Legs Edition</div>
+<div class="shoot-title">You're Not Training Legs. You're Breaking Your Back.</div>
+
+<div class="meta-row">
+  <div class="meta-pill">Format: <span>Silent Split Screen</span></div>
+  <div class="meta-pill">Funnel: <span>ToF</span></div>
+  <div class="meta-pill">Pattern: <span>Contrast Rhythm</span></div>
+  <div class="meta-pill">Operator: <span>Henry</span></div>
+  <div class="meta-pill">Location: <span>Anytime Fitness</span></div>
+  <div class="meta-pill">Lens: <span>16mm DZO — Full Body</span></div>
+</div>
+
+<div class="source-box"><span class="source-box-label">Source</span><a href="https://www.instagram.com/p/DUTUGvHjeXT/" target="_blank">instagram.com/p/DUTUGvHjeXT</a></div>
+
+<div class="assets-note"><strong>WWA Logo:</strong> Download from the Assets folder in Notion under CONTENT → ASSETS. White PNG for the WWA label on the right side of the split frame.</div>
+
+<div class="caption-box">
+  <div class="caption-title">Caption — Copy for Post</div>
+  <div class="caption-text">You're not training legs. You're breaking your back. Comment <strong>LOCKED</strong> and I'll send you the WWA Size Starter — free. That's where we begin.</div>
+</div>
+
+<div class="prog-row"><p>Progress</p><strong id="prog-text">0 / 10</strong></div>
+<div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+
+<div class="section-label">Full Script</div>
+<div class="collapsible-header" id="script-toggle" onclick="toggleScript()">
+  <span class="collapsible-title">Read in full before shooting</span>
+  <span class="collapsible-chevron">▼</span>
+</div>
+<div class="collapsible-body" id="script-body">
+  <div class="vo-line">
+    <span class="dim">[ 1–2 sec flash — split screen preview, one rep each side ]</span><br><br>
+    <span class="dim">[ cut to Ash — dead to camera ]</span><br>
+    <span class="key">You're not training legs. You're breaking your back.</span><br><br>
+    <span class="dim">[ hard cut back to full split screen — silent, music only ]</span><br><br>
+    <span class="key">LEFT: Most People — RIGHT: WWA</span><br><br>
+
+    <span class="bad">Most People — Goblet Squat:</span> Dumbbell held away from body. Rounded back. Spine winking at the bottom. Fast uncontrolled reps. No knee tracking. No braced core. Poor range.<br>
+    <span class="good">WWA — Goblet Squat:</span> Heels elevated on ramp. Dumbbell firmly braced to chest. Neutral spine, shoulders retracted, chest out. Braced core. Slow descent with knee tracking over toe. Never winks. Controlled drive to the top.<br><br>
+
+    <span class="bad">Most People — Romanian Deadlift:</span> Squatting the weight. Hips rising and falling. Knees coming over toes. Shins not vertical. Lower back rounding. No hinge pattern.<br>
+    <span class="good">WWA — Romanian Deadlift:</span> Weight tracks vertical shins. True hip hinge — hips move back and forward, not up and down. Knee bend fixed throughout. Neutral spine never winks. Slow controlled pace. Exhale at the top. Heels driving the movement targeting hamstrings.<br><br>
+
+    <span class="bad">Most People — Leg Extension:</span> Flinging the weight. Machine losing contact with legs at the top. Fast, uncontrolled. No upper body brace. Tension constantly changing.<br>
+    <span class="good">WWA — Leg Extension:</span> Pad or sponge under knees for maximum knee flexion. Controlled flex and hold at the top. Upper body fully braced, neutral spine, core engaged. Exhale at the top. Slow eccentric return. Every rep deliberate.<br><br>
+
+    <span class="bad">Most People — Calf Raise (Seated Machine):</span> Too much weight. Fast pulsing — tippy toe stand. No heel lowering. No full stretch. No range. Just noise.<br>
+    <span class="good">WWA — Calf Raise (Smith Machine + Platform):</span> Platform under the bar allows full heel drop and stretch. Lengthened position maximises tension on the calf. Slow controlled movement. Priority on the eccentric. Heels tap the ground. Drive up, exhale, flex. Only the calves move. Everything else locked.<br><br>
+
+    <span class="dim">[ no CTA — ToF content, follow is the action ]</span>
+  </div>
+  <div class="split-label">
+    <div class="split-tag left">Most People — Breaking It</div>
+    <div class="split-tag right">WWA — Building It</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+<div class="section-label">Shot List</div>
+
+<div class="shot" data-id="s1">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 1 — Flash Preview</div>
+      <div class="shot-title">1–2 second split screen tease. Goblet squat recommended.</div>
+      <div class="shot-detail">Opens the video. Both sides visible immediately. Goblet squat is the strongest flash — the spine wink vs neutral spine contrast is readable immediately. Cut before the rep completes. Leave them mid-movement.</div>
+      <div style="margin-top:8px"><span class="tag tag-split">Split Screen</span><span class="tag tag-hook">Hook</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Screen</div>
+    <div class="script-lines"><span class="key">Most People</span> — left. <span class="key">WWA</span> — right. No audio. Music only.</div>
+  </div>
+</div>
+
+<div class="shot" data-id="s2">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 2 — Hook Interruption</div>
+      <div class="shot-title">Cut to Ash. Dead to camera. One line. Two seconds.</div>
+      <div class="shot-detail">Single frame. Ash facing camera, shirt off. Interrupts the split screen before the viewer is satisfied. Deadpan. No build-up. Deliver it like a verdict. Hard cut back to split screen immediately after.</div>
+      <div style="margin-top:8px"><span class="tag tag-hook">Hook</span><span class="tag tag-gym">Gym</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines"><span class="key">You're not training legs. You're breaking your back.</span></div>
+  </div>
+</div>
+
+<div class="shot" data-id="s3">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 3 — Goblet Squat</div>
+      <div class="shot-title">Bad: rounded spine, no tracking, fast. Good: heels elevated, neutral spine, knee over toe.</div>
+      <div class="shot-detail">Bad — dumbbell hanging away from body, back rounding, spine winking at the bottom, knees caving or tracking nowhere, fast uncontrolled reps, no depth. Good — heels on ramp, dumbbell braced firmly to chest, shoulders retracted, neutral spine maintained throughout, knee tracks over toe on descent, slow and controlled, drives through the full range. Side angle to show the spine clearly on both sides.</div>
+      <div style="margin-top:8px"><span class="tag tag-bad">Most People</span><span class="tag tag-good">WWA</span><span class="tag tag-split">Split Screen</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Screen</div>
+    <div class="script-lines">Silent. Music only. Labels persistent.</div>
+  </div>
+</div>
+
+<div class="shot" data-id="s4">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 4 — Romanian Deadlift</div>
+      <div class="shot-title">Bad: squatting it, knees over toes, rounded back. Good: true hinge, vertical shins, neutral spine.</div>
+      <div class="shot-detail">Bad — hips rising and falling like a squat, knees drifting forward, shins not vertical, lower back rounding, no hip hinge pattern. Good — weight tracks along vertical shins throughout, hips hinge back and forward not up and down, knee bend fixed and unchanged, spine never rounds or winks, slow and controlled, exhale at the top. Side angle essential to show the shin angle and hinge pattern clearly.</div>
+      <div style="margin-top:8px"><span class="tag tag-bad">Most People</span><span class="tag tag-good">WWA</span><span class="tag tag-split">Split Screen</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Screen</div>
+    <div class="script-lines">Silent. Music only.</div>
+  </div>
+</div>
+
+<div class="shot" data-id="s5">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 5 — Leg Extension</div>
+      <div class="shot-title">Bad: flinging, machine loses contact. Good: pad under knees, controlled hold, slow eccentric.</div>
+      <div class="shot-detail">Bad — kicking the weight up fast, machine pad losing contact with legs at the top, tension dropping completely, loose upper body, no control on the way down. Good — small pad or sponge placed under the knees to increase knee flexion range, upper body fully braced and still, controlled extension to the top, hold and exhale at full contraction, slow eccentric return all the way down. The contrast in machine contact alone is enough to make this clip go viral.</div>
+      <div style="margin-top:8px"><span class="tag tag-bad">Most People</span><span class="tag tag-good">WWA</span><span class="tag tag-split">Split Screen</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Screen</div>
+    <div class="script-lines">Silent. Music only.</div>
+  </div>
+</div>
+
+<div class="shot" data-id="s6">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 6 — Calf Raise</div>
+      <div class="shot-title">Bad: seated machine, fast pulse, no stretch. Good: Smith machine + platform, full stretch, slow eccentric.</div>
+      <div class="shot-detail">Bad — seated calf machine, heavy weight, fast pulsing tippy-toe motion, heels never lowering, no stretch, no range. Good — Smith machine with platform underneath allowing full heel drop below the platform, lengthened position at the bottom, slow drive up, exhale and flex at the top, slow eccentric back to full stretch. Only the calves move — everything else locked. The setup difference alone stops the scroll.</div>
+      <div style="margin-top:8px"><span class="tag tag-bad">Most People</span><span class="tag tag-good">WWA</span><span class="tag tag-split">Split Screen</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Screen</div>
+    <div class="script-lines">Silent. Music only.</div>
+  </div>
+</div>
+
+<div class="shot" data-id="s7">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 7 — Closing: Wide Lower Body</div>
+      <div class="shot-title">Ash. Abs to lower body in frame. No text.</div>
+      <div class="shot-detail">Clean wide shot from abs to feet — full lower body visible, core tight, quads and legs showing. No text. No movement. Just the result. Hold 2–3 seconds.</div>
+      <div style="margin-top:8px"><span class="tag tag-close">Closing</span><span class="tag tag-gym">Gym</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Screen</div>
+    <div class="script-lines">No text. No music change. Just the physique.</div>
+  </div>
+</div>
+
+<div class="shot" data-id="s8">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 8 — Closing: Quad Flex</div>
+      <div class="shot-title">Punch in. Quad flex. Muscle detail visible. Hold.</div>
+      <div class="shot-detail">Punch in tight to Ash's quads — full flex, muscle separation and detail visible. This is the target muscle. The viewer just watched four exercises corrected. Now they see what correct training builds. Hold. Let it land.</div>
+      <div style="margin-top:8px"><span class="tag tag-close">Closing</span><span class="tag tag-gym">Gym</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Screen</div>
+    <div class="script-lines">No text. This is the final frame. Caption does the rest.</div>
+  </div>
+</div>
+
+<div class="note-box"><p><strong>Setup note — calf raise:</strong> The Smith machine platform setup is the most important visual difference in this video. Make sure the platform is in place and the full heel drop is visible before shooting. If the stretch isn't visible on camera the whole point is lost. Shoot from the side.</p></div>
+
+<div class="divider"></div>
+<div class="section-label">Editing Notes</div>
+
+<div class="shot" data-id="edit1">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Split screen — persistent labels throughout</div>
+      <div class="shot-detail">"Most People" top left. "WWA" top right. Both visible from first frame to last. Clean minimal font, white. Never remove the labels.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit2">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Hook interruption — cut before the rep completes</div>
+      <div class="shot-detail">Flash preview cuts away before the first rep is finished. Leave them mid-movement. That's what creates the pull back into the video after the hook line lands.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit3">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Music — strong beat, cut exercise changes to it</div>
+      <div class="shot-detail">Silent except music throughout. Each exercise transition lands on a beat. The rhythm keeps people watching through four exercises.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit4">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Grade — match both sides identically</div>
+      <div class="shot-detail">WWA palette — crushed blacks, cooler midtones. Both sides graded identically. One frame, one world.</div>
+    </div>
+  </div>
+</div>
+
+<div class="complete-section">
+  <div class="complete-title">Completion</div>
+  <div class="complete-row" data-id="c1" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">All exercises shot — both sides</div></div>
+  <div class="complete-row" data-id="c2" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Hook line recorded</div></div>
+  <div class="complete-row" data-id="c3" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Closing physique shots captured</div></div>
+  <div class="complete-row" data-id="c4" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Edit complete</div></div>
+  <div class="complete-row" data-id="c5" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Posted</div></div>
+  <div class="date-label">COMPLETION DATE</div>
+  <input type="date" class="date-input" id="completion-date" onchange="saveDate(this.value)">
+</div>
+
+<button class="reset-btn" onclick="resetAll()">Reset checklist</button>
+
+<script>
+const KEY='wwa_legs_v1';
+function getState(){try{return JSON.parse(localStorage.getItem(KEY))||{};}catch(e){return{};}}
+function setState(s){try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){}}
+function updateProgress(){const shots=document.querySelectorAll('.shot');const done=document.querySelectorAll('.shot.done').length;document.getElementById('prog-fill').style.width=Math.round((done/shots.length)*100)+'%';document.getElementById('prog-text').textContent=done+' / '+shots.length;}
+function toggle(el){el.classList.toggle('done');const s=getState();s[el.dataset.id]=el.classList.contains('done');setState(s);updateProgress();}
+function toggleComplete(el){el.classList.toggle('done');const s=getState();s[el.dataset.id]=el.classList.contains('done');setState(s);}
+function saveDate(val){const s=getState();s.completion_date=val;setState(s);}
+function resetAll(){document.querySelectorAll('.shot.done,.complete-row.done').forEach(el=>el.classList.remove('done'));document.getElementById('completion-date').value='';setState({});updateProgress();}
+function toggleScript(){const header=document.getElementById('script-toggle');const body=document.getElementById('script-body');header.classList.toggle('open');body.classList.toggle('open');}
+(function(){const s=getState();document.querySelectorAll('.shot,.complete-row').forEach(el=>{if(s[el.dataset.id])el.classList.add('done');});if(s.completion_date)document.getElementById('completion-date').value=s.completion_date;updateProgress();})();
+</script>
+</body>
+</html>
