@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>WWA - Origin Node 1 — The Invisible Problem</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 1.25rem; min-height: 100vh; }
+.title-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; color: #555; text-transform: uppercase; margin-bottom: 4px; }
+.shoot-title { font-size: 22px; font-weight: 600; color: #f0f0f0; line-height: 1.2; margin-bottom: 1.5rem; }
+.meta-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+.meta-pill { font-size: 11px; color: #888; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 99px; padding: 4px 10px; }
+.meta-pill span { color: #c8ff00; }
+.prog-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.prog-row p { font-size: 12px; color: #666; }
+.prog-row strong { font-size: 12px; color: #f0f0f0; }
+.progress-bar { height: 4px; background: #1e1e1e; border-radius: 99px; overflow: hidden; margin-bottom: 1.5rem; }
+.progress-fill { height: 100%; background: #c8ff00; border-radius: 99px; transition: width 0.3s ease; }
+.section-label { font-size: 10px; font-weight: 600; color: #555; text-transform: uppercase; margin: 1.5rem 0 0.75rem; letter-spacing: 0.1em; }
+.shot { background: #141414; border-radius: 12px; margin-bottom: 10px; border: 1px solid #1e1e1e; overflow: hidden; }
+.shot.done { opacity: 0.4; }
+.shot.done .shot-title { text-decoration: line-through; color: #555; }
+.shot-header { display: flex; align-items: flex-start; gap: 14px; padding: 14px; cursor: pointer; }
+.cb { width: 24px; height: 24px; min-width: 24px; border-radius: 50%; border: 1.5px solid #333; display: flex; align-items: center; justify-content: center; background: transparent; flex-shrink: 0; margin-top: 1px; }
+.shot.done .cb, .complete-row.done .cb { background: #c8ff00; border-color: #c8ff00; }
+.check-icon { width: 13px; height: 13px; stroke: #000; stroke-width: 2.5; fill: none; display: none; }
+.shot.done .check-icon, .complete-row.done .check-icon { display: block; }
+.shot-body { flex: 1; }
+.shot-num { font-size: 10px; color: #555; font-weight: 600; text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.08em; }
+.shot-title { font-size: 15px; font-weight: 600; color: #e0e0e0; margin-bottom: 5px; line-height: 1.3; }
+.shot-detail { font-size: 13px; color: #666; line-height: 1.55; }
+.script-section { border-top: 1px solid #1e1e1e; padding: 12px 14px 14px 52px; }
+.script-label { font-size: 9px; text-transform: uppercase; color: #c8ff00; font-weight: 600; margin-bottom: 8px; letter-spacing: 0.12em; }
+.script-lines { font-size: 13px; color: #777; line-height: 1.9; font-style: italic; }
+.script-lines .key { color: #bbb; font-style: normal; font-weight: 600; }
+.script-lines .dim { color: #555; font-style: normal; font-size: 12px; }
+.tag { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; margin-right: 4px; margin-bottom: 4px; }
+.tag-origin { background: #1a1a2a; color: #7c8fff; border: 1px solid #2a2a3a; }
+.tag-broll { background: #2a1a2a; color: #ce7cff; border: 1px solid #3a2a3a; }
+.tag-direct { background: #1a2a1a; color: #4caf50; border: 1px solid #2a3a2a; }
+.tag-hook { background: #2a1a00; color: #c8ff00; border: 1px solid #3a2a00; }
+.divider { height: 1px; background: #1a1a1a; margin: 1.5rem 0; }
+.note-box { background: #111; border-left: 2px solid #c8ff00; border-radius: 0 10px 10px 0; padding: 12px 14px; margin-top: 1rem; }
+.note-box p { font-size: 13px; color: #777; line-height: 1.65; margin-bottom: 8px; }
+.note-box p:last-child { margin-bottom: 0; }
+.note-box strong { color: #c8ff00; }
+.reset-btn { width: 100%; margin-top: 1.25rem; padding: 14px; background: #141414; border: 1px solid #2a2a2a; border-radius: 12px; color: #555; font-size: 13px; cursor: pointer; font-family: inherit; }
+.complete-section { margin-top: 2rem; background: #141414; border-radius: 12px; border: 1px solid #1e1e1e; padding: 14px; }
+.complete-title { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 12px; }
+.complete-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #1e1e1e; cursor: pointer; }
+.complete-row:last-of-type { border-bottom: none; padding-bottom: 0; }
+.complete-row.done .complete-label { color: #555; text-decoration: line-through; }
+.complete-label { font-size: 14px; color: #bbb; flex: 1; }
+.date-label { font-size: 11px; color: #555; margin: 12px 0 6px; letter-spacing: 0.06em; }
+.date-input { width: 100%; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 8px; color: #bbb; font-size: 14px; padding: 10px 12px; font-family: inherit; outline: none; }
+.collapsible-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; margin-bottom: 0; user-select: none; }
+.collapsible-header.open { border-radius: 10px 10px 0 0; border-bottom-color: #1a1a1a; }
+.collapsible-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; }
+.collapsible-chevron { font-size: 11px; color: #555; transition: transform 0.2s ease; }
+.collapsible-header.open .collapsible-chevron { transform: rotate(180deg); }
+.collapsible-body { display: none; background: #0f0f0f; border: 1px solid #2a2a2a; border-top: none; border-radius: 0 0 10px 10px; padding: 14px; margin-bottom: 1.5rem; }
+.collapsible-body.open { display: block; }
+.vo-line { font-size: 13px; color: #888; line-height: 2.2; font-style: italic; }
+.vo-line .key { color: #ddd; font-style: normal; font-weight: 600; }
+.vo-line .dim { color: #555; font-style: normal; font-size: 12px; }
+.source-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; }
+.source-box-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #555; white-space: nowrap; }
+.source-box a { font-size: 12px; color: #c8ff00; text-decoration: none; word-break: break-all; }
+.source-box a:hover { text-decoration: underline; }
+.caption-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px; margin-bottom: 1.5rem; }
+.caption-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 10px; }
+.caption-text { font-size: 14px; color: #bbb; line-height: 1.7; }
+.caption-text strong { color: #f0f0f0; }
+.series-badge { display: inline-block; background: #1a1a2a; border: 1px solid #2a2a3a; color: #7c8fff; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; padding: 4px 12px; border-radius: 99px; margin-bottom: 1rem; }
+.wardrobe-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px; margin-bottom: 1.5rem; }
+.wardrobe-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 8px; }
+.wardrobe-text { font-size: 13px; color: #666; line-height: 1.65; }
+</style>
+</head>
+<body>
+
+<div class="title-label">WWA — Origin Series</div>
+<div class="shoot-title">The Invisible Problem.</div>
+<div class="series-badge">Part 1 of 6 — The Origin</div>
+
+<div class="meta-row">
+  <div class="meta-pill">Format: <span>Talking Head + B-Roll</span></div>
+  <div class="meta-pill">Funnel: <span>ToF</span></div>
+  <div class="meta-pill">Pattern: <span>Vulnerable Confession</span></div>
+  <div class="meta-pill">Operator: <span>Henry</span></div>
+  <div class="meta-pill">Location: <span>Personal Setting — Not Gym</span></div>
+  <div class="meta-pill">Camera: <span>Sony FX3</span></div>
+  <div class="meta-pill">Lens: <span>35mm DZO</span></div>
+  <div class="meta-pill">Orientation: <span>Vertical 9:16</span></div>
+  <div class="meta-pill">Ash: <span>Casual — Non-Gym</span></div>
+</div>
+
+<div class="source-box"><span class="source-box-label">Source</span><a href="https://www.instagram.com/reel/DCHoFylyuE-/" target="_blank">instagram.com/reel/DCHoFylyuE-</a></div>
+
+<div class="wardrobe-box">
+  <div class="wardrobe-title">Wardrobe + Setting — Critical</div>
+  <div class="wardrobe-text">Casual, fashionable, non-gym. Atelier or WWA streetwear — the clothes Ash wears outside the gym. This is the only node where the physique is not the visual. The person is.<br><br>Setting: same personal location used across all 6 nodes. Character in the background — bookshelves, textured wall, window light. Not a set. A real space. This setting becomes the visual signature of the entire Origin series. Do not change it between nodes.</div>
+</div>
+
+<div class="caption-box">
+  <div class="caption-title">Caption — Copy for Post</div>
+  <div class="caption-text"><strong>Part 1 of 6 — The Invisible Problem.</strong></div>
+</div>
+
+<div class="prog-row"><p>Progress</p><strong id="prog-text">0 / 6</strong></div>
+<div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+
+<div class="section-label">Full Script</div>
+<div class="collapsible-header" id="script-toggle" onclick="toggleScript()">
+  <span class="collapsible-title">Read in full before shooting — use teleprompter</span>
+  <span class="collapsible-chevron">▼</span>
+</div>
+<div class="collapsible-body" id="script-body">
+  <div class="vo-line">
+    <span class="key">A lot of driven men — and I mean most of them — burn out in silence.</span><br><br>
+    And it's just how we're wired.<br><br>
+    We were taught that the grind is the goal. That any moment of rest equates to failure.<br><br>
+    <span class="key">That belief is suffocating.</span><br><br>
+    <span class="key">Nobody tells you that's how you disappear.</span><br><br>
+    You don't wake up one day at the bottom. You just look up and realize you've been there for a while.<br><br>
+    I was angry at everything. Exhausted. Isolated in a city across the country from my family and support system.<br><br>
+    <span class="key">There was no home.</span><br><br>
+    "It's only temporary." It never was.<br><br>
+    That's not drive. That's a slow collapse dressed up as ambition.<br><br>
+    <span class="key">And in the midst of collapse is where Waterworld begins. Not in the gym. In the wreckage.</span>
+  </div>
+</div>
+
+<div class="divider"></div>
+<div class="section-label">Shot List</div>
+
+<div class="shot" data-id="s1">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 1 — Primary Take</div>
+      <div class="shot-title">Full script. One continuous take. No cuts.</div>
+      <div class="shot-detail">Ash facing camera, upper body portrait frame, direct eye contact throughout. Teleprompter in use — eyes must stay on lens, not drifting. Casual clothes. Personal setting. Natural or single soft light source. This is the anchor footage for the entire video. Shoot minimum 3 full takes — pick the one where the pauses feel most natural and the eye contact never breaks.</div>
+      <div style="margin-top:8px"><span class="tag tag-direct">Direct to Camera</span><span class="tag tag-origin">Origin</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      <span class="key">Full script — read in full above.</span><br>
+      <span class="dim">Pacing: slow. Let every pause breathe. "There was no home." holds for a full beat before continuing. "In the wreckage." is the last word. Don't fill the silence after it.</span>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s2">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 2 — B-Roll: Training Footage</div>
+      <div class="shot-title">Archive training clips for overlay on gym-adjacent lines.</div>
+      <div class="shot-detail">Pull from existing diary frame or session footage. Used as overlay B-roll underneath the voiceover when the script references the physical — "in the gym," "in the wreckage." These clips play over the voice while Ash continues speaking. Dark, cinematic, moody grade. Not pump content — raw training moments. The grind without the glory.</div>
+      <div style="margin-top:8px"><span class="tag tag-broll">B-Roll</span><span class="tag tag-origin">Archive</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">B-Roll Placement</div>
+    <div class="script-lines">
+      <span class="dim">Drop B-roll on: "Not in the gym. In the wreckage." — final line only. Everything else stays on Ash's face. The B-roll is the punctuation on the close, not a visual escape from the confession.</span>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s3">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 3 — Setting Establishing Shot</div>
+      <div class="shot-title">Wide shot of the personal setting. Used across all 6 nodes.</div>
+      <div class="shot-detail">Capture a clean wide shot of the full setting — the chair, the background, the light. This shot locks in the visual signature of the entire Origin series. Every node opens or closes in this space. Shoot it once, use it across all six. Get it right.</div>
+      <div style="margin-top:8px"><span class="tag tag-origin">Series Anchor</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">Note</div>
+    <div class="script-lines"><span class="dim">This shot is not used in Node 1 edit necessarily — but capture it now so it's available for the series opener or any future node that needs it.</span></div>
+  </div>
+</div>
+
+<div class="note-box">
+  <p><strong>The one thing that makes or breaks this shoot:</strong> the pauses. This script is not meant to be delivered fast. Every line needs space after it. The silence is not dead air — it's the emotion landing. If Ash rushes through this, the intimacy collapses. Slow is the instruction.</p>
+  <p><strong>Teleprompter note:</strong> the teleprompter must be positioned directly behind or beside the lens so eye contact reads as direct to camera. If the eyes track left or right to read, reshoot. The eye contact is the entire hook.</p>
+  <p><strong>Series note:</strong> this setting, this frame, this wardrobe aesthetic is locked for all 6 nodes. Do not change the location between nodes. The visual consistency is what tells the viewer this is a body of work, not six separate videos.</p>
+</div>
+
+<div class="divider"></div>
+<div class="section-label">Editing Notes</div>
+
+<div class="shot" data-id="edit1">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">No cuts in the primary take</div>
+      <div class="shot-detail">The entire video is one continuous shot of Ash. No jump cuts, no angle changes, no cutaways except the single B-roll drop on the final line. The rawness of one unbroken take is the format. Any cut breaks the intimacy.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit2">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Text overlay — each line as it's spoken, below chest</div>
+      <div class="shot-detail">Clean minimal font, white, below the chest line. One line at a time. Appears as Ash speaks it. Never two lines simultaneously. This captures the muted viewer without breaking the visual for sound-on viewers.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit3">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Music — ambient, melancholic, barely audible</div>
+      <div class="shot-detail">If music is used, it sits underneath — not driving the pace, just creating atmosphere. Slow, minimal, emotional. It should not be identifiable as a track. If it calls attention to itself, remove it. The voice is the only thing that matters.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit4">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Grade — consistent across all 6 nodes</div>
+      <div class="shot-detail">Establish the grade for this node and lock it as the series grade. Every Origin node gets the same colour treatment. Slightly cooler, slightly darker than standard WWA palette. This is a different emotional register to the Contrast content — the grade should reflect that.</div>
+    </div>
+  </div>
+</div>
+
+<div class="complete-section">
+  <div class="complete-title">Completion</div>
+  <div class="complete-row" data-id="c1" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Setting locked and lit</div></div>
+  <div class="complete-row" data-id="c2" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Primary take captured (min 3 takes)</div></div>
+  <div class="complete-row" data-id="c3" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Establishing shot captured</div></div>
+  <div class="complete-row" data-id="c4" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">B-roll training clips pulled from archive</div></div>
+  <div class="complete-row" data-id="c5" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Edit complete</div></div>
+  <div class="complete-row" data-id="c6" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Posted</div></div>
+  <div class="date-label">COMPLETION DATE</div>
+  <input type="date" class="date-input" id="completion-date" onchange="saveDate(this.value)">
+</div>
+
+<button class="reset-btn" onclick="resetAll()">Reset checklist</button>
+
+<script>
+const KEY='wwa_origin_node1_v1';
+function getState(){try{return JSON.parse(localStorage.getItem(KEY))||{};}catch(e){return{};}}
+function setState(s){try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){}}
+function updateProgress(){const shots=document.querySelectorAll('.shot');const done=document.querySelectorAll('.shot.done').length;document.getElementById('prog-fill').style.width=Math.round((done/shots.length)*100)+'%';document.getElementById('prog-text').textContent=done+' / '+shots.length;}
+function toggle(el){el.classList.toggle('done');const s=getState();s[el.dataset.id]=el.classList.contains('done');setState(s);updateProgress();}
+function toggleComplete(el){el.classList.toggle('done');const s=getState();s[el.dataset.id]=el.classList.contains('done');setState(s);}
+function saveDate(val){const s=getState();s.completion_date=val;setState(s);}
+function resetAll(){document.querySelectorAll('.shot.done,.complete-row.done').forEach(el=>el.classList.remove('done'));document.getElementById('completion-date').value='';setState({});updateProgress();}
+function toggleScript(){const header=document.getElementById('script-toggle');const body=document.getElementById('script-body');header.classList.toggle('open');body.classList.toggle('open');}
+(function(){const s=getState();document.querySelectorAll('.shot,.complete-row').forEach(el=>{if(s[el.dataset.id])el.classList.add('done');});if(s.completion_date)document.getElementById('completion-date').value=s.completion_date;updateProgress();})();
+</script>
+</body>
+</html>
