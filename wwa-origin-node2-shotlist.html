@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>WWA - Origin Node 2 — Physical Reality</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 1.25rem; min-height: 100vh; }
+.title-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; color: #555; text-transform: uppercase; margin-bottom: 4px; }
+.shoot-title { font-size: 22px; font-weight: 600; color: #f0f0f0; line-height: 1.2; margin-bottom: 1.5rem; }
+.meta-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+.meta-pill { font-size: 11px; color: #888; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 99px; padding: 4px 10px; }
+.meta-pill span { color: #c8ff00; }
+.prog-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.prog-row p { font-size: 12px; color: #666; }
+.prog-row strong { font-size: 12px; color: #f0f0f0; }
+.progress-bar { height: 4px; background: #1e1e1e; border-radius: 99px; overflow: hidden; margin-bottom: 1.5rem; }
+.progress-fill { height: 100%; background: #c8ff00; border-radius: 99px; transition: width 0.3s ease; }
+.section-label { font-size: 10px; font-weight: 600; color: #555; text-transform: uppercase; margin: 1.5rem 0 0.75rem; letter-spacing: 0.1em; }
+.shot { background: #141414; border-radius: 12px; margin-bottom: 10px; border: 1px solid #1e1e1e; overflow: hidden; }
+.shot.done { opacity: 0.4; }
+.shot.done .shot-title { text-decoration: line-through; color: #555; }
+.shot-header { display: flex; align-items: flex-start; gap: 14px; padding: 14px; cursor: pointer; }
+.cb { width: 24px; height: 24px; min-width: 24px; border-radius: 50%; border: 1.5px solid #333; display: flex; align-items: center; justify-content: center; background: transparent; flex-shrink: 0; margin-top: 1px; }
+.shot.done .cb, .complete-row.done .cb { background: #c8ff00; border-color: #c8ff00; }
+.check-icon { width: 13px; height: 13px; stroke: #000; stroke-width: 2.5; fill: none; display: none; }
+.shot.done .check-icon, .complete-row.done .check-icon { display: block; }
+.shot-body { flex: 1; }
+.shot-num { font-size: 10px; color: #555; font-weight: 600; text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.08em; }
+.shot-title { font-size: 15px; font-weight: 600; color: #e0e0e0; margin-bottom: 5px; line-height: 1.3; }
+.shot-detail { font-size: 13px; color: #666; line-height: 1.55; }
+.script-section { border-top: 1px solid #1e1e1e; padding: 12px 14px 14px 52px; }
+.script-label { font-size: 9px; text-transform: uppercase; color: #c8ff00; font-weight: 600; margin-bottom: 8px; letter-spacing: 0.12em; }
+.script-lines { font-size: 13px; color: #777; line-height: 1.9; font-style: italic; }
+.script-lines .key { color: #bbb; font-style: normal; font-weight: 600; }
+.script-lines .dim { color: #555; font-style: normal; font-size: 12px; }
+.tag { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; margin-right: 4px; margin-bottom: 4px; }
+.tag-origin { background: #1a1a2a; color: #7c8fff; border: 1px solid #2a2a3a; }
+.tag-broll { background: #2a1a2a; color: #ce7cff; border: 1px solid #3a2a3a; }
+.tag-direct { background: #1a2a1a; color: #4caf50; border: 1px solid #2a3a2a; }
+.tag-hook { background: #2a1a00; color: #c8ff00; border: 1px solid #3a2a00; }
+.divider { height: 1px; background: #1a1a1a; margin: 1.5rem 0; }
+.note-box { background: #111; border-left: 2px solid #c8ff00; border-radius: 0 10px 10px 0; padding: 12px 14px; margin-top: 1rem; }
+.note-box p { font-size: 13px; color: #777; line-height: 1.65; margin-bottom: 8px; }
+.note-box p:last-child { margin-bottom: 0; }
+.note-box strong { color: #c8ff00; }
+.reset-btn { width: 100%; margin-top: 1.25rem; padding: 14px; background: #141414; border: 1px solid #2a2a2a; border-radius: 12px; color: #555; font-size: 13px; cursor: pointer; font-family: inherit; }
+.complete-section { margin-top: 2rem; background: #141414; border-radius: 12px; border: 1px solid #1e1e1e; padding: 14px; }
+.complete-title { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 12px; }
+.complete-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #1e1e1e; cursor: pointer; }
+.complete-row:last-of-type { border-bottom: none; padding-bottom: 0; }
+.complete-row.done .complete-label { color: #555; text-decoration: line-through; }
+.complete-label { font-size: 14px; color: #bbb; flex: 1; }
+.date-label { font-size: 11px; color: #555; margin: 12px 0 6px; letter-spacing: 0.06em; }
+.date-input { width: 100%; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 8px; color: #bbb; font-size: 14px; padding: 10px 12px; font-family: inherit; outline: none; }
+.collapsible-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; margin-bottom: 0; user-select: none; }
+.collapsible-header.open { border-radius: 10px 10px 0 0; border-bottom-color: #1a1a1a; }
+.collapsible-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; }
+.collapsible-chevron { font-size: 11px; color: #555; transition: transform 0.2s ease; }
+.collapsible-header.open .collapsible-chevron { transform: rotate(180deg); }
+.collapsible-body { display: none; background: #0f0f0f; border: 1px solid #2a2a2a; border-top: none; border-radius: 0 0 10px 10px; padding: 14px; margin-bottom: 1.5rem; }
+.collapsible-body.open { display: block; }
+.vo-line { font-size: 13px; color: #888; line-height: 2.2; font-style: italic; }
+.vo-line .key { color: #ddd; font-style: normal; font-weight: 600; }
+.vo-line .dim { color: #555; font-style: normal; font-size: 12px; }
+.source-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; }
+.source-box-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #555; white-space: nowrap; }
+.source-box a { font-size: 12px; color: #c8ff00; text-decoration: none; word-break: break-all; }
+.source-box a:hover { text-decoration: underline; }
+.caption-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px; margin-bottom: 1.5rem; }
+.caption-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 10px; }
+.caption-text { font-size: 14px; color: #bbb; line-height: 1.7; }
+.caption-text strong { color: #f0f0f0; }
+.series-badge { display: inline-block; background: #1a1a2a; border: 1px solid #2a2a3a; color: #7c8fff; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; padding: 4px 12px; border-radius: 99px; margin-bottom: 1rem; }
+.wardrobe-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px; margin-bottom: 1.5rem; }
+.wardrobe-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 8px; }
+.wardrobe-text { font-size: 13px; color: #666; line-height: 1.65; }
+</style>
+</head>
+<body>
+
+<div class="title-label">WWA — Origin Series</div>
+<div class="shoot-title">Physical Reality.</div>
+<div class="series-badge">Part 2 of 6 — The Origin</div>
+
+<div class="meta-row">
+  <div class="meta-pill">Format: <span>Talking Head + B-Roll</span></div>
+  <div class="meta-pill">Funnel: <span>ToF</span></div>
+  <div class="meta-pill">Pattern: <span>Vulnerable Confession</span></div>
+  <div class="meta-pill">Operator: <span>Henry</span></div>
+  <div class="meta-pill">Location: <span>Personal Setting — Same as Node 1</span></div>
+  <div class="meta-pill">Camera: <span>Sony FX3</span></div>
+  <div class="meta-pill">Lens: <span>35mm DZO</span></div>
+  <div class="meta-pill">Orientation: <span>Vertical 9:16</span></div>
+  <div class="meta-pill">Ash: <span>Casual — Non-Gym</span></div>
+</div>
+
+<div class="source-box"><span class="source-box-label">Source</span><a href="https://www.instagram.com/reel/DCHoFylyuE-/" target="_blank">instagram.com/reel/DCHoFylyuE-</a></div>
+
+<div class="wardrobe-box">
+  <div class="wardrobe-title">Wardrobe + Setting — Must Match Node 1</div>
+  <div class="wardrobe-text">Exact same personal setting as Node 1. Same chair, same light, same frame, same grade. Do not change anything. The visual consistency across all 6 nodes is what tells the viewer this is a body of work. Casual WWA or Atelier clothing — non-gym.</div>
+</div>
+
+<div class="caption-box">
+  <div class="caption-title">Caption — Copy for Post</div>
+  <div class="caption-text"><strong>Part 2 of 6 — Physical Reality.</strong></div>
+</div>
+
+<div class="prog-row"><p>Progress</p><strong id="prog-text">0 / 6</strong></div>
+<div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+
+<div class="section-label">Full Script</div>
+<div class="collapsible-header" id="script-toggle" onclick="toggleScript()">
+  <span class="collapsible-title">Read in full before shooting — use teleprompter</span>
+  <span class="collapsible-chevron">▼</span>
+</div>
+<div class="collapsible-body" id="script-body">
+  <div class="vo-line">
+    <span class="key">Depression has a body.</span><br><br>
+    <span class="key">It used to be mine.</span><br><br>
+    Skinny fat. Soft. It was easy for me to disappear.<br><br>
+    I spent fifteen years in nonstop daily pain.<br><br>
+    Excruciating lower back pain. An underdeveloped core. Weak glutes.<br><br>
+    <span class="key">I was in my twenties and walking a city block was a problem.</span><br><br>
+    I've seen every lower back stretch on YouTube. That was my daily routine.<br><br>
+    I was desperate. I spent years hunting for just one second of peace — which never came.<br><br>
+    Because nothing helps when the days you're living are the problem.<br><br>
+    I made peace with pain. Told myself these were just the cards I was dealt.<br><br>
+    The difference between then and now isn't motion. It's direction.<br><br>
+    <span class="key">You're not broken. You just need to learn how to build.</span>
+  </div>
+</div>
+
+<div class="divider"></div>
+<div class="section-label">Shot List</div>
+
+<div class="shot" data-id="s1">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 1 — Primary Take</div>
+      <div class="shot-title">Full script. One continuous take. No cuts.</div>
+      <div class="shot-detail">Same setup as Node 1. Ash facing camera, upper body portrait, direct eye contact throughout, teleprompter in use. Casual clothes. Same personal setting, same light. Minimum 3 full takes. Pick the one with the most natural pauses and unbroken eye contact. Pacing is slow — let every line breathe, especially "It used to be mine" and "which never came."</div>
+      <div style="margin-top:8px"><span class="tag tag-direct">Direct to Camera</span><span class="tag tag-origin">Origin</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      <span class="key">Full script — read in full above.</span><br>
+      <span class="dim">Key pauses: hold after "It used to be mine." — full beat. Hold after "which never came." — full beat. "You're not broken." — deliver directly into the lens. That line is for one specific person watching.</span>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s2">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 2 — B-Roll: Urban Street Clip</div>
+      <div class="shot-title">City block. Bleak. Urban. Drops on "walking a city block was a problem."</div>
+      <div class="shot-detail">A street-level clip — pavement, a city block, nothing glamorous. Could be Toronto footage from archive. Moody, slightly desaturated. The visual is not about beauty — it's about the mundane act that became a problem. Hold for the full line then cut back to Ash.</div>
+      <div style="margin-top:8px"><span class="tag tag-broll">B-Roll</span><span class="tag tag-origin">Archive</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">B-Roll Placement</div>
+    <div class="script-lines"><span class="dim">Drop on: "I was in my twenties and walking a city block was a problem." Cut back to Ash immediately after.</span></div>
+  </div>
+</div>
+
+<div class="shot" data-id="s3">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 3 — B-Roll: Early Training or Dark Gym</div>
+      <div class="shot-title">Raw, unglamorous gym footage. Drops on "motion vs direction" line.</div>
+      <div class="shot-detail">Not pump content. Not the physique showcase. Dark, early, unglamorous training — empty gym, weights on the floor, something that feels like the beginning not the peak. If no early training archive exists, a dark atmospheric gym shot works. This is the visual bridge between the pain era and what came after.</div>
+      <div style="margin-top:8px"><span class="tag tag-broll">B-Roll</span><span class="tag tag-origin">Archive</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">B-Roll Placement</div>
+    <div class="script-lines"><span class="dim">Drop on: "The difference between then and now isn't motion. It's direction." Hold through the line. Cut back to Ash for the final line.</span></div>
+  </div>
+</div>
+
+<div class="shot" data-id="s4">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 4 — B-Roll: Current Physique</div>
+      <div class="shot-title">Silent. No text. Ash's physique. The close.</div>
+      <div class="shot-detail">After "You're not broken. You just need to learn how to build." — cut to a clean physique shot. No pump check performance. Just Ash standing, shirt off, the result visible. Hold for 2–3 seconds. No text. No music change. This is the proof that everything you just heard is real. The viewer has spent the whole video in the pain era — this is the first glimpse of what came after. Let it land in silence.</div>
+      <div style="margin-top:8px"><span class="tag tag-broll">Closing</span><span class="tag tag-origin">Physique</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">B-Roll Placement</div>
+    <div class="script-lines"><span class="dim">Drop after the final line. No voiceover. No text. Just the physique. This is the most powerful frame in the entire node — do not undercut it with anything.</span></div>
+  </div>
+</div>
+
+<div class="note-box">
+  <p><strong>The most important line in this node:</strong> "I was in my twenties and walking a city block was a problem." That's the scroll-stop. Someone in their twenties or thirties reading that either recognises themselves or recognises someone they love. Deliver it flat. No drama. The flatness is what makes it devastating.</p>
+  <p><strong>The closing B-roll is the entire point of this node.</strong> Node 2 exists to show the before so the after lands. The physique shot at the end is not vanity — it's the payoff for everything that came before it. It needs to be captured clean, pumped, defined. The contrast with everything described in the script is the hook into Node 3.</p>
+  <p><strong>Grade:</strong> match Node 1 exactly. Same series, same visual world.</p>
+</div>
+
+<div class="divider"></div>
+<div class="section-label">Editing Notes</div>
+
+<div class="shot" data-id="edit1">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">No cuts in the primary take — B-roll overlays only</div>
+      <div class="shot-detail">The base is one continuous take. B-roll drops overlay on top of the voiceover — Ash's voice continues uninterrupted underneath. Never cut away from Ash during a line. Only overlay during or between lines.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit2">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Text overlay — each line as spoken, below chest</div>
+      <div class="shot-detail">Same as Node 1. Clean minimal font, white, below chest line. One line at a time. Appears as Ash speaks it. Text continues over B-roll overlays so muted viewers never lose the thread.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit3">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Closing physique shot — no text, no music change</div>
+      <div class="shot-detail">The physique B-roll at the close gets no text overlay and no music transition. Silence after the final spoken word. The image does the work. Do not fill it.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit4">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Grade — match Node 1 exactly</div>
+      <div class="shot-detail">Same series grade locked in Node 1. Apply identically here. The B-roll clips will need to be brought into the same palette — cooler, slightly darker than standard WWA content.</div>
+    </div>
+  </div>
+</div>
+
+<div class="complete-section">
+  <div class="complete-title">Completion</div>
+  <div class="complete-row" data-id="c1" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Setting confirmed — matches Node 1</div></div>
+  <div class="complete-row" data-id="c2" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Primary take captured (min 3 takes)</div></div>
+  <div class="complete-row" data-id="c3" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Street B-roll pulled from archive</div></div>
+  <div class="complete-row" data-id="c4" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Early training or dark gym B-roll pulled</div></div>
+  <div class="complete-row" data-id="c5" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Closing physique shot captured</div></div>
+  <div class="complete-row" data-id="c6" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Edit complete</div></div>
+  <div class="complete-row" data-id="c7" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Posted</div></div>
+  <div class="date-label">COMPLETION DATE</div>
+  <input type="date" class="date-input" id="completion-date" onchange="saveDate(this.value)">
+</div>
+
+<button class="reset-btn" onclick="resetAll()">Reset checklist</button>
+
+<script>
+const KEY='wwa_origin_node2_v1';
+function getState(){try{return JSON.parse(localStorage.getItem(KEY))||{};}catch(e){return{};}}
+function setState(s){try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){}}
+function updateProgress(){const shots=document.querySelectorAll('.shot');const done=document.querySelectorAll('.shot.done').length;document.getElementById('prog-fill').style.width=Math.round((done/shots.length)*100)+'%';document.getElementById('prog-text').textContent=done+' / '+shots.length;}
+function toggle(el){el.classList.toggle('done');const s=getState();s[el.dataset.id]=el.classList.contains('done');setState(s);updateProgress();}
+function toggleComplete(el){el.classList.toggle('done');const s=getState();s[el.dataset.id]=el.classList.contains('done');setState(s);}
+function saveDate(val){const s=getState();s.completion_date=val;setState(s);}
+function resetAll(){document.querySelectorAll('.shot.done,.complete-row.done').forEach(el=>el.classList.remove('done'));document.getElementById('completion-date').value='';setState({});updateProgress();}
+function toggleScript(){const header=document.getElementById('script-toggle');const body=document.getElementById('script-body');header.classList.toggle('open');body.classList.toggle('open');}
+(function(){const s=getState();document.querySelectorAll('.shot,.complete-row').forEach(el=>{if(s[el.dataset.id])el.classList.add('done');});if(s.completion_date)document.getElementById('completion-date').value=s.completion_date;updateProgress();})();
+</script>
+</body>
+</html>
