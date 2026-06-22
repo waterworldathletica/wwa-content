@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>WWA - Origin Node 4 — What He Figured Out</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 1.25rem; min-height: 100vh; }
+.title-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; color: #555; text-transform: uppercase; margin-bottom: 4px; }
+.shoot-title { font-size: 22px; font-weight: 600; color: #f0f0f0; line-height: 1.2; margin-bottom: 1.5rem; }
+.meta-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+.meta-pill { font-size: 11px; color: #888; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 99px; padding: 4px 10px; }
+.meta-pill span { color: #c8ff00; }
+.prog-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.prog-row p { font-size: 12px; color: #666; }
+.prog-row strong { font-size: 12px; color: #f0f0f0; }
+.progress-bar { height: 4px; background: #1e1e1e; border-radius: 99px; overflow: hidden; margin-bottom: 1.5rem; }
+.progress-fill { height: 100%; background: #c8ff00; border-radius: 99px; transition: width 0.3s ease; }
+.section-label { font-size: 10px; font-weight: 600; color: #555; text-transform: uppercase; margin: 1.5rem 0 0.75rem; letter-spacing: 0.1em; }
+.shot { background: #141414; border-radius: 12px; margin-bottom: 10px; border: 1px solid #1e1e1e; overflow: hidden; }
+.shot.done { opacity: 0.4; }
+.shot.done .shot-title { text-decoration: line-through; color: #555; }
+.shot-header { display: flex; align-items: flex-start; gap: 14px; padding: 14px; cursor: pointer; }
+.cb { width: 24px; height: 24px; min-width: 24px; border-radius: 50%; border: 1.5px solid #333; display: flex; align-items: center; justify-content: center; background: transparent; flex-shrink: 0; margin-top: 1px; }
+.shot.done .cb, .complete-row.done .cb { background: #c8ff00; border-color: #c8ff00; }
+.check-icon { width: 13px; height: 13px; stroke: #000; stroke-width: 2.5; fill: none; display: none; }
+.shot.done .check-icon, .complete-row.done .check-icon { display: block; }
+.shot-body { flex: 1; }
+.shot-num { font-size: 10px; color: #555; font-weight: 600; text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.08em; }
+.shot-title { font-size: 15px; font-weight: 600; color: #e0e0e0; margin-bottom: 5px; line-height: 1.3; }
+.shot-detail { font-size: 13px; color: #666; line-height: 1.55; }
+.script-section { border-top: 1px solid #1e1e1e; padding: 12px 14px 14px 52px; }
+.script-label { font-size: 9px; text-transform: uppercase; color: #c8ff00; font-weight: 600; margin-bottom: 8px; letter-spacing: 0.12em; }
+.script-lines { font-size: 13px; color: #777; line-height: 1.9; font-style: italic; }
+.script-lines .key { color: #bbb; font-style: normal; font-weight: 600; }
+.script-lines .dim { color: #555; font-style: normal; font-size: 12px; }
+.tag { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; margin-right: 4px; margin-bottom: 4px; }
+.tag-origin { background: #1a1a2a; color: #7c8fff; border: 1px solid #2a2a3a; }
+.tag-broll { background: #2a1a2a; color: #ce7cff; border: 1px solid #3a2a3a; }
+.tag-direct { background: #1a2a1a; color: #4caf50; border: 1px solid #2a3a2a; }
+.tag-hook { background: #2a1a00; color: #c8ff00; border: 1px solid #3a2a00; }
+.tag-key { background: #2a1500; color: #ff9c40; border: 1px solid #3a2500; }
+.divider { height: 1px; background: #1a1a1a; margin: 1.5rem 0; }
+.note-box { background: #111; border-left: 2px solid #c8ff00; border-radius: 0 10px 10px 0; padding: 12px 14px; margin-top: 1rem; }
+.note-box p { font-size: 13px; color: #777; line-height: 1.65; margin-bottom: 8px; }
+.note-box p:last-child { margin-bottom: 0; }
+.note-box strong { color: #c8ff00; }
+.reset-btn { width: 100%; margin-top: 1.25rem; padding: 14px; background: #141414; border: 1px solid #2a2a2a; border-radius: 12px; color: #555; font-size: 13px; cursor: pointer; font-family: inherit; }
+.complete-section { margin-top: 2rem; background: #141414; border-radius: 12px; border: 1px solid #1e1e1e; padding: 14px; }
+.complete-title { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 12px; }
+.complete-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #1e1e1e; cursor: pointer; }
+.complete-row:last-of-type { border-bottom: none; padding-bottom: 0; }
+.complete-row.done .complete-label { color: #555; text-decoration: line-through; }
+.complete-label { font-size: 14px; color: #bbb; flex: 1; }
+.date-label { font-size: 11px; color: #555; margin: 12px 0 6px; letter-spacing: 0.06em; }
+.date-input { width: 100%; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 8px; color: #bbb; font-size: 14px; padding: 10px 12px; font-family: inherit; outline: none; }
+.collapsible-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; margin-bottom: 0; user-select: none; }
+.collapsible-header.open { border-radius: 10px 10px 0 0; border-bottom-color: #1a1a1a; }
+.collapsible-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; }
+.collapsible-chevron { font-size: 11px; color: #555; transition: transform 0.2s ease; }
+.collapsible-header.open .collapsible-chevron { transform: rotate(180deg); }
+.collapsible-body { display: none; background: #0f0f0f; border: 1px solid #2a2a2a; border-top: none; border-radius: 0 0 10px 10px; padding: 14px; margin-bottom: 1.5rem; }
+.collapsible-body.open { display: block; }
+.vo-line { font-size: 13px; color: #888; line-height: 2.2; font-style: italic; }
+.vo-line .key { color: #ddd; font-style: normal; font-weight: 600; }
+.vo-line .dim { color: #555; font-style: normal; font-size: 12px; }
+.source-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; }
+.source-box-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #555; white-space: nowrap; }
+.source-box a { font-size: 12px; color: #c8ff00; text-decoration: none; word-break: break-all; }
+.source-box a:hover { text-decoration: underline; }
+.caption-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px; margin-bottom: 1.5rem; }
+.caption-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 10px; }
+.caption-text { font-size: 14px; color: #bbb; line-height: 1.7; }
+.caption-text strong { color: #f0f0f0; }
+.series-badge { display: inline-block; background: #1a1a2a; border: 1px solid #2a2a3a; color: #7c8fff; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; padding: 4px 12px; border-radius: 99px; margin-bottom: 1rem; }
+.wardrobe-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px; margin-bottom: 1.5rem; }
+.wardrobe-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 8px; }
+.wardrobe-text { font-size: 13px; color: #666; line-height: 1.65; }
+</style>
+</head>
+<body>
+
+<div class="title-label">WWA — Origin Series</div>
+<div class="shoot-title">What He Figured Out.</div>
+<div class="series-badge">Part 4 of 6 — The Origin</div>
+
+<div class="meta-row">
+  <div class="meta-pill">Format: <span>Talking Head + B-Roll</span></div>
+  <div class="meta-pill">Funnel: <span>ToF</span></div>
+  <div class="meta-pill">Pattern: <span>Vulnerable Confession</span></div>
+  <div class="meta-pill">Operator: <span>Henry</span></div>
+  <div class="meta-pill">Location: <span>Personal Setting — Same as Nodes 1, 2 & 3</span></div>
+  <div class="meta-pill">Camera: <span>Sony FX3</span></div>
+  <div class="meta-pill">Lens: <span>35mm DZO</span></div>
+  <div class="meta-pill">Orientation: <span>Vertical 9:16</span></div>
+  <div class="meta-pill">Teleprompter: <span>Yes — direct eye contact required</span></div>
+</div>
+
+<div class="source-box">
+  <div class="source-box-label">Source Ref</div>
+  <a href="https://www.instagram.com/reel/DCHoFylyuE-/" target="_blank">https://www.instagram.com/reel/DCHoFylyuE-/</a>
+</div>
+
+<div class="wardrobe-box">
+  <div class="wardrobe-title">Wardrobe + Setting — Series Standard</div>
+  <div class="wardrobe-text">Casual non-gym clothing — Atelier or streetwear. Same personal setting used in Nodes 1, 2, and 3. Same chair, same light, same frame. Visual consistency across all 6 nodes is non-negotiable. This is a chapter in the same book — it must look like one.</div>
+</div>
+
+<div class="caption-box">
+  <div class="caption-title">Caption</div>
+  <div class="caption-text"><strong>Part 4 of 6 — What He Figured Out.</strong></div>
+</div>
+
+<div class="prog-row">
+  <p>Shot progress</p>
+  <strong><span id="prog-text">0 / 5</span></strong>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+
+<div class="collapsible-header" id="script-toggle" onclick="toggleScript()">
+  <span class="collapsible-title">Full Script</span>
+  <span class="collapsible-chevron">▼</span>
+</div>
+<div class="collapsible-body" id="script-body">
+  <div class="vo-line">
+    I wasn't trying to build a physique. I was trying to breathe — because I was drowning.<br><br>
+    Once my brother lit the fire, I began to pour gas on it.<br><br>
+    Within those first three months, everything shifted. Not in my body — in my mind.<br><br>
+    The chaos outside the gym began to feel lighter. Not because my circumstances had changed — but because I was changing within my circumstances.<br><br>
+    I learned how to move through adversity instead of running from it. Quicker problem solving. Mental clarity. Step by step solutions.<br><br>
+    I was building evidence. Evidence that I was capable of more than I thought.<br><br>
+    When you test boundaries long enough, they begin to break.<br><br>
+    Everybody walks into the room with their own limitations. When those limitations start to break, you begin to question everything. The world begins to open up.<br><br>
+    <span class="key">Your chains are longer than you know. And if you put consistent pressure on them, they begin to break. One link at a time.</span><br><br>
+    <span class="key">Progress accelerates the moment you stop mistaking your walls for your ceiling.</span><br><br>
+    The physique showed up fourteen months later. It was never the focus — but it became walking proof that my mind had already won.
+  </div>
+</div>
+
+<div class="section-label">Shot List</div>
+
+<div class="shot" data-id="s1">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 01</div>
+      <div class="shot-title">Hook — vulnerability first, no setup</div>
+      <div class="shot-detail">Locked off. Same frame as Nodes 1, 2, and 3. Direct eye contact from the first word. The hook is quiet — not a bold claim, not a call-out. Just a confession. "I wasn't trying to build a physique." Deliver it simply. The simplicity is what makes it stop the scroll.</div>
+      <div style="margin-top:8px"><span class="tag tag-hook">Hook</span><span class="tag tag-direct">Direct</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      I wasn't trying to build a physique. I was trying to breathe — because I was drowning.<br>
+      Once my brother lit the fire, I began to pour gas on it.
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s2">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 02</div>
+      <div class="shot-title">The shift — mind before body, B-roll drop on "chaos outside the gym"</div>
+      <div class="shot-detail">Talking head through the three months line. On "The chaos outside the gym began to feel lighter" — drop a brief atmospheric B-roll clip. City street, overcast, something that feels like the weight of the world outside. Then return to talking head immediately. The circumstances line is the most quotable line in the node — deliver it slowly. Let both halves of that sentence land separately.</div>
+      <div style="margin-top:8px"><span class="tag tag-broll">B-Roll</span><span class="tag tag-key">Key Moment</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      Within those first three months, everything shifted. Not in my body — in my mind.<br>
+      The chaos outside the gym began to feel lighter. Not because my circumstances had changed — but because I was changing within my circumstances.<br>
+      I learned how to move through adversity instead of running from it. Quicker problem solving. Mental clarity. Step by step solutions.
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s3">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 03</div>
+      <div class="shot-title">The evidence — building proof, B-roll drop on training footage</div>
+      <div class="shot-detail">On "I was building evidence" — drop early training B-roll. Raw, unglamorous gym footage. The visual should feel like work, not content. Return to talking head for the limitations and chains section. The chains lines need to breathe — "One link at a time." is three words that each need their own beat. Do not rush them.</div>
+      <div style="margin-top:8px"><span class="tag tag-broll">B-Roll</span><span class="tag tag-origin">Origin</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      I was building evidence. Evidence that I was capable of more than I thought.<br>
+      When you test boundaries long enough, they begin to break.<br>
+      Everybody walks into the room with their own limitations. When those limitations start to break, you begin to question everything. The world begins to open up.<br>
+      <span class="key">Your chains are longer than you know. And if you put consistent pressure on them, they begin to break. One link at a time.</span>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s4">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 04</div>
+      <div class="shot-title">The quotable — deliver "walls for your ceiling" as a full stop</div>
+      <div class="shot-detail">"Progress accelerates the moment you stop mistaking your walls for your ceiling." is the screenshottable line of the entire node. Deliver it as one complete thought with a hard stop at the end. No trailing energy. Say it and let it sit. This is the line people screenshot and send.</div>
+      <div style="margin-top:8px"><span class="tag tag-key">Screenshottable</span><span class="tag tag-direct">Direct</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      <span class="key">Progress accelerates the moment you stop mistaking your walls for your ceiling.</span>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s5">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 05</div>
+      <div class="shot-title">The close — physique B-roll on final line, silence after</div>
+      <div class="shot-detail">Talking head on "The physique showed up fourteen months later." On "it became walking proof that my mind had already won" — or immediately after — cut to Ash's current physique. Clean, pumped, defined. No text. No music change. Silence. The body on screen after that final line is the entire argument made visible. Hold for 2-3 seconds and let it land.</div>
+      <div style="margin-top:8px"><span class="tag tag-broll">Closing</span><span class="tag tag-origin">Physique</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      The physique showed up fourteen months later. <span class="key">It was never the focus — but it became walking proof that my mind had already won.</span>
+    </div>
+  </div>
+</div>
+
+<div class="note-box">
+  <p><strong>The screenshottable line:</strong> "Progress accelerates the moment you stop mistaking your walls for your ceiling." Give it its own beat. Full stop. Nothing after it until the close. That pause is what makes it land as a standalone thought people want to save.</p>
+  <p><strong>The circumstances line</strong> — "Not because my circumstances had changed — but because I was changing within my circumstances." — is the most quotable sentence in the node after the walls line. Deliver both halves slowly. The second half is the payoff and it needs space to land.</p>
+  <p><strong>"One link at a time."</strong> Three words. Three separate beats. Do not rush this. The pause between each word is the delivery.</p>
+  <p><strong>Teleprompter note:</strong> This node has more lines than Nodes 1-3. Pace is everything. Read slower than feels natural. The pauses between lines are not dead air — they are part of the script.</p>
+  <p><strong>Grade:</strong> Match Nodes 1, 2, and 3 exactly. Same series, same visual world. B-roll clips brought into the same palette — cooler, slightly darker than standard WWA content.</p>
+</div>
+
+<div class="divider"></div>
+<div class="section-label">Editing Notes</div>
+
+<div class="shot" data-id="edit1">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">One continuous take — B-roll overlays only, never cut Ash mid-line</div>
+      <div class="shot-detail">Base is a single unbroken take. B-roll drops overlay on top of the voiceover. Ash's voice continues underneath uninterrupted. Never cut away from Ash during a line — only between lines or at designated B-roll moments.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit2">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Text overlay — each line as spoken, below chest line</div>
+      <div class="shot-detail">Same as Nodes 1, 2, and 3. Clean minimal font, white, below chest. One line at a time, appears as Ash speaks it. Text continues over B-roll overlays so muted viewers never lose the thread. "One link at a time." gets its own three text drops — one word per beat.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit3">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Closing physique shot — no text, no music change, silence</div>
+      <div class="shot-detail">After "my mind had already won" — physique B-roll drops with no text overlay and no music transition. Hold in silence. Do not fill it. Node 5 is The Timeline — the physical proof era. This closing shot is the bridge into that node.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit4">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Grade — match Nodes 1, 2, and 3 exactly</div>
+      <div class="shot-detail">Series grade locked in Node 1. Apply identically. B-roll clips brought into the same palette — cooler, slightly darker than standard WWA content.</div>
+    </div>
+  </div>
+</div>
+
+<div class="complete-section">
+  <div class="complete-title">Completion</div>
+  <div class="complete-row" data-id="c1" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Setting confirmed — matches Nodes 1, 2, and 3</div></div>
+  <div class="complete-row" data-id="c2" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Primary take captured (min 3 takes)</div></div>
+  <div class="complete-row" data-id="c3" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">City B-roll sourced for chaos outside gym moment</div></div>
+  <div class="complete-row" data-id="c4" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Early training B-roll sourced for evidence moment</div></div>
+  <div class="complete-row" data-id="c5" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Closing physique shot captured</div></div>
+  <div class="complete-row" data-id="c6" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Edit complete</div></div>
+  <div class="complete-row" data-id="c7" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Posted</div></div>
+  <div class="date-label">COMPLETION DATE</div>
+  <input type="date" class="date-input" id="completion-date" onchange="saveDate(this.value)">
+</div>
+
+<button class="reset-btn" onclick="resetAll()">Reset checklist</button>
+
+<script>
+var KEY = 'wwa_origin_node4_v1';
+function getState() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e) { return {}; } }
+function setState(s) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch(e) {} }
+function updateProgress() {
+  var shots = document.querySelectorAll('.shot');
+  var done = document.querySelectorAll('.shot.done').length;
+  document.getElementById('prog-fill').style.width = Math.round((done / shots.length) * 100) + '%';
+  document.getElementById('prog-text').textContent = done + ' / ' + shots.length;
+}
+function toggle(el) { el.classList.toggle('done'); var s = getState(); s[el.dataset.id] = el.classList.contains('done'); setState(s); updateProgress(); }
+function toggleComplete(el) { el.classList.toggle('done'); var s = getState(); s[el.dataset.id] = el.classList.contains('done'); setState(s); }
+function saveDate(val) { var s = getState(); s.completion_date = val; setState(s); }
+function resetAll() { document.querySelectorAll('.shot.done,.complete-row.done').forEach(function(el) { el.classList.remove('done'); }); document.getElementById('completion-date').value = ''; setState({}); updateProgress(); }
+function toggleScript() { var header = document.getElementById('script-toggle'); var body = document.getElementById('script-body'); header.classList.toggle('open'); body.classList.toggle('open'); }
+(function() {
+  var s = getState();
+  document.querySelectorAll('.shot,.complete-row').forEach(function(el) { if (s[el.dataset.id]) el.classList.add('done'); });
+  if (s.completion_date) document.getElementById('completion-date').value = s.completion_date;
+  updateProgress();
+})();
+</script>
+</body>
+</html>
