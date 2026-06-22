@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>WWA - Origin Node 3 — Little Brother</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 1.25rem; min-height: 100vh; }
+.title-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; color: #555; text-transform: uppercase; margin-bottom: 4px; }
+.shoot-title { font-size: 22px; font-weight: 600; color: #f0f0f0; line-height: 1.2; margin-bottom: 1.5rem; }
+.meta-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+.meta-pill { font-size: 11px; color: #888; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 99px; padding: 4px 10px; }
+.meta-pill span { color: #c8ff00; }
+.prog-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.prog-row p { font-size: 12px; color: #666; }
+.prog-row strong { font-size: 12px; color: #f0f0f0; }
+.progress-bar { height: 4px; background: #1e1e1e; border-radius: 99px; overflow: hidden; margin-bottom: 1.5rem; }
+.progress-fill { height: 100%; background: #c8ff00; border-radius: 99px; transition: width 0.3s ease; }
+.section-label { font-size: 10px; font-weight: 600; color: #555; text-transform: uppercase; margin: 1.5rem 0 0.75rem; letter-spacing: 0.1em; }
+.shot { background: #141414; border-radius: 12px; margin-bottom: 10px; border: 1px solid #1e1e1e; overflow: hidden; }
+.shot.done { opacity: 0.4; }
+.shot.done .shot-title { text-decoration: line-through; color: #555; }
+.shot-header { display: flex; align-items: flex-start; gap: 14px; padding: 14px; cursor: pointer; }
+.cb { width: 24px; height: 24px; min-width: 24px; border-radius: 50%; border: 1.5px solid #333; display: flex; align-items: center; justify-content: center; background: transparent; flex-shrink: 0; margin-top: 1px; }
+.shot.done .cb, .complete-row.done .cb { background: #c8ff00; border-color: #c8ff00; }
+.check-icon { width: 13px; height: 13px; stroke: #000; stroke-width: 2.5; fill: none; display: none; }
+.shot.done .check-icon, .complete-row.done .check-icon { display: block; }
+.shot-body { flex: 1; }
+.shot-num { font-size: 10px; color: #555; font-weight: 600; text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.08em; }
+.shot-title { font-size: 15px; font-weight: 600; color: #e0e0e0; margin-bottom: 5px; line-height: 1.3; }
+.shot-detail { font-size: 13px; color: #666; line-height: 1.55; }
+.script-section { border-top: 1px solid #1e1e1e; padding: 12px 14px 14px 52px; }
+.script-label { font-size: 9px; text-transform: uppercase; color: #c8ff00; font-weight: 600; margin-bottom: 8px; letter-spacing: 0.12em; }
+.script-lines { font-size: 13px; color: #777; line-height: 1.9; font-style: italic; }
+.script-lines .key { color: #bbb; font-style: normal; font-weight: 600; }
+.script-lines .dim { color: #555; font-style: normal; font-size: 12px; }
+.tag { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; margin-right: 4px; margin-bottom: 4px; }
+.tag-origin { background: #1a1a2a; color: #7c8fff; border: 1px solid #2a2a3a; }
+.tag-broll { background: #2a1a2a; color: #ce7cff; border: 1px solid #3a2a3a; }
+.tag-direct { background: #1a2a1a; color: #4caf50; border: 1px solid #2a3a2a; }
+.tag-hook { background: #2a1a00; color: #c8ff00; border: 1px solid #3a2a00; }
+.tag-key { background: #2a1500; color: #ff9c40; border: 1px solid #3a2500; }
+.divider { height: 1px; background: #1a1a1a; margin: 1.5rem 0; }
+.note-box { background: #111; border-left: 2px solid #c8ff00; border-radius: 0 10px 10px 0; padding: 12px 14px; margin-top: 1rem; }
+.note-box p { font-size: 13px; color: #777; line-height: 1.65; margin-bottom: 8px; }
+.note-box p:last-child { margin-bottom: 0; }
+.note-box strong { color: #c8ff00; }
+.reset-btn { width: 100%; margin-top: 1.25rem; padding: 14px; background: #141414; border: 1px solid #2a2a2a; border-radius: 12px; color: #555; font-size: 13px; cursor: pointer; font-family: inherit; }
+.complete-section { margin-top: 2rem; background: #141414; border-radius: 12px; border: 1px solid #1e1e1e; padding: 14px; }
+.complete-title { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 12px; }
+.complete-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #1e1e1e; cursor: pointer; }
+.complete-row:last-of-type { border-bottom: none; padding-bottom: 0; }
+.complete-row.done .complete-label { color: #555; text-decoration: line-through; }
+.complete-label { font-size: 14px; color: #bbb; flex: 1; }
+.date-label { font-size: 11px; color: #555; margin: 12px 0 6px; letter-spacing: 0.06em; }
+.date-input { width: 100%; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 8px; color: #bbb; font-size: 14px; padding: 10px 12px; font-family: inherit; outline: none; }
+.collapsible-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; margin-bottom: 0; user-select: none; }
+.collapsible-header.open { border-radius: 10px 10px 0 0; border-bottom-color: #1a1a1a; }
+.collapsible-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; }
+.collapsible-chevron { font-size: 11px; color: #555; transition: transform 0.2s ease; }
+.collapsible-header.open .collapsible-chevron { transform: rotate(180deg); }
+.collapsible-body { display: none; background: #0f0f0f; border: 1px solid #2a2a2a; border-top: none; border-radius: 0 0 10px 10px; padding: 14px; margin-bottom: 1.5rem; }
+.collapsible-body.open { display: block; }
+.vo-line { font-size: 13px; color: #888; line-height: 2.2; font-style: italic; }
+.vo-line .key { color: #ddd; font-style: normal; font-weight: 600; }
+.vo-line .dim { color: #555; font-style: normal; font-size: 12px; }
+.source-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; }
+.source-box-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #555; white-space: nowrap; }
+.source-box a { font-size: 12px; color: #c8ff00; text-decoration: none; word-break: break-all; }
+.source-box a:hover { text-decoration: underline; }
+.caption-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px; margin-bottom: 1.5rem; }
+.caption-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 10px; }
+.caption-text { font-size: 14px; color: #bbb; line-height: 1.7; }
+.caption-text strong { color: #f0f0f0; }
+.series-badge { display: inline-block; background: #1a1a2a; border: 1px solid #2a2a3a; color: #7c8fff; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; padding: 4px 12px; border-radius: 99px; margin-bottom: 1rem; }
+.wardrobe-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px; margin-bottom: 1.5rem; }
+.wardrobe-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 8px; }
+.wardrobe-text { font-size: 13px; color: #666; line-height: 1.65; }
+</style>
+</head>
+<body>
+
+<div class="title-label">WWA — Origin Series</div>
+<div class="shoot-title">Little Brother.</div>
+<div class="series-badge">Part 3 of 6 — The Origin</div>
+
+<div class="meta-row">
+  <div class="meta-pill">Format: <span>Talking Head + B-Roll</span></div>
+  <div class="meta-pill">Funnel: <span>ToF</span></div>
+  <div class="meta-pill">Pattern: <span>Vulnerable Confession</span></div>
+  <div class="meta-pill">Operator: <span>Henry</span></div>
+  <div class="meta-pill">Location: <span>Personal Setting — Same as Nodes 1 & 2</span></div>
+  <div class="meta-pill">Camera: <span>Sony FX3</span></div>
+  <div class="meta-pill">Lens: <span>35mm DZO</span></div>
+  <div class="meta-pill">Orientation: <span>Vertical 9:16</span></div>
+  <div class="meta-pill">Teleprompter: <span>Yes — direct eye contact required</span></div>
+</div>
+
+<div class="source-box">
+  <div class="source-box-label">Source Ref</div>
+  <a href="https://www.instagram.com/reel/DCHoFylyuE-/" target="_blank">https://www.instagram.com/reel/DCHoFylyuE-/</a>
+</div>
+
+<div class="wardrobe-box">
+  <div class="wardrobe-title">Wardrobe + Setting — Series Standard</div>
+  <div class="wardrobe-text">Casual non-gym clothing — Atelier or streetwear. Same personal setting used in Nodes 1 and 2. Same chair, same light, same frame. Visual consistency across all 6 nodes is non-negotiable. This is a chapter in the same book — it must look like one.</div>
+</div>
+
+<div class="caption-box">
+  <div class="caption-title">Caption</div>
+  <div class="caption-text"><strong>Part 3 of 6 — Little Brother.</strong></div>
+</div>
+
+<div class="prog-row">
+  <p>Shot progress</p>
+  <strong><span id="prog-text">0 / 6</span></strong>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+
+<div class="collapsible-header" id="script-toggle" onclick="toggleScript()">
+  <span class="collapsible-title">Full Script</span>
+  <span class="collapsible-chevron">▼</span>
+</div>
+<div class="collapsible-body" id="script-body">
+  <div class="vo-line">
+    <span class="key">I'm not the perfect brother — but I've always given whatever I could.</span><br>
+    When I moved to Toronto, I left my family across the country. And I hit rock bottom.<br>
+    I slaved to keep companies alive, only for them to steal from me, use me, and cut me loose. It's just business, right?<br>
+    I also lost family members to sickness and disease.<br>
+    I was broke, isolated, and lonely — still trying to spin my wheels out of a dark place.<br>
+    <span class="key">I was ready to call it quits. So I called my brother.</span><br>
+    He didn't tell me to work on myself. He showed me what it looked like.<br>
+    Thank god, I walked away from that moment for one last shot.<br>
+    We trained every day.<br>
+    And no, it didn't fix my problems — but it taught me how to breathe while drowning.<br>
+    I know it looked excessive. But I was fighting for my life.<br>
+    He was a bodybuilder — and I looked like the sick and defeated version of him.<br>
+    <span class="key">Effort. Not comparison.</span><br>
+    This wasn't just working out. This was two brothers riding into war together.<br>
+    Nobody talks their way out of that place.<br>
+    You don't need me to tell you it gets better.<br>
+    <span class="key">You need me to meet you in the trenches and show you the exact way out.</span><br>
+    I've become the brother you never had.<br>
+    <span class="key">And I'm ready for war.</span>
+  </div>
+</div>
+
+<div class="section-label">Shot List</div>
+
+<div class="shot" data-id="s1">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 01</div>
+      <div class="shot-title">Hook — direct to camera, no setup</div>
+      <div class="shot-detail">Locked off. Ash upper body portrait, same frame as Nodes 1 and 2. Direct eye contact from the first word. No intro, no setup — straight into the line. The humility of the opening is the hook.</div>
+      <div style="margin-top:8px"><span class="tag tag-hook">Hook</span><span class="tag tag-direct">Direct</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">I'm not the perfect brother — but I've always given whatever I could.</div>
+  </div>
+</div>
+
+<div class="shot" data-id="s2">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 02</div>
+      <div class="shot-title">The collapse — city B-roll drop on Toronto line</div>
+      <div class="shot-detail">Continue talking head through the rock bottom section. On "When I moved to Toronto, I left my family across the country" — drop a brief atmospheric Toronto B-roll clip. Dark, urban, nothing glamorous. City at night or overcast. Then return to talking head for the company and family loss lines. Deliver those flat. No emotion performed. The flatness is the weight.</div>
+      <div style="margin-top:8px"><span class="tag tag-broll">B-Roll</span><span class="tag tag-origin">Origin</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      When I moved to Toronto, I left my family across the country. And I hit rock bottom.<br>
+      I slaved to keep companies alive, only for them to steal from me, use me, and cut me loose. It's just business, right?<br>
+      I also lost family members to sickness and disease.<br>
+      I was broke, isolated, and lonely — still trying to spin my wheels out of a dark place.
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s3">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 03</div>
+      <div class="shot-title">The call — the weight of this moment, delivered simply</div>
+      <div class="shot-detail">Back to talking head. No B-roll here. This is the emotional pivot of the entire node — the moment everything shifts. "I was ready to call it quits. So I called my brother." is two sentences that carry the weight of everything before them. Do not rush it. Let "I was ready to call it quits." sit for a full beat before "So I called my brother." The pause is the story.</div>
+      <div style="margin-top:8px"><span class="tag tag-key">Key Moment</span><span class="tag tag-direct">Direct</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      <span class="key">I was ready to call it quits. So I called my brother.</span><br>
+      He didn't tell me to work on myself. He showed me what it looked like.<br>
+      Thank god, I walked away from that moment for one last shot.
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s4">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 04</div>
+      <div class="shot-title">The training — gym B-roll drop on "we trained every day"</div>
+      <div class="shot-detail">On "We trained every day" — drop early training B-roll. Raw gym footage, nothing polished. Ash training, not performing. If archive footage from the early era exists, use it. If not, shoot new footage intentionally raw — dim lighting, basic equipment, nothing glamorous. The visual should feel like survival, not content. Return to talking head for "I know it looked excessive."</div>
+      <div style="margin-top:8px"><span class="tag tag-broll">B-Roll</span><span class="tag tag-origin">Origin</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      We trained every day.<br>
+      And no, it didn't fix my problems — but it taught me how to breathe while drowning.<br>
+      I know it looked excessive. But I was fighting for my life.
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s5">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 05</div>
+      <div class="shot-title">The revelation — "Effort. Not comparison." lands as a full stop</div>
+      <div class="shot-detail">Back to talking head. The bodybuilder line sets up the contrast — then "Effort. Not comparison." lands as two words with a hard stop between them. Do not rush those two words. They are the philosophy that built everything after this moment. Then carry through to the war line — energy lifts slightly here. This is the turning point.</div>
+      <div style="margin-top:8px"><span class="tag tag-key">Key Moment</span><span class="tag tag-direct">Direct</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      He was a bodybuilder — and I looked like the sick and defeated version of him.<br>
+      <span class="key">Effort. Not comparison.</span><br>
+      This wasn't just working out. This was two brothers riding into war together.
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s6">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 06</div>
+      <div class="shot-title">The close — direct to avatar, physique B-roll on final line</div>
+      <div class="shot-detail">Talking head straight through to "And I'm ready for war." On that final line — or immediately after it — cut to Ash's current physique. Clean, pumped, defined. No text. No music change. The silence after "And I'm ready for war." with the physique on screen is the CTA without being a CTA. The viewer understands what's available without being told.</div>
+      <div style="margin-top:8px"><span class="tag tag-broll">Closing</span><span class="tag tag-origin">Physique</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      Nobody talks their way out of that place.<br>
+      You don't need me to tell you it gets better.<br>
+      <span class="key">You need me to meet you in the trenches and show you the exact way out.</span><br>
+      I've become the brother you never had.<br>
+      <span class="key">And I'm ready for war.</span>
+    </div>
+  </div>
+</div>
+
+<div class="note-box">
+  <p><strong>The most important line in this node:</strong> "I was ready to call it quits. So I called my brother." Do not rush it. Do not perform it. Say it the way you'd say it to one person at 2am. The pause between those two sentences is the story.</p>
+  <p><strong>"Effort. Not comparison."</strong> — two words with a full stop between them. This is the philosophy that everything else was built on. Let them land separately. This is the screenshottable moment in the node.</p>
+  <p><strong>The closing physique shot is the payoff</strong> for everything just described. Node 3 closes the collapse arc and opens the transformation arc. The body on screen after "And I'm ready for war." tells the avatar exactly what's possible without a single word of pitch.</p>
+  <p><strong>Grade:</strong> match Nodes 1 and 2 exactly. Same series, same visual world. B-roll clips brought into the same palette — cooler, slightly darker than standard WWA content.</p>
+</div>
+
+<div class="divider"></div>
+<div class="section-label">Editing Notes</div>
+
+<div class="shot" data-id="edit1">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">One continuous take — B-roll overlays only, never cut Ash mid-line</div>
+      <div class="shot-detail">Base is a single unbroken take. B-roll drops overlay on top of the voiceover. Ash's voice continues underneath uninterrupted. Never cut away from Ash during a line — only between lines or at designated B-roll moments.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit2">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Text overlay — each line as spoken, below chest line</div>
+      <div class="shot-detail">Same as Nodes 1 and 2. Clean minimal font, white, below chest. One line at a time, appears as Ash speaks it. Text continues over B-roll overlays so muted viewers never lose the thread.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit3">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Closing physique shot — no text, no music change, silence</div>
+      <div class="shot-detail">After "And I'm ready for war." — physique B-roll drops with no text overlay and no music transition. The image holds in silence. Do not fill it. The contrast between the collapse described and the physique on screen is the entire message.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit4">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Grade — match Nodes 1 and 2 exactly</div>
+      <div class="shot-detail">Series grade locked in Node 1. Apply identically. B-roll clips brought into the same palette — cooler, slightly darker than standard WWA content. This is a chapter in the same book.</div>
+    </div>
+  </div>
+</div>
+
+<div class="complete-section">
+  <div class="complete-title">Completion</div>
+  <div class="complete-row" data-id="c1" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Setting confirmed — matches Nodes 1 and 2</div></div>
+  <div class="complete-row" data-id="c2" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Primary take captured (min 3 takes)</div></div>
+  <div class="complete-row" data-id="c3" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Toronto city B-roll sourced from archive</div></div>
+  <div class="complete-row" data-id="c4" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Early training B-roll sourced or shot raw</div></div>
+  <div class="complete-row" data-id="c5" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Closing physique shot captured</div></div>
+  <div class="complete-row" data-id="c6" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Edit complete</div></div>
+  <div class="complete-row" data-id="c7" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Posted</div></div>
+  <div class="date-label">COMPLETION DATE</div>
+  <input type="date" class="date-input" id="completion-date" onchange="saveDate(this.value)">
+</div>
+
+<button class="reset-btn" onclick="resetAll()">Reset checklist</button>
+
+<script>
+var KEY = 'wwa_origin_node3_v1';
+function getState() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e) { return {}; } }
+function setState(s) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch(e) {} }
+function updateProgress() {
+  var shots = document.querySelectorAll('.shot');
+  var done = document.querySelectorAll('.shot.done').length;
+  document.getElementById('prog-fill').style.width = Math.round((done / shots.length) * 100) + '%';
+  document.getElementById('prog-text').textContent = done + ' / ' + shots.length;
+}
+function toggle(el) { el.classList.toggle('done'); var s = getState(); s[el.dataset.id] = el.classList.contains('done'); setState(s); updateProgress(); }
+function toggleComplete(el) { el.classList.toggle('done'); var s = getState(); s[el.dataset.id] = el.classList.contains('done'); setState(s); }
+function saveDate(val) { var s = getState(); s.completion_date = val; setState(s); }
+function resetAll() { document.querySelectorAll('.shot.done,.complete-row.done').forEach(function(el) { el.classList.remove('done'); }); document.getElementById('completion-date').value = ''; setState({}); updateProgress(); }
+function toggleScript() { var header = document.getElementById('script-toggle'); var body = document.getElementById('script-body'); header.classList.toggle('open'); body.classList.toggle('open'); }
+(function() {
+  var s = getState();
+  document.querySelectorAll('.shot,.complete-row').forEach(function(el) { if (s[el.dataset.id]) el.classList.add('done'); });
+  if (s.completion_date) document.getElementById('completion-date').value = s.completion_date;
+  updateProgress();
+})();
+</script>
+</body>
+</html>
