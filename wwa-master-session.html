@@ -662,6 +662,50 @@ function sortShoots() {
   links.forEach(function(l) { c.appendChild(l); });
 }
 
+// ── CURATED SHOOTS — STAR + SHOOT DAY ──
+function toggleStar(evt, id) {
+  evt.stopPropagation();
+  var btn = document.getElementById('star-' + id);
+  var card = document.getElementById('shoot-card-' + id);
+  var active = btn.classList.toggle('active');
+  if (card) card.classList.toggle('starred', active);
+  var s = getState();
+  if (!s.stars) s.stars = {};
+  s.stars[id] = active;
+  setState(s);
+}
+
+function saveShootDay(id, val) {
+  var s = getState();
+  if (!s.shootDays) s.shootDays = {};
+  s.shootDays[id] = val;
+  setState(s);
+}
+
+function loadShootState() {
+  var s = getState();
+  if (s.stars) {
+    var starIds = Object.keys(s.stars);
+    for (var i = 0; i < starIds.length; i++) {
+      var id = starIds[i];
+      if (s.stars[id]) {
+        var starBtn = document.getElementById('star-' + id);
+        var card = document.getElementById('shoot-card-' + id);
+        if (starBtn) starBtn.classList.add('active');
+        if (card) card.classList.add('starred');
+      }
+    }
+  }
+  if (s.shootDays) {
+    var dayIds = Object.keys(s.shootDays);
+    for (var j = 0; j < dayIds.length; j++) {
+      var did = dayIds[j];
+      var dayInput = document.getElementById('day-' + did);
+      if (dayInput && s.shootDays[did]) dayInput.value = s.shootDays[did];
+    }
+  }
+}
+
 // ── AUTOSAVE ──
 function autosave() {
   var s = getState();
@@ -855,6 +899,7 @@ if (S.shoots) {
 
 renderLog(S.log);
 renderTimerDisplay();
+loadShootState();
 </script>
 </body>
 </html>
