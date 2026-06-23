@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>WWA - Cardio Is Killing Your Gains</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 1.25rem; min-height: 100vh; }
+.title-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; color: #555; text-transform: uppercase; margin-bottom: 4px; }
+.shoot-title { font-size: 22px; font-weight: 600; color: #f0f0f0; line-height: 1.2; margin-bottom: 1.5rem; }
+.meta-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+.meta-pill { font-size: 11px; color: #888; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 99px; padding: 4px 10px; }
+.meta-pill span { color: #c8ff00; }
+.prog-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.prog-row p { font-size: 12px; color: #666; }
+.prog-row strong { font-size: 12px; color: #f0f0f0; }
+.progress-bar { height: 4px; background: #1e1e1e; border-radius: 99px; overflow: hidden; margin-bottom: 1.5rem; }
+.progress-fill { height: 100%; background: #c8ff00; border-radius: 99px; transition: width 0.3s ease; }
+.section-label { font-size: 10px; font-weight: 600; color: #555; text-transform: uppercase; margin: 1.5rem 0 0.75rem; letter-spacing: 0.1em; }
+.shot { background: #141414; border-radius: 12px; margin-bottom: 10px; border: 1px solid #1e1e1e; overflow: hidden; }
+.shot.done { opacity: 0.4; }
+.shot.done .shot-title { text-decoration: line-through; color: #555; }
+.shot-header { display: flex; align-items: flex-start; gap: 14px; padding: 14px; cursor: pointer; }
+.cb { width: 24px; height: 24px; min-width: 24px; border-radius: 50%; border: 1.5px solid #333; display: flex; align-items: center; justify-content: center; background: transparent; flex-shrink: 0; margin-top: 1px; }
+.shot.done .cb, .complete-row.done .cb { background: #c8ff00; border-color: #c8ff00; }
+.check-icon { width: 13px; height: 13px; stroke: #000; stroke-width: 2.5; fill: none; display: none; }
+.shot.done .check-icon, .complete-row.done .check-icon { display: block; }
+.shot-body { flex: 1; }
+.shot-num { font-size: 10px; color: #555; font-weight: 600; text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.08em; }
+.shot-title { font-size: 15px; font-weight: 600; color: #e0e0e0; margin-bottom: 5px; line-height: 1.3; }
+.shot-detail { font-size: 13px; color: #666; line-height: 1.55; }
+.script-section { border-top: 1px solid #1e1e1e; padding: 12px 14px 14px 52px; }
+.script-label { font-size: 9px; text-transform: uppercase; color: #c8ff00; font-weight: 600; margin-bottom: 8px; letter-spacing: 0.12em; }
+.script-lines { font-size: 13px; color: #777; line-height: 1.9; font-style: italic; }
+.script-lines .key { color: #bbb; font-style: normal; font-weight: 600; }
+.tag { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; margin-right: 4px; margin-bottom: 4px; }
+.tag-method { background: #1a2a1a; color: #4caf50; border: 1px solid #2a3a2a; }
+.tag-broll { background: #2a1a2a; color: #ce7cff; border: 1px solid #3a2a3a; }
+.tag-direct { background: #1a1a2a; color: #7c8fff; border: 1px solid #2a2a3a; }
+.tag-hook { background: #2a1a00; color: #c8ff00; border: 1px solid #3a2a00; }
+.tag-key { background: #2a1500; color: #ff9c40; border: 1px solid #3a2500; }
+.divider { height: 1px; background: #1a1a1a; margin: 1.5rem 0; }
+.note-box { background: #111; border-left: 2px solid #c8ff00; border-radius: 0 10px 10px 0; padding: 12px 14px; margin-top: 1rem; }
+.note-box p { font-size: 13px; color: #777; line-height: 1.65; margin-bottom: 8px; }
+.note-box p:last-child { margin-bottom: 0; }
+.note-box strong { color: #c8ff00; }
+.reset-btn { width: 100%; margin-top: 1.25rem; padding: 14px; background: #141414; border: 1px solid #2a2a2a; border-radius: 12px; color: #555; font-size: 13px; cursor: pointer; font-family: inherit; }
+.complete-section { margin-top: 2rem; background: #141414; border-radius: 12px; border: 1px solid #1e1e1e; padding: 14px; }
+.complete-title { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 12px; }
+.complete-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #1e1e1e; cursor: pointer; }
+.complete-row:last-of-type { border-bottom: none; padding-bottom: 0; }
+.complete-row.done .complete-label { color: #555; text-decoration: line-through; }
+.complete-label { font-size: 14px; color: #bbb; flex: 1; }
+.date-label { font-size: 11px; color: #555; margin: 12px 0 6px; letter-spacing: 0.06em; }
+.date-input { width: 100%; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 8px; color: #bbb; font-size: 14px; padding: 10px 12px; font-family: inherit; outline: none; }
+.collapsible-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; margin-bottom: 0; user-select: none; }
+.collapsible-header.open { border-radius: 10px 10px 0 0; border-bottom-color: #1a1a1a; }
+.collapsible-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; }
+.collapsible-chevron { font-size: 11px; color: #555; transition: transform 0.2s ease; }
+.collapsible-header.open .collapsible-chevron { transform: rotate(180deg); }
+.collapsible-body { display: none; background: #0f0f0f; border: 1px solid #2a2a2a; border-top: none; border-radius: 0 0 10px 10px; padding: 14px; margin-bottom: 1.5rem; }
+.collapsible-body.open { display: block; }
+.vo-line { font-size: 13px; color: #888; line-height: 2.2; font-style: italic; }
+.vo-line .key { color: #ddd; font-style: normal; font-weight: 600; }
+.source-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; }
+.source-box-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #555; white-space: nowrap; }
+.source-box a { font-size: 12px; color: #c8ff00; text-decoration: none; word-break: break-all; }
+.caption-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px; margin-bottom: 1.5rem; }
+.caption-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 10px; }
+.caption-text { font-size: 13px; color: #777; line-height: 1.8; }
+</style>
+</head>
+<body>
+
+<div class="title-label">WWA — The Method</div>
+<div class="shoot-title">Cardio Is Killing Your Gains.</div>
+
+<div class="meta-row">
+  <div class="meta-pill">Pillar: <span>The Method</span></div>
+  <div class="meta-pill">Funnel: <span>MoF</span></div>
+  <div class="meta-pill">Pattern: <span>Myth-Bust</span></div>
+  <div class="meta-pill">Operator: <span>Henry</span></div>
+  <div class="meta-pill">Location: <span>Anytime Fitness</span></div>
+  <div class="meta-pill">Camera: <span>Sony FX3</span></div>
+  <div class="meta-pill">Lens: <span>35mm DZO</span></div>
+  <div class="meta-pill">Orientation: <span>Vertical 9:16</span></div>
+  <div class="meta-pill">Wardrobe: <span>Shirt off throughout</span></div>
+</div>
+
+<div class="source-box">
+  <div class="source-box-label">Source Ref</div>
+  <a href="https://www.instagram.com/p/DK3D9EFyLML/" target="_blank">https://www.instagram.com/p/DK3D9EFyLML/</a>
+</div>
+
+<div class="caption-box">
+  <div class="caption-title">Caption</div>
+  <div class="caption-text">
+    Most people don't realize they're sabotaging their own session before it even starts.<br><br>
+    Common misconception: cardio burns more calories, so more cardio equals more fat loss.<br><br>
+    Reality: cardio burns calories and muscle equally. Over time that leaves you smaller but soft — not lean and defined.<br><br>
+    Lifting reshapes the body. Cardio just shrinks it.<br><br>
+    And here's what cardio never tells you — EPOC (Excess Post-Exercise Oxygen Consumption). After a properly executed resistance training session your body continues burning elevated calories for up to 48 hours. The treadmill stops the second you step off it. Muscle works for you around the clock.<br><br>
+    Build mode over burn mode. Every time.<br><br>
+    Comment LOCKED and I'll send you my Size Starter — free.
+  </div>
+</div>
+
+<div class="prog-row">
+  <p>Shot progress</p>
+  <strong><span id="prog-text">0 / 5</span></strong>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+
+<div class="collapsible-header" id="script-toggle" onclick="toggleScript()">
+  <span class="collapsible-title">Full Script</span>
+  <span class="collapsible-chevron">▼</span>
+</div>
+<div class="collapsible-body" id="script-body">
+  <div class="vo-line">
+    <span class="key">If you start your workout with cardio, you're blocking your ability to build muscle.</span><br><br>
+    Your body has two modes — build mode, which is lifting, and burn mode, which is cardio.<br><br>
+    In build mode, your body releases a protein called mTOR — the signal to build and repair muscle.<br><br>
+    In burn mode, your body releases an enzyme called AMPK — the signal to break down fuel and burn energy.<br><br>
+    Now here's your problem.<br><br>
+    Every time you do cardio before lifting, you've activated the release of AMPK — which actively shuts down the release of mTOR.<br><br>
+    This means you've blocked your ability to build before you've touched a single weight.<br><br>
+    It's like shooting yourself in the foot before the race even starts.<br><br>
+    Cardio burns through your primary fuel levels — which means by the time you even begin lifting, you're already running on fumes.<br><br>
+    You're not undertrained. You're misdirected.<br><br>
+    <span class="key">Skinny fat is cardio's greatest achievement.</span><br><br>
+    One hour. Six days a week. Zero treadmill.<br><br>
+    <span class="key">And before you blame genetics — you're looking at the product of someone who's not supposed to be here.</span><br><br>
+    Comment LOCKED and I'll send you my Size Starter — free.
+  </div>
+</div>
+
+<div class="section-label">Shot List</div>
+
+<div class="shot" data-id="s1">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 01</div>
+      <div class="shot-title">Hook — Ash on the treadmill, shirt off, stepping off toward camera</div>
+      <div class="shot-detail">Ash on the treadmill at low speed, shirt off, physique visible. As he delivers the hook line he steps off or turns and walks toward the camera. Camera at chest height, slight low angle. The treadmill is fully visible and recognizable — the visual contradiction of standing on the thing you're dismantling is the hook before a word is processed. If the treadmill belt goes backwards, face camera and walk toward it. If not, step off mid-delivery and turn to face camera. Either way — movement signals intent.</div>
+      <div style="margin-top:8px"><span class="tag tag-hook">Hook</span><span class="tag tag-direct">Treadmill</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      <span class="key">If you start your workout with cardio, you're blocking your ability to build muscle.</span>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s2">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 02</div>
+      <div class="shot-title">The science — B-roll drops for build mode and burn mode</div>
+      <div class="shot-detail">Talking head for the two modes setup. On "build mode, which is lifting" — drop a brief B-roll clip of Ash mid-set. Heavy, controlled, pumped. On "burn mode, which is cardio" — drop a clip of Ash on the elliptical. Casual, unbothered — contrasting energy entirely. Return to talking head for "Now here's your problem." The visual contrast between the two clips makes the science land before the viewer processes the words. Keep each B-roll drop to 2–3 seconds max.</div>
+      <div style="margin-top:8px"><span class="tag tag-broll">B-Roll</span><span class="tag tag-method">Science</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      Your body has two modes — build mode, which is lifting, and burn mode, which is cardio.<br>
+      In build mode, your body releases a protein called mTOR — the signal to build and repair muscle.<br>
+      In burn mode, your body releases an enzyme called AMPK — the signal to break down fuel and burn energy.
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s3">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 03</div>
+      <div class="shot-title">The problem — dead to camera, hard eye contact, no cuts</div>
+      <div class="shot-detail">Back to talking head. No B-roll. "Now here's your problem." gets its own beat before the next line. The AMPK shuts down mTOR line is the most important piece of information in the entire script — deliver it slowly, one clause at a time. "This means you've blocked your ability to build before you've touched a single weight." — full stop. Hold eye contact. Then "It's like shooting yourself in the foot before the race even starts." — slightly lighter delivery. It's the analogy that makes the science human.</div>
+      <div style="margin-top:8px"><span class="tag tag-key">Key Moment</span><span class="tag tag-direct">Direct</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      Now here's your problem.<br>
+      Every time you do cardio before lifting, you've activated the release of AMPK — which actively shuts down the release of mTOR.<br>
+      <span class="key">This means you've blocked your ability to build before you've touched a single weight.</span><br>
+      It's like shooting yourself in the foot before the race even starts.<br>
+      Cardio burns through your primary fuel levels — which means by the time you even begin lifting, you're already running on fumes.
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s4">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 04</div>
+      <div class="shot-title">Running on fumes — B-roll of Ash on elliptical, low energy</div>
+      <div class="shot-detail">On "running on fumes" — drop a clip of Ash on the elliptical looking deliberately depleted. Low energy, going through the motions, nothing behind it. Exaggerate slightly. The visual indicts the behavior without Ash having to say another word. Brief clip — 2 seconds max. Then back to talking head for "You're not undertrained. You're misdirected." Deliver that line flat. Hard stop between the two sentences. That line is the pivot of the entire script.</div>
+      <div style="margin-top:8px"><span class="tag tag-broll">B-Roll</span><span class="tag tag-key">Pivot</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      You're not undertrained. You're misdirected.<br>
+      <span class="key">Skinny fat is cardio's greatest achievement.</span>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s5">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 05</div>
+      <div class="shot-title">The close — full physique, zero treadmill in frame</div>
+      <div class="shot-detail">On "One hour. Six days a week. Zero treadmill." — pull back to a wider shot showing Ash's full physique. No treadmill in frame. Just the result. On "And before you blame genetics — you're looking at the product of someone who's not supposed to be here." — hold on full physique. Let the body be the last thing they see before the CTA. No music change, no text card. Just the proof standing there. CTA delivered direct to camera, close frame.</div>
+      <div style="margin-top:8px"><span class="tag tag-key">Screenshottable</span><span class="tag tag-direct">Close</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      One hour. Six days a week. Zero treadmill.<br>
+      <span class="key">And before you blame genetics — you're looking at the product of someone who's not supposed to be here.</span><br>
+      Comment LOCKED and I'll send you my Size Starter — free.
+    </div>
+  </div>
+</div>
+
+<div class="note-box">
+  <p><strong>The hook is everything in this script.</strong> Ash stepping off or turning away from a moving treadmill while delivering the first line is the visual contradiction that stops the scroll. The body does the work before the voice does.</p>
+  <p><strong>Shirt off throughout.</strong> Every frame where the viewer sees the physique while you dismantle their habits is a silent closing argument. The body is the proof the entire script is built around.</p>
+  <p><strong>Two screenshottable lines:</strong> "Skinny fat is cardio's greatest achievement." and "You're looking at the product of someone who's not supposed to be here." Both need a full beat of silence after delivery.</p>
+  <p><strong>"You're not undertrained. You're misdirected."</strong> — flat delivery, hard stop between the two sentences. This is the pivot of the entire script. Don't rush it.</p>
+  <p><strong>B-roll contrast matters.</strong> The lifting clip and the elliptical clip need to feel completely different in energy. One is controlled and powerful. The other is depleted and purposeless. That contrast is the science made visual.</p>
+</div>
+
+<div class="divider"></div>
+<div class="section-label">Editing Notes</div>
+
+<div class="shot" data-id="edit1">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">B-roll drops — overlay only, voice never cuts</div>
+      <div class="shot-detail">B-roll overlays at Shots 02 and 04 only. Ash's voice continues underneath uninterrupted. Never cut away mid-line. Each B-roll drop is 2–3 seconds max — enough to register, not enough to distract.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit2">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Text overlay — key terms highlighted differently</div>
+      <div class="shot-detail">Standard text overlay below chest throughout. When "mTOR" and "AMPK" appear — bold or highlight them differently so they register as technical terms. Not distracting — just distinct. Helps viewers who want to look them up later.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit3">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Closing physique hold — no music change, no text card</div>
+      <div class="shot-detail">After "someone who's not supposed to be here" — hold on full physique for 2 seconds before CTA. No transition, no card. The body is the final argument. Let it land in silence before the CTA pulls them in.</div>
+    </div>
+  </div>
+</div>
+
+<div class="complete-section">
+  <div class="complete-title">Completion</div>
+  <div class="complete-row" data-id="c1" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Treadmill hook captured — min 2 takes</div></div>
+  <div class="complete-row" data-id="c2" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Primary talking head take captured — min 3 takes</div></div>
+  <div class="complete-row" data-id="c3" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Build mode B-roll — Ash mid-set, heavy and controlled</div></div>
+  <div class="complete-row" data-id="c4" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Burn mode B-roll — Ash on elliptical, deliberately low energy</div></div>
+  <div class="complete-row" data-id="c5" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Closing full physique shot captured</div></div>
+  <div class="complete-row" data-id="c6" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Edit complete</div></div>
+  <div class="complete-row" data-id="c7" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Posted</div></div>
+  <div class="date-label">COMPLETION DATE</div>
+  <input type="date" class="date-input" id="completion-date" onchange="saveDate(this.value)">
+</div>
+
+<button class="reset-btn" onclick="resetAll()">Reset checklist</button>
+
+<script>
+var KEY = 'wwa_cardio_myth_v1';
+function getState() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e) { return {}; } }
+function setState(s) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch(e) {} }
+function updateProgress() {
+  var shots = document.querySelectorAll('.shot');
+  var done = document.querySelectorAll('.shot.done').length;
+  document.getElementById('prog-fill').style.width = Math.round((done / shots.length) * 100) + '%';
+  document.getElementById('prog-text').textContent = done + ' / ' + shots.length;
+}
+function toggle(el) { el.classList.toggle('done'); var s = getState(); s[el.dataset.id] = el.classList.contains('done'); setState(s); updateProgress(); }
+function toggleComplete(el) { el.classList.toggle('done'); var s = getState(); s[el.dataset.id] = el.classList.contains('done'); setState(s); }
+function saveDate(val) { var s = getState(); s.completion_date = val; setState(s); }
+function resetAll() { document.querySelectorAll('.shot.done,.complete-row.done').forEach(function(el) { el.classList.remove('done'); }); document.getElementById('completion-date').value = ''; setState({}); updateProgress(); }
+function toggleScript() { var header = document.getElementById('script-toggle'); var body = document.getElementById('script-body'); header.classList.toggle('open'); body.classList.toggle('open'); }
+(function() {
+  var s = getState();
+  document.querySelectorAll('.shot,.complete-row').forEach(function(el) { if (s[el.dataset.id]) el.classList.add('done'); });
+  if (s.completion_date) document.getElementById('completion-date').value = s.completion_date;
+  updateProgress();
+})();
+</script>
+</body>
+</html>
