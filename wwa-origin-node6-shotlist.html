@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>WWA - Origin Node 6 — Fort York</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 1.25rem; min-height: 100vh; }
+.title-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; color: #555; text-transform: uppercase; margin-bottom: 4px; }
+.shoot-title { font-size: 22px; font-weight: 600; color: #f0f0f0; line-height: 1.2; margin-bottom: 1.5rem; }
+.meta-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+.meta-pill { font-size: 11px; color: #888; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 99px; padding: 4px 10px; }
+.meta-pill span { color: #c8ff00; }
+.prog-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.prog-row p { font-size: 12px; color: #666; }
+.prog-row strong { font-size: 12px; color: #f0f0f0; }
+.progress-bar { height: 4px; background: #1e1e1e; border-radius: 99px; overflow: hidden; margin-bottom: 1.5rem; }
+.progress-fill { height: 100%; background: #c8ff00; border-radius: 99px; transition: width 0.3s ease; }
+.section-label { font-size: 10px; font-weight: 600; color: #555; text-transform: uppercase; margin: 1.5rem 0 0.75rem; letter-spacing: 0.1em; }
+.shot { background: #141414; border-radius: 12px; margin-bottom: 10px; border: 1px solid #1e1e1e; overflow: hidden; }
+.shot.done { opacity: 0.4; }
+.shot.done .shot-title { text-decoration: line-through; color: #555; }
+.shot-header { display: flex; align-items: flex-start; gap: 14px; padding: 14px; cursor: pointer; }
+.cb { width: 24px; height: 24px; min-width: 24px; border-radius: 50%; border: 1.5px solid #333; display: flex; align-items: center; justify-content: center; background: transparent; flex-shrink: 0; margin-top: 1px; }
+.shot.done .cb, .complete-row.done .cb { background: #c8ff00; border-color: #c8ff00; }
+.check-icon { width: 13px; height: 13px; stroke: #000; stroke-width: 2.5; fill: none; display: none; }
+.shot.done .check-icon, .complete-row.done .check-icon { display: block; }
+.shot-body { flex: 1; }
+.shot-num { font-size: 10px; color: #555; font-weight: 600; text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.08em; }
+.shot-title { font-size: 15px; font-weight: 600; color: #e0e0e0; margin-bottom: 5px; line-height: 1.3; }
+.shot-detail { font-size: 13px; color: #666; line-height: 1.55; }
+.script-section { border-top: 1px solid #1e1e1e; padding: 12px 14px 14px 52px; }
+.script-label { font-size: 9px; text-transform: uppercase; color: #c8ff00; font-weight: 600; margin-bottom: 8px; letter-spacing: 0.12em; }
+.script-lines { font-size: 13px; color: #777; line-height: 1.9; font-style: italic; }
+.script-lines .key { color: #bbb; font-style: normal; font-weight: 600; }
+.tag { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; margin-right: 4px; margin-bottom: 4px; }
+.tag-origin { background: #1a1a2a; color: #7c8fff; border: 1px solid #2a2a3a; }
+.tag-broll { background: #2a1a2a; color: #ce7cff; border: 1px solid #3a2a3a; }
+.tag-direct { background: #1a2a1a; color: #4caf50; border: 1px solid #2a3a2a; }
+.tag-hook { background: #2a1a00; color: #c8ff00; border: 1px solid #3a2a00; }
+.tag-key { background: #2a1500; color: #ff9c40; border: 1px solid #3a2500; }
+.tag-hold { background: #2a0a0a; color: #ff4444; border: 1px solid #3a1a1a; }
+.divider { height: 1px; background: #1a1a1a; margin: 1.5rem 0; }
+.note-box { background: #111; border-left: 2px solid #c8ff00; border-radius: 0 10px 10px 0; padding: 12px 14px; margin-top: 1rem; }
+.note-box p { font-size: 13px; color: #777; line-height: 1.65; margin-bottom: 8px; }
+.note-box p:last-child { margin-bottom: 0; }
+.note-box strong { color: #c8ff00; }
+.hold-box { background: #1a0a0a; border: 1px solid #3a1a1a; border-radius: 10px; padding: 14px; margin-bottom: 1.5rem; }
+.hold-title { font-size: 10px; color: #ff4444; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 8px; }
+.hold-text { font-size: 13px; color: #666; line-height: 1.65; }
+.hold-text strong { color: #ff4444; }
+.reset-btn { width: 100%; margin-top: 1.25rem; padding: 14px; background: #141414; border: 1px solid #2a2a2a; border-radius: 12px; color: #555; font-size: 13px; cursor: pointer; font-family: inherit; }
+.complete-section { margin-top: 2rem; background: #141414; border-radius: 12px; border: 1px solid #1e1e1e; padding: 14px; }
+.complete-title { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 12px; }
+.complete-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #1e1e1e; cursor: pointer; }
+.complete-row:last-of-type { border-bottom: none; padding-bottom: 0; }
+.complete-row.done .complete-label { color: #555; text-decoration: line-through; }
+.complete-label { font-size: 14px; color: #bbb; flex: 1; }
+.date-label { font-size: 11px; color: #555; margin: 12px 0 6px; letter-spacing: 0.06em; }
+.date-input { width: 100%; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 8px; color: #bbb; font-size: 14px; padding: 10px 12px; font-family: inherit; outline: none; }
+.collapsible-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; margin-bottom: 0; user-select: none; }
+.collapsible-header.open { border-radius: 10px 10px 0 0; border-bottom-color: #1a1a1a; }
+.collapsible-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; }
+.collapsible-chevron { font-size: 11px; color: #555; transition: transform 0.2s ease; }
+.collapsible-header.open .collapsible-chevron { transform: rotate(180deg); }
+.collapsible-body { display: none; background: #0f0f0f; border: 1px solid #2a2a2a; border-top: none; border-radius: 0 0 10px 10px; padding: 14px; margin-bottom: 1.5rem; }
+.collapsible-body.open { display: block; }
+.vo-line { font-size: 13px; color: #888; line-height: 2.2; font-style: italic; }
+.vo-line .key { color: #ddd; font-style: normal; font-weight: 600; }
+.source-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; }
+.source-box-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #555; white-space: nowrap; }
+.source-box a { font-size: 12px; color: #c8ff00; text-decoration: none; word-break: break-all; }
+.caption-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px; margin-bottom: 1.5rem; }
+.caption-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 10px; }
+.caption-text { font-size: 14px; color: #bbb; line-height: 1.7; }
+.caption-text strong { color: #f0f0f0; }
+.series-badge { display: inline-block; background: #1a1a2a; border: 1px solid #2a2a3a; color: #7c8fff; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; padding: 4px 12px; border-radius: 99px; margin-bottom: 1rem; }
+.wardrobe-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px; margin-bottom: 1.5rem; }
+.wardrobe-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 8px; }
+.wardrobe-text { font-size: 13px; color: #666; line-height: 1.65; }
+</style>
+</head>
+<body>
+
+<div class="title-label">WWA — Origin Series</div>
+<div class="shoot-title">Fort York.</div>
+<div class="series-badge">Part 6 of 6 — The Origin</div>
+
+<div class="hold-box">
+  <div class="hold-title">⚠ Vault Hold — Do Not Post Until Nodes 1–5 Are Live</div>
+  <div class="hold-text">This is the final node and the most powerful piece in the series. <strong>It cannot air until Nodes 1 through 5 have been posted.</strong> The audience needs the full context of the arc for this to land at its full weight. Script it, shoot it, edit it — then hold it until the series is running.</div>
+</div>
+
+<div class="meta-row">
+  <div class="meta-pill">Format: <span>Talking Head + Location B-Roll</span></div>
+  <div class="meta-pill">Funnel: <span>ToF</span></div>
+  <div class="meta-pill">Pattern: <span>Vulnerable Confession</span></div>
+  <div class="meta-pill">Operator: <span>Henry</span></div>
+  <div class="meta-pill">Location: <span>Personal Setting — Same as Nodes 1–5</span></div>
+  <div class="meta-pill">B-Roll Location: <span>Fort York, Toronto — Night</span></div>
+  <div class="meta-pill">Camera: <span>Sony FX3</span></div>
+  <div class="meta-pill">Lens: <span>35mm DZO</span></div>
+  <div class="meta-pill">Orientation: <span>Vertical 9:16</span></div>
+  <div class="meta-pill">Teleprompter: <span>Yes — direct eye contact required</span></div>
+</div>
+
+<div class="source-box">
+  <div class="source-box-label">Source Ref</div>
+  <a href="https://www.instagram.com/reel/DCHoFylyuE-/" target="_blank">https://www.instagram.com/reel/DCHoFylyuE-/</a>
+</div>
+
+<div class="wardrobe-box">
+  <div class="wardrobe-title">Wardrobe + Setting — Series Standard</div>
+  <div class="wardrobe-text">Casual non-gym clothing — Atelier or streetwear. Same personal setting used in Nodes 1–5. Same chair, same light, same frame. The visual consistency across all 6 nodes is the series. It must look like one body of work from Node 1 to Node 6.</div>
+</div>
+
+<div class="caption-box">
+  <div class="caption-title">Caption</div>
+  <div class="caption-text"><strong>Part 6 of 6 — Fort York.</strong></div>
+</div>
+
+<div class="prog-row">
+  <p>Shot progress</p>
+  <strong><span id="prog-text">0 / 6</span></strong>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+
+<div class="collapsible-header" id="script-toggle" onclick="toggleScript()">
+  <span class="collapsible-title">Full Script</span>
+  <span class="collapsible-chevron">▼</span>
+</div>
+<div class="collapsible-body" id="script-body">
+  <div class="vo-line">
+    It was late. I'd just walked out of one of the worst arguments of my life with my girl.<br><br>
+    No destination. No music. Just the city.<br><br>
+    I ended up at Fort York — a park in the middle of Toronto. Summer days, picnics, music with friends.<br><br>
+    But it was dark that night. Empty.<br><br>
+    The deeper I walked in, the darker it got. Through skeletal trees and eroded ground from years of the city living on top of it.<br><br>
+    On the other side of the park — a faint light. And the distant sound of a long horn.<br><br>
+    It didn't feel how you'd imagine it would feel to walk toward a train.<br><br>
+    <span class="key">I was just walking toward the only light I could see.</span><br><br>
+    With every step, that haunting idea slowly became more real. Like I was testing how real this thought actually was.<br><br>
+    I was getting closer.<br><br>
+    On the edge of the park, there's a perimeter fence. I climbed it. Walked across the gravel and finally met the set of rails that run through Toronto.<br><br>
+    On my left — a faint set of headlights and a distant horn. Growing brighter and louder.<br><br>
+    And I just stood there. Weighing everything out.<br><br>
+    <span class="key">I wasn't crying. I wasn't panicking. I was genuinely assessing.</span><br><br>
+    Every person that stole from me. Every promise that dissolved. Every moment of worthlessness. Every failure.<br><br>
+    One last test.<br><br>
+    I took my phone out. And I called my brother.<br><br>
+    I spoke to him like I had nothing left to lose.<br><br>
+    I listened to him as he tried to soften my heart.<br><br>
+    Those headlights are closer now. And this thing is roaring.<br><br>
+    Something inside pulled me to take a step backwards.<br><br>
+    Thank god I did.<br><br>
+    Not because I believed in myself. Not even because I believed him. But for his sake.<br><br>
+    That step is the reason any of this exists.<br><br>
+    The training. The coaching. Every conversation. Every person I've worked with since.<br><br>
+    All of it was birthed on the other side of that step.<br><br>
+    <span class="key">This is where Waterworld began.</span>
+  </div>
+</div>
+
+<div class="section-label">Shot List</div>
+
+<div class="shot" data-id="s1">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 01</div>
+      <div class="shot-title">Hook — quiet open, no setup, mid-scene from the first word</div>
+      <div class="shot-detail">Locked off. Same frame as all previous nodes. No introduction, no context. Just starts. "It was late." Deliver it quietly. This node is not performed — it is recalled. The restraint in the delivery is what makes it haunting. If it feels emotional, slow down. If it feels dramatic, pull back. The power is in the flatness.</div>
+      <div style="margin-top:8px"><span class="tag tag-hook">Hook</span><span class="tag tag-direct">Direct</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      It was late. I'd just walked out of one of the worst arguments of my life with my girl.<br>
+      No destination. No music. Just the city.<br>
+      I ended up at Fort York — a park in the middle of Toronto. Summer days, picnics, music with friends.<br>
+      But it was dark that night. Empty.
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s2">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 02</div>
+      <div class="shot-title">The park — B-roll of Fort York at night, skeletal trees, eroded ground</div>
+      <div class="shot-detail">On "The deeper I walked in, the darker it got" — drop Fort York night B-roll. This needs to be shot at Fort York specifically. Dark, minimal lighting, skeletal trees, the worn ground. Wide shots of the park interior. The visual should feel isolated and unnerving. Not cinematic horror — just empty and real. Henry shoots this separately on a night visit to Fort York. On "a faint light. And the distant sound of a long horn" — if possible, capture the train light in the distance from within the park. Return to talking head on "It didn't feel how you'd imagine."</div>
+      <div style="margin-top:8px"><span class="tag tag-broll">Fort York B-Roll</span><span class="tag tag-origin">Location</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      The deeper I walked in, the darker it got. Through skeletal trees and eroded ground from years of the city living on top of it.<br>
+      On the other side of the park — a faint light. And the distant sound of a long horn.<br>
+      It didn't feel how you'd imagine it would feel to walk toward a train.<br>
+      <span class="key">I was just walking toward the only light I could see.</span>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s3">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 03</div>
+      <div class="shot-title">The fence — B-roll of the perimeter fence and tracks at Fort York</div>
+      <div class="shot-detail">"I was getting closer." — drop B-roll of the chain link fence at the edge of Fort York bordering the tracks. Shot from inside the park looking toward the fence. Dark. Then a shot of the tracks themselves — gravel, rails, empty. On "finally met the set of rails that run through Toronto" — low angle shot of the tracks stretching into the distance. Return to talking head for "On my left — a faint set of headlights." These B-roll clips need to be shot at Fort York specifically. Do not substitute stock footage.</div>
+      <div style="margin-top:8px"><span class="tag tag-broll">Fort York B-Roll</span><span class="tag tag-key">Key Moment</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      With every step, that haunting idea slowly became more real. Like I was testing how real this thought actually was.<br>
+      I was getting closer.<br>
+      On the edge of the park, there's a perimeter fence. I climbed it. Walked across the gravel and finally met the set of rails that run through Toronto.<br>
+      On my left — a faint set of headlights and a distant horn. Growing brighter and louder.
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s4">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 04</div>
+      <div class="shot-title">Standing at the tracks — the most important delivery in the series</div>
+      <div class="shot-detail">Back to talking head. No B-roll. "And I just stood there. Weighing everything out." gets a full beat of silence before the next line. Then "I wasn't crying. I wasn't panicking. I was genuinely assessing." — this is the most chilling line in all six nodes. Deliver it completely flat. No emotion. That flatness is the horror of the moment. The list that follows — every person, every promise, every failure — deliver each one with a pause between them. They are separate weights. Not one sentence.</div>
+      <div style="margin-top:8px"><span class="tag tag-key">Most Important Delivery</span><span class="tag tag-direct">Direct</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      And I just stood there. Weighing everything out.<br>
+      <span class="key">I wasn't crying. I wasn't panicking. I was genuinely assessing.</span><br>
+      Every person that stole from me. Every promise that dissolved. Every moment of worthlessness. Every failure.<br>
+      One last test.
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s5">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 05</div>
+      <div class="shot-title">The phone call — present tense shift, the headlights are roaring</div>
+      <div class="shot-detail">Talking head throughout. "Those headlights are closer now. And this thing is roaring." — this is the only present tense moment in the entire script. Do not change it to past tense in the edit. The shift is intentional. It pulls the viewer physically into the moment. The energy shifts slightly here — not dramatic, but present. Then "Something inside pulled me to take a step backwards. Thank god I did." — quiet. Almost matter of fact. The understatement is the power.</div>
+      <div style="margin-top:8px"><span class="tag tag-key">Present Tense Shift</span><span class="tag tag-direct">Direct</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      I took my phone out. And I called my brother.<br>
+      I spoke to him like I had nothing left to lose.<br>
+      I listened to him as he tried to soften my heart.<br>
+      <span class="key">Those headlights are closer now. And this thing is roaring.</span><br>
+      Something inside pulled me to take a step backwards.<br>
+      Thank god I did.<br>
+      Not because I believed in myself. Not even because I believed him. But for his sake.
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s6">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 06</div>
+      <div class="shot-title">The close — the step, Waterworld, silence</div>
+      <div class="shot-detail">"That step is the reason any of this exists." — energy is completely quiet here. Almost a whisper. The list that follows is not triumphant — it is grateful. Then "This is where Waterworld began." — full stop. Six words. After that line, hold on Ash's face in silence for two full seconds. No B-roll. No music change. No physique shot. Just Ash. The series ends on his face. Everything the viewer has watched across all six nodes lands in that silence.</div>
+      <div style="margin-top:8px"><span class="tag tag-broll">Series Close</span><span class="tag tag-key">Screenshottable</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      That step is the reason any of this exists.<br>
+      The training. The coaching. Every conversation. Every person I've worked with since.<br>
+      All of it was birthed on the other side of that step.<br>
+      <span class="key">This is where Waterworld began.</span>
+    </div>
+  </div>
+</div>
+
+<div class="note-box">
+  <p><strong>The scroll-stop line of the entire series:</strong> "I was just walking toward the only light I could see." Do not touch it. Do not explain it. Let it sit alone.</p>
+  <p><strong>The most chilling line in all six nodes:</strong> "I wasn't crying. I wasn't panicking. I was genuinely assessing." Deliver it completely flat. The flatness is what makes it land. Any emotion in the delivery undercuts it.</p>
+  <p><strong>The present tense shift</strong> — "Those headlights are closer now. And this thing is roaring." — is intentional. Do NOT correct to past tense in the edit. That shift pulls the viewer into the moment physically. It is the most cinematically effective moment in the series.</p>
+  <p><strong>The series ends on Ash's face.</strong> No B-roll. No physique shot. No music change. Two seconds of silence after "This is where Waterworld began." Everything lands in that silence.</p>
+  <p><strong>Fort York B-roll must be shot on location at night.</strong> The fence, the tracks, the park interior, the tree line. Do not substitute stock footage. This is a real place and the authenticity of the location is part of the story.</p>
+  <p><strong>Grade:</strong> Match Nodes 1–5 exactly. Series grade locked in Node 1.</p>
+</div>
+
+<div class="divider"></div>
+<div class="section-label">Editing Notes</div>
+
+<div class="shot" data-id="edit1">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">One continuous take — Fort York B-roll overlays only at designated moments</div>
+      <div class="shot-detail">Base is a single unbroken take. Fort York B-roll drops overlay at Shots 02 and 03 only. Every other moment is Ash to camera uninterrupted. Never cut away during a line.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit2">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Text overlay — each line as spoken, below chest line</div>
+      <div class="shot-detail">Same as Nodes 1–5. Clean minimal font, white, below chest. One line at a time. Text continues over Fort York B-roll overlays so muted viewers never lose the thread. "This is where Waterworld began." gets its own full text card — hold it for the full two seconds of silence after delivery.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit3">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Series close — Ash's face, two seconds silence, no B-roll, no music change</div>
+      <div class="shot-detail">The series ends on Ash's face. Not his physique. Not a logo card. Not a CTA. His face. Hold for two full seconds in complete silence after "This is where Waterworld began." This is the only node in the series that closes this way — and it's the right call for the final chapter.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit4">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Grade — match Nodes 1–5 exactly</div>
+      <div class="shot-detail">Series grade locked in Node 1. Apply identically. Fort York night B-roll brought into the same palette. The park footage should feel cold and isolated — lean into the darker, cooler tones for this node specifically.</div>
+    </div>
+  </div>
+</div>
+
+<div class="complete-section">
+  <div class="complete-title">Completion</div>
+  <div class="complete-row" data-id="c1" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Setting confirmed — matches Nodes 1–5</div></div>
+  <div class="complete-row" data-id="c2" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Primary talking head take captured (min 3 takes)</div></div>
+  <div class="complete-row" data-id="c3" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Fort York night B-roll — park interior, skeletal trees, eroded ground</div></div>
+  <div class="complete-row" data-id="c4" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Fort York night B-roll — perimeter fence and track side</div></div>
+  <div class="complete-row" data-id="c5" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Fort York night B-roll — tracks and train light in distance</div></div>
+  <div class="complete-row" data-id="c6" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Nodes 1–5 confirmed live before scheduling this post</div></div>
+  <div class="complete-row" data-id="c7" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Edit complete</div></div>
+  <div class="complete-row" data-id="c8" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Posted</div></div>
+  <div class="date-label">COMPLETION DATE</div>
+  <input type="date" class="date-input" id="completion-date" onchange="saveDate(this.value)">
+</div>
+
+<button class="reset-btn" onclick="resetAll()">Reset checklist</button>
+
+<script>
+var KEY = 'wwa_origin_node6_v1';
+function getState() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e) { return {}; } }
+function setState(s) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch(e) {} }
+function updateProgress() {
+  var shots = document.querySelectorAll('.shot');
+  var done = document.querySelectorAll('.shot.done').length;
+  document.getElementById('prog-fill').style.width = Math.round((done / shots.length) * 100) + '%';
+  document.getElementById('prog-text').textContent = done + ' / ' + shots.length;
+}
+function toggle(el) { el.classList.toggle('done'); var s = getState(); s[el.dataset.id] = el.classList.contains('done'); setState(s); updateProgress(); }
+function toggleComplete(el) { el.classList.toggle('done'); var s = getState(); s[el.dataset.id] = el.classList.contains('done'); setState(s); }
+function saveDate(val) { var s = getState(); s.completion_date = val; setState(s); }
+function resetAll() { document.querySelectorAll('.shot.done,.complete-row.done').forEach(function(el) { el.classList.remove('done'); }); document.getElementById('completion-date').value = ''; setState({}); updateProgress(); }
+function toggleScript() { var header = document.getElementById('script-toggle'); var body = document.getElementById('script-body'); header.classList.toggle('open'); body.classList.toggle('open'); }
+(function() {
+  var s = getState();
+  document.querySelectorAll('.shot,.complete-row').forEach(function(el) { if (s[el.dataset.id]) el.classList.add('done'); });
+  if (s.completion_date) document.getElementById('completion-date').value = s.completion_date;
+  updateProgress();
+})();
+</script>
+</body>
+</html>
