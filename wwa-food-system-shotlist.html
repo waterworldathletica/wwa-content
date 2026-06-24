@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>WWA - You've Been Trained to Walk Past It — Food System</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 1.25rem; min-height: 100vh; }
+.title-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; color: #555; text-transform: uppercase; margin-bottom: 4px; }
+.shoot-title { font-size: 22px; font-weight: 600; color: #f0f0f0; line-height: 1.2; margin-bottom: 1.5rem; }
+.meta-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+.meta-pill { font-size: 11px; color: #888; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 99px; padding: 4px 10px; }
+.meta-pill span { color: #c8ff00; }
+.prog-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.prog-row p { font-size: 12px; color: #666; }
+.prog-row strong { font-size: 12px; color: #f0f0f0; }
+.progress-bar { height: 4px; background: #1e1e1e; border-radius: 99px; overflow: hidden; margin-bottom: 1.5rem; }
+.progress-fill { height: 100%; background: #c8ff00; border-radius: 99px; transition: width 0.3s ease; }
+.section-label { font-size: 10px; font-weight: 600; color: #555; text-transform: uppercase; margin: 1.5rem 0 0.75rem; letter-spacing: 0.1em; }
+.shot { background: #141414; border-radius: 12px; margin-bottom: 10px; border: 1px solid #1e1e1e; overflow: hidden; }
+.shot.done { opacity: 0.4; }
+.shot.done .shot-title { text-decoration: line-through; color: #555; }
+.shot-header { display: flex; align-items: flex-start; gap: 14px; padding: 14px; cursor: pointer; }
+.cb { width: 24px; height: 24px; min-width: 24px; border-radius: 50%; border: 1.5px solid #333; display: flex; align-items: center; justify-content: center; background: transparent; flex-shrink: 0; margin-top: 1px; }
+.shot.done .cb, .complete-row.done .cb { background: #c8ff00; border-color: #c8ff00; }
+.check-icon { width: 13px; height: 13px; stroke: #000; stroke-width: 2.5; fill: none; display: none; }
+.shot.done .check-icon, .complete-row.done .check-icon { display: block; }
+.shot-body { flex: 1; }
+.shot-num { font-size: 10px; color: #555; font-weight: 600; text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.08em; }
+.shot-title { font-size: 15px; font-weight: 600; color: #e0e0e0; margin-bottom: 5px; line-height: 1.3; }
+.shot-detail { font-size: 13px; color: #666; line-height: 1.55; }
+.script-section { border-top: 1px solid #1e1e1e; padding: 12px 14px 14px 52px; }
+.script-label { font-size: 9px; text-transform: uppercase; color: #c8ff00; font-weight: 600; margin-bottom: 8px; letter-spacing: 0.12em; }
+.script-lines { font-size: 13px; color: #777; line-height: 1.9; font-style: italic; }
+.script-lines .key { color: #bbb; font-style: normal; font-weight: 600; }
+.tag { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; margin-right: 4px; margin-bottom: 4px; }
+.tag-method { background: #1a2a1a; color: #4caf50; border: 1px solid #2a3a2a; }
+.tag-broll { background: #2a1a2a; color: #ce7cff; border: 1px solid #3a2a3a; }
+.tag-direct { background: #1a1a2a; color: #7c8fff; border: 1px solid #2a2a3a; }
+.tag-hook { background: #2a1a00; color: #c8ff00; border: 1px solid #3a2a00; }
+.tag-key { background: #2a1500; color: #ff9c40; border: 1px solid #3a2500; }
+.tag-reuse { background: #2a0a2a; color: #ff44ff; border: 1px solid #3a1a3a; }
+.divider { height: 1px; background: #1a1a1a; margin: 1.5rem 0; }
+.note-box { background: #111; border-left: 2px solid #c8ff00; border-radius: 0 10px 10px 0; padding: 12px 14px; margin-top: 1rem; }
+.note-box p { font-size: 13px; color: #777; line-height: 1.65; margin-bottom: 8px; }
+.note-box p:last-child { margin-bottom: 0; }
+.note-box strong { color: #c8ff00; }
+.location-box { background: #0f0f0f; border: 1px solid #3a2a00; border-radius: 10px; padding: 14px; margin-bottom: 1.5rem; }
+.location-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 8px; }
+.location-text { font-size: 13px; color: #666; line-height: 1.65; }
+.reset-btn { width: 100%; margin-top: 1.25rem; padding: 14px; background: #141414; border: 1px solid #2a2a2a; border-radius: 12px; color: #555; font-size: 13px; cursor: pointer; font-family: inherit; }
+.complete-section { margin-top: 2rem; background: #141414; border-radius: 12px; border: 1px solid #1e1e1e; padding: 14px; }
+.complete-title { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 12px; }
+.complete-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #1e1e1e; cursor: pointer; }
+.complete-row:last-of-type { border-bottom: none; padding-bottom: 0; }
+.complete-row.done .complete-label { color: #555; text-decoration: line-through; }
+.complete-label { font-size: 14px; color: #bbb; flex: 1; }
+.date-label { font-size: 11px; color: #555; margin: 12px 0 6px; letter-spacing: 0.06em; }
+.date-input { width: 100%; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 8px; color: #bbb; font-size: 14px; padding: 10px 12px; font-family: inherit; outline: none; }
+.collapsible-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; margin-bottom: 0; user-select: none; }
+.collapsible-header.open { border-radius: 10px 10px 0 0; border-bottom-color: #1a1a1a; }
+.collapsible-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; }
+.collapsible-chevron { font-size: 11px; color: #555; transition: transform 0.2s ease; }
+.collapsible-header.open .collapsible-chevron { transform: rotate(180deg); }
+.collapsible-body { display: none; background: #0f0f0f; border: 1px solid #2a2a2a; border-top: none; border-radius: 0 0 10px 10px; padding: 14px; margin-bottom: 1.5rem; }
+.collapsible-body.open { display: block; }
+.vo-line { font-size: 13px; color: #888; line-height: 2.2; font-style: italic; }
+.vo-line .key { color: #ddd; font-style: normal; font-weight: 600; }
+.source-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; }
+.source-box-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #555; white-space: nowrap; }
+.source-box a { font-size: 12px; color: #c8ff00; text-decoration: none; word-break: break-all; }
+.caption-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px; margin-bottom: 1.5rem; }
+.caption-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 10px; }
+.caption-text { font-size: 13px; color: #777; line-height: 1.8; }
+.sources-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px; margin-bottom: 1.5rem; }
+.sources-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 10px; }
+.sources-text { font-size: 12px; color: #666; line-height: 1.8; }
+</style>
+</head>
+<body>
+
+<div class="title-label">WWA — The Method</div>
+<div class="shoot-title">You've Been Trained to Walk Past It — Food System.</div>
+
+<div class="meta-row">
+  <div class="meta-pill">Pillar: <span>The Method</span></div>
+  <div class="meta-pill">Funnel: <span>MoF</span></div>
+  <div class="meta-pill">Pattern: <span>Breakdown Explainer</span></div>
+  <div class="meta-pill">Operator: <span>Henry</span></div>
+  <div class="meta-pill">Location: <span>Grocery Store — Run and Gun</span></div>
+  <div class="meta-pill">Camera: <span>Sony FX3</span></div>
+  <div class="meta-pill">Lens: <span>35mm DZO</span></div>
+  <div class="meta-pill">Orientation: <span>Vertical 9:16</span></div>
+  <div class="meta-pill">Rig: <span>Gimbal primary / Handheld backup</span></div>
+</div>
+
+<div class="source-box">
+  <div class="source-box-label">Source Ref</div>
+  <a href="https://www.instagram.com/p/DK3D9EFyLML/" target="_blank">Eddie Abbew @eddie_abbew — 4.3x outlier · 1.9M views</a>
+</div>
+
+<div class="sources-box">
+  <div class="sources-title">Research Sources — On Screen Citations</div>
+  <div class="sources-text">
+    <strong>88% lobbying stat:</strong> Public Health Agency of Canada — peer-reviewed study, Health Promotion and Chronic Disease Prevention in Canada, December 2023<br><br>
+    <strong>1938 processed food data:</strong> Published study — Processed and ultra-processed food products: consumption trends in Canada from 1938 to 2011, PubMed<br><br>
+    <strong>Nearly 50% today:</strong> Statistics Canada / Canadian Community Health Survey (CCHS)<br><br>
+    <strong>Obesity 1981 → 2025:</strong> Statistics Canada, Canadian Health Measures Survey (CHMS) Cycle 7, released October 2025 — 9% (1981) to 33% (2022–2024)
+  </div>
+</div>
+
+<div class="caption-box">
+  <div class="caption-title">Caption</div>
+  <div class="caption-text">
+    Drop a 🔒 and let's free you up. One on one coaching — link in bio.
+  </div>
+</div>
+
+<div class="location-box">
+  <div class="location-title">Location Strategy — Grocery Store</div>
+  <div class="location-text">
+    <strong>Primary rig:</strong> FX3 on gimbal — smooth movement through aisles, cinematic, looks intentional.<br><br>
+    <strong>Backup rig:</strong> FX3 handheld if gimbal creates too large a footprint.<br><br>
+    <strong>Store selection:</strong> Avoid large mainstream chains with strict security. Independent or local grocery stores. All that's needed is shelves with food.<br><br>
+    <strong>Aisle sequencing:</strong> Cold open (grocery store frame) → Exterior beat (walking in) → Produce aisle → Processed/junk food aisle → Close<br><br>
+    <strong>Approach:</strong> Run and gun. No lighting setup, no tripod, no footprint. Quick in, quick out.
+  </div>
+</div>
+
+<div class="prog-row">
+  <p>Shot progress</p>
+  <strong><span id="prog-text">0 / 5</span></strong>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+
+<div class="collapsible-header" id="script-toggle" onclick="toggleScript()">
+  <span class="collapsible-title">Full Script</span>
+  <span class="collapsible-chevron">▼</span>
+</div>
+<div class="collapsible-body" id="script-body">
+  <div class="vo-line">
+    <span class="key">[COLD OPEN — grocery store frame, flat delivery]</span><br>
+    <span class="key">If you can enslave children when they're young — what makes you think they're gonna grow up to be free adults?</span><br><br>
+    <span class="key">[Beat — exterior shot, Ash walking into store]</span><br><br>
+    The healthy option has always been on the shelf — but we've been trained to walk past it.<br><br>
+    Growing up, Canadian elementary schools handed us the Canada Food Guide.<br><br>
+    Shaped by lobbyists with market interest. Not scientists.<br><br>
+    A 2023 peer-reviewed study from the Public Health Agency of Canada confirmed that 88% of those influencing Canada's nutrition policy had direct industry ties to grain, dairy, sweetened beverages, and processed food manufacturers.<br><br>
+    <span class="key">88%.</span><br><br>
+    In 1938, a study showed 28.7% of Canadian daily calories coming from processed food.<br><br>
+    Today, studies show nearly 50%.<br><br>
+    In 1981 — 9% of Canadians had obesity.<br><br>
+    In 2025 — 33%.<br><br>
+    More than triple.<br><br>
+    <span class="key">[CALLBACK — same clip reused in context]</span><br>
+    <span class="key">If you can enslave children when they're young — what makes you think they're gonna grow up to be free adults?</span><br><br>
+    That's not a coincidence. That's a business model.<br><br>
+    Coming home from the gym only to fuel yourself with garbage is an illusion of progress.<br><br>
+    I reversed years of body pain and built my physique on a limited ingredient whole food diet.<br><br>
+    <span class="key">But that's too boring. Right?</span><br><br>
+    <span class="key">[cut to black]</span>
+  </div>
+</div>
+
+<div class="section-label">Shot List</div>
+
+<div class="shot" data-id="s1">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 01 — Cold Open</div>
+      <div class="shot-title">Enslaving children line — grocery store frame, flat delivery, no context</div>
+      <div class="shot-detail">Inside the grocery store. Upper body portrait, tight frame. Ash delivers the line completely flat — no anger, no performance, just a statement of fact. This clip gets reused at the callback moment later in the video. The flatness is what makes it work in both places — cold it's unsettling, in context it's the indictment landing with full weight. Shoot multiple takes. The flattest one wins.</div>
+      <div style="margin-top:8px"><span class="tag tag-hook">Cold Open</span><span class="tag tag-reuse">Reused at Callback</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines"><span class="key">If you can enslave children when they're young — what makes you think they're gonna grow up to be free adults?</span></div>
+  </div>
+</div>
+
+<div class="shot" data-id="s2">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 02 — Exterior Beat</div>
+      <div class="shot-title">Ash walking into the grocery store — two seconds, no words</div>
+      <div class="shot-detail">Short exterior clip of Ash walking toward and through the grocery store entrance. No dialogue. Two seconds maximum. This establishes the setting between the cold open and the produce aisle without over-explaining it. Wide shot — enough to read as a grocery store immediately.</div>
+      <div style="margin-top:8px"><span class="tag tag-broll">Establishing</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">No Dialogue</div>
+    <div class="script-lines">Visual beat only. No words.</div>
+  </div>
+</div>
+
+<div class="shot" data-id="s3">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 03 — Produce Aisle</div>
+      <div class="shot-title">Hook through 88% — fresh food visible behind Ash</div>
+      <div class="shot-detail">Start in the produce section. Fresh whole foods visible behind Ash as he delivers the hook and the food guide section. Henry on gimbal moving slowly alongside — upper body portrait frame. The environment is the first visual proof before the argument builds. "Shaped by lobbyists with market interest. Not scientists." — hard stop between both sentences. "88%." — one number, own beat, full stop.</div>
+      <div style="margin-top:8px"><span class="tag tag-direct">Produce</span><span class="tag tag-method">Data</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      The healthy option has always been on the shelf — but we've been trained to walk past it.<br>
+      Growing up, Canadian elementary schools handed us the Canada Food Guide.<br>
+      Shaped by lobbyists with market interest. Not scientists.<br>
+      A 2023 peer-reviewed study from the Public Health Agency of Canada confirmed that 88% of those influencing Canada's nutrition policy had direct industry ties to grain, dairy, sweetened beverages, and processed food manufacturers.<br>
+      <span class="key">88%.</span>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s4">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 04 — Processed Aisle</div>
+      <div class="shot-title">Data section — processed food and junk food visible behind Ash</div>
+      <div class="shot-detail">Move into the processed food or junk food aisle as Ash delivers the data. Packaged products, cereal boxes, snacks visible behind him — the environment indicts itself. "More than triple." lands as its own full-stop line. Don't rush it. The numbers hit harder when they breathe. Text overlays display each statistic as spoken.</div>
+      <div style="margin-top:8px"><span class="tag tag-key">Data</span><span class="tag tag-broll">Processed Aisle</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      In 1938, a study showed 28.7% of Canadian daily calories coming from processed food.<br>
+      Today, studies show nearly 50%.<br>
+      In 1981 — 9% of Canadians had obesity.<br>
+      In 2025 — 33%.<br>
+      <span class="key">More than triple.</span>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s5">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 05 — Close</div>
+      <div class="shot-title">Callback + business model + close — cut to black mid-delivery</div>
+      <div class="shot-detail">The enslaving children line reappears here as a callback — same clip from Shot 01, now in full context. Then continue to the close. "That's not a coincidence. That's a business model." — flat, authoritative, hard stop between the two sentences. "But that's too boring. Right?" — slight smirk on "Right?" then immediate hard cut to black. Do not linger. The cut is the punchline.</div>
+      <div style="margin-top:8px"><span class="tag tag-reuse">Callback</span><span class="tag tag-key">Cut to Black</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      <span class="key">[Callback — same clip from Shot 01]</span><br>
+      That's not a coincidence. That's a business model.<br>
+      Coming home from the gym only to fuel yourself with garbage is an illusion of progress.<br>
+      I reversed years of body pain and built my physique on a limited ingredient whole food diet.<br>
+      <span class="key">But that's too boring. Right? [hard cut to black]</span>
+    </div>
+  </div>
+</div>
+
+<div class="note-box">
+  <p><strong>The cold open and callback structure is the key to this video.</strong> The enslaving children line lands cold as a pattern interrupt before the viewer has any context. When it returns in the grocery store with the full argument behind it, the same line hits completely differently. That's intentional. That's why it works.</p>
+  <p><strong>Flat delivery on the enslaving children line.</strong> Both times. No anger, no performance. A statement of fact. The grocery store environment provides the emotional charge — Ash stays the authority.</p>
+  <p><strong>"88%." gets its own beat.</strong> One number. Full stop. Don't move into the next line immediately. Let it sit.</p>
+  <p><strong>"More than triple." same treatment.</strong> Own line, own beat, full stop. The statistic does the work when it has space to land.</p>
+  <p><strong>Hard cut to black on "Right?"</strong> Do not linger. Do not fade. The abruptness is the punchline. The smirk on "Right?" signals it's coming — then the cut lands it.</p>
+  <p><strong>Text overlays display all statistics as spoken.</strong> Numbers appear on screen when Ash says them. Keeps muted viewers fully engaged through the data section.</p>
+</div>
+
+<div class="divider"></div>
+<div class="section-label">Editing Notes</div>
+
+<div class="shot" data-id="edit1">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Cold open clip reused at callback — same cut, no colour change</div>
+      <div class="shot-detail">The cold open clip (Shot 01) is reused exactly at the callback moment. Same grade, same cut. No transition effect. It should feel like the same moment revisited, not a flashback. The viewer recognises it immediately.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit2">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Text overlays — statistics displayed as spoken, bold and high contrast</div>
+      <div class="shot-detail">Every statistic gets its own text overlay appearing as Ash says it. 28.7%. 50%. 9%. 33%. More than triple. Bold, high contrast, large. The numbers are the argument — make them visible to muted viewers.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit3">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Hard cut to black — no fade, no music change, immediate</div>
+      <div class="shot-detail">After "Right?" — hard cut to black immediately. Not a fade. The abruptness is intentional. Hold black for one full second. Caption CTA carries the conversion from there.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit4">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Grade — natural documentary feel, slightly cooler than gym content</div>
+      <div class="shot-detail">This is not a gym shoot. Grade should feel real and slightly documentary — natural grocery store lighting, slightly cooled. Not the dark moody WWA gym palette. The rawness of the environment is part of the visual argument.</div>
+    </div>
+  </div>
+</div>
+
+<div class="complete-section">
+  <div class="complete-title">Completion</div>
+  <div class="complete-row" data-id="c1" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Location scouted — independent grocery store confirmed</div></div>
+  <div class="complete-row" data-id="c2" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Cold open captured — min 3 takes, flattest delivery selected</div></div>
+  <div class="complete-row" data-id="c3" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Exterior beat captured</div></div>
+  <div class="complete-row" data-id="c4" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Full grocery store walk captured — produce through processed aisle</div></div>
+  <div class="complete-row" data-id="c5" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Edit complete</div></div>
+  <div class="complete-row" data-id="c6" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Posted</div></div>
+  <div class="date-label">COMPLETION DATE</div>
+  <input type="date" class="date-input" id="completion-date" onchange="saveDate(this.value)">
+</div>
+
+<button class="reset-btn" onclick="resetAll()">Reset checklist</button>
+
+<script>
+var KEY = 'wwa_food_system_v1';
+function getState() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e) { return {}; } }
+function setState(s) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch(e) {} }
+function updateProgress() {
+  var shots = document.querySelectorAll('.shot');
+  var done = document.querySelectorAll('.shot.done').length;
+  document.getElementById('prog-fill').style.width = Math.round((done / shots.length) * 100) + '%';
+  document.getElementById('prog-text').textContent = done + ' / ' + shots.length;
+}
+function toggle(el) { el.classList.toggle('done'); var s = getState(); s[el.dataset.id] = el.classList.contains('done'); setState(s); updateProgress(); }
+function toggleComplete(el) { el.classList.toggle('done'); var s = getState(); s[el.dataset.id] = el.classList.contains('done'); setState(s); }
+function saveDate(val) { var s = getState(); s.completion_date = val; setState(s); }
+function resetAll() { document.querySelectorAll('.shot.done,.complete-row.done').forEach(function(el) { el.classList.remove('done'); }); document.getElementById('completion-date').value = ''; setState({}); updateProgress(); }
+function toggleScript() { var header = document.getElementById('script-toggle'); var body = document.getElementById('script-body'); header.classList.toggle('open'); body.classList.toggle('open'); }
+(function() {
+  var s = getState();
+  document.querySelectorAll('.shot,.complete-row').forEach(function(el) { if (s[el.dataset.id]) el.classList.add('done'); });
+  if (s.completion_date) document.getElementById('completion-date').value = s.completion_date;
+  updateProgress();
+})();
+</script>
+</body>
+</html>
