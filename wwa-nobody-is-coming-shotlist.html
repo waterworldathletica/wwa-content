@@ -54,6 +54,16 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
 .source-box-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #555; white-space: nowrap; }
 .source-box a { font-size: 12px; color: #c8ff00; text-decoration: none; word-break: break-all; }
 .source-box a:hover { text-decoration: underline; }
+
+.collapsible-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; margin-bottom: 0; user-select: none; }
+.collapsible-header.open { border-radius: 10px 10px 0 0; border-bottom-color: #1a1a1a; }
+.collapsible-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; }
+.collapsible-chevron { font-size: 11px; color: #555; transition: transform 0.2s ease; }
+.collapsible-header.open .collapsible-chevron { transform: rotate(180deg); }
+.collapsible-body { display: none; background: #0f0f0f; border: 1px solid #2a2a2a; border-top: none; border-radius: 0 0 10px 10px; padding: 14px; margin-bottom: 1.5rem; }
+.collapsible-body.open { display: block; }
+.vo-line { font-size: 13px; color: #888; line-height: 2.2; font-style: italic; }
+.vo-line .key { color: #ddd; font-style: normal; font-weight: 600; }
 </style>
 </head>
 <body>
@@ -66,6 +76,28 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMac
 <div class="meta-pill">Operator: <span>Henry</span></div>
 </div>
 <div class="source-box"><span class="source-box-label">Source</span><a href="https://www.instagram.com/p/DYeis5WgOX_/" target="_blank">instagram.com/p/DYeis5WgOX_</a></div>
+
+<div class="collapsible-header" id="script-toggle" onclick="toggleScript()">
+  <span class="collapsible-title">Full Script</span>
+  <span class="collapsible-chevron">▼</span>
+</div>
+<div class="collapsible-body" id="script-body">
+  <div class="vo-line">
+    I was ready to take my life in front of a train at Fort York Park in downtown Toronto.<br><br>
+    You're the only person losing sleep over where you're at.<br><br>
+    So why are you waiting on everybody else to do something about it?<br><br>
+    Most people around you don't want to see you become great. Not because they hate you. Because your pursuit exposes their decision to stop.<br><br>
+    I waited till the very last moment to decide that what I was about to accomplish would be undeniable.<br><br>
+    That's way too fucking close for comfort. But I needed extreme — because comfort was killing me.<br><br>
+    They'll call it obsession. They'll tell you to relax.<br><br>
+    Right up until you've built something no one can tear down.<br><br>
+    It's rare when someone keeps going when no one's watching.<br><br>
+    It's rare when someone builds something real out of nothing but will.<br><br>
+    <span class="key">I know what it's like to be standing with nothing at the finish line.</span><br><br>
+    <span class="key">But you have the power to make that your starting line.</span>
+  </div>
+</div>
+
 <div class="prog-row"><p>Progress</p><strong id="prog-text">0 / 7</strong></div>
 <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
 <div class="section-label">Before You Shoot</div>
@@ -105,6 +137,8 @@ function toggleComplete(el){el.classList.toggle('done');const s=getState();s[el.
 function saveDate(val){const s=getState();s.completion_date=val;setState(s);}
 function resetAll(){document.querySelectorAll('.shot.done,.complete-row.done').forEach(el=>el.classList.remove('done'));document.getElementById('completion-date').value='';setState({});updateProgress();}
 (function(){const s=getState();document.querySelectorAll('.shot,.complete-row').forEach(el=>{if(s[el.dataset.id])el.classList.add('done');});if(s.completion_date)document.getElementById('completion-date').value=s.completion_date;updateProgress();})();
+
+function toggleScript() { var header = document.getElementById('script-toggle'); var body = document.getElementById('script-body'); header.classList.toggle('open'); body.classList.toggle('open'); }
 </script>
 </body>
 </html>
