@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>WWA - You've Lost Your Damn Mind — Food Lie</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 1.25rem; min-height: 100vh; }
+.title-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; color: #555; text-transform: uppercase; margin-bottom: 4px; }
+.shoot-title { font-size: 22px; font-weight: 600; color: #f0f0f0; line-height: 1.2; margin-bottom: 1.5rem; }
+.meta-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+.meta-pill { font-size: 11px; color: #888; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 99px; padding: 4px 10px; }
+.meta-pill span { color: #c8ff00; }
+.prog-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.prog-row p { font-size: 12px; color: #666; }
+.prog-row strong { font-size: 12px; color: #f0f0f0; }
+.progress-bar { height: 4px; background: #1e1e1e; border-radius: 99px; overflow: hidden; margin-bottom: 1.5rem; }
+.progress-fill { height: 100%; background: #c8ff00; border-radius: 99px; transition: width 0.3s ease; }
+.section-label { font-size: 10px; font-weight: 600; color: #555; text-transform: uppercase; margin: 1.5rem 0 0.75rem; letter-spacing: 0.1em; }
+.shot { background: #141414; border-radius: 12px; margin-bottom: 10px; border: 1px solid #1e1e1e; overflow: hidden; }
+.shot.done { opacity: 0.4; }
+.shot.done .shot-title { text-decoration: line-through; color: #555; }
+.shot-header { display: flex; align-items: flex-start; gap: 14px; padding: 14px; cursor: pointer; }
+.cb { width: 24px; height: 24px; min-width: 24px; border-radius: 50%; border: 1.5px solid #333; display: flex; align-items: center; justify-content: center; background: transparent; flex-shrink: 0; margin-top: 1px; }
+.shot.done .cb, .complete-row.done .cb { background: #c8ff00; border-color: #c8ff00; }
+.check-icon { width: 13px; height: 13px; stroke: #000; stroke-width: 2.5; fill: none; display: none; }
+.shot.done .check-icon, .complete-row.done .check-icon { display: block; }
+.shot-body { flex: 1; }
+.shot-num { font-size: 10px; color: #555; font-weight: 600; text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.08em; }
+.shot-title { font-size: 15px; font-weight: 600; color: #e0e0e0; margin-bottom: 5px; line-height: 1.3; }
+.shot-detail { font-size: 13px; color: #666; line-height: 1.55; }
+.script-section { border-top: 1px solid #1e1e1e; padding: 12px 14px 14px 52px; }
+.script-label { font-size: 9px; text-transform: uppercase; color: #c8ff00; font-weight: 600; margin-bottom: 8px; letter-spacing: 0.12em; }
+.script-lines { font-size: 13px; color: #777; line-height: 1.9; font-style: italic; }
+.script-lines .key { color: #bbb; font-style: normal; font-weight: 600; }
+.tag { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; margin-right: 4px; margin-bottom: 4px; }
+.tag-method { background: #1a2a1a; color: #4caf50; border: 1px solid #2a3a2a; }
+.tag-broll { background: #2a1a2a; color: #ce7cff; border: 1px solid #3a2a3a; }
+.tag-direct { background: #1a1a2a; color: #7c8fff; border: 1px solid #2a2a3a; }
+.tag-hook { background: #2a1a00; color: #c8ff00; border: 1px solid #3a2a00; }
+.tag-key { background: #2a1500; color: #ff9c40; border: 1px solid #3a2500; }
+.divider { height: 1px; background: #1a1a1a; margin: 1.5rem 0; }
+.note-box { background: #111; border-left: 2px solid #c8ff00; border-radius: 0 10px 10px 0; padding: 12px 14px; margin-top: 1rem; }
+.note-box p { font-size: 13px; color: #777; line-height: 1.65; margin-bottom: 8px; }
+.note-box p:last-child { margin-bottom: 0; }
+.note-box strong { color: #c8ff00; }
+.reset-btn { width: 100%; margin-top: 1.25rem; padding: 14px; background: #141414; border: 1px solid #2a2a2a; border-radius: 12px; color: #555; font-size: 13px; cursor: pointer; font-family: inherit; }
+.complete-section { margin-top: 2rem; background: #141414; border-radius: 12px; border: 1px solid #1e1e1e; padding: 14px; }
+.complete-title { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 12px; }
+.complete-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #1e1e1e; cursor: pointer; }
+.complete-row:last-of-type { border-bottom: none; padding-bottom: 0; }
+.complete-row.done .complete-label { color: #555; text-decoration: line-through; }
+.complete-label { font-size: 14px; color: #bbb; flex: 1; }
+.date-label { font-size: 11px; color: #555; margin: 12px 0 6px; letter-spacing: 0.06em; }
+.date-input { width: 100%; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 8px; color: #bbb; font-size: 14px; padding: 10px 12px; font-family: inherit; outline: none; }
+.collapsible-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; margin-bottom: 0; user-select: none; }
+.collapsible-header.open { border-radius: 10px 10px 0 0; border-bottom-color: #1a1a1a; }
+.collapsible-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; }
+.collapsible-chevron { font-size: 11px; color: #555; transition: transform 0.2s ease; }
+.collapsible-header.open .collapsible-chevron { transform: rotate(180deg); }
+.collapsible-body { display: none; background: #0f0f0f; border: 1px solid #2a2a2a; border-top: none; border-radius: 0 0 10px 10px; padding: 14px; margin-bottom: 1.5rem; }
+.collapsible-body.open { display: block; }
+.vo-line { font-size: 13px; color: #888; line-height: 2.2; font-style: italic; }
+.vo-line .key { color: #ddd; font-style: normal; font-weight: 600; }
+.source-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; }
+.source-box-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #555; white-space: nowrap; }
+.source-box-text { font-size: 12px; color: #555; }
+.caption-box { background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px; margin-bottom: 1.5rem; }
+.caption-title { font-size: 10px; color: #c8ff00; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 10px; }
+.caption-text { font-size: 13px; color: #777; line-height: 1.8; }
+</style>
+</head>
+<body>
+
+<div class="title-label">WWA — The Method</div>
+<div class="shoot-title">You've Lost Your Damn Mind — Food Lie.</div>
+
+<div class="meta-row">
+  <div class="meta-pill">Pillar: <span>The Method</span></div>
+  <div class="meta-pill">Funnel: <span>MoF</span></div>
+  <div class="meta-pill">Pattern: <span>Polarizing Claim + Bold Proof</span></div>
+  <div class="meta-pill">Operator: <span>Henry</span></div>
+  <div class="meta-pill">Location: <span>Anytime Fitness — Treadmill</span></div>
+  <div class="meta-pill">Camera: <span>Sony FX3</span></div>
+  <div class="meta-pill">Lens: <span>35mm DZO</span></div>
+  <div class="meta-pill">Orientation: <span>Vertical 9:16</span></div>
+  <div class="meta-pill">Wardrobe: <span>Shirt off — sweaty</span></div>
+</div>
+
+<div class="source-box">
+  <div class="source-box-label">Source Ref</div>
+  <div class="source-box-text">Original — no Sandcastles reference. Visual reference: Eddie Abbew format — stationary locked-off camera, physique visible throughout, bold text overlays on key lines.</div>
+</div>
+
+<div class="caption-box">
+  <div class="caption-title">Caption</div>
+  <div class="caption-text">
+    We were conditioned from birth to eat in a way that keeps us dependent. Sugary breakfast that spikes our insulin and tells our bodies to store fat. Processed food engineered in a lab to override our body's satiety signals. Diet sodas that trick our brains while wrecking our gut. And a fitness industry selling us the treadmill like it's the antidote to our addiction.<br><br>
+    I didn't count a single macro in my first fourteen months. I didn't hire a nutritionist. I didn't buy supplements.<br><br>
+    Six eggs. Raw vegetables. Animal protein. Cut sugar completely. No alcohol. No processed garbage.<br><br>
+    That's it. That's what built this.<br><br>
+    Your body recognizes real ingredients. It knows what to do with an egg. It doesn't know what to do with a lab-engineered protein bar made from seventeen ingredients you can't pronounce.<br><br>
+    You don't have a body problem. You have a food problem.<br><br>
+    And the people selling you the solution created it.<br><br>
+    Drop a 🔒 and I'll send you information on one on one coaching.
+  </div>
+</div>
+
+<div class="prog-row">
+  <p>Shot progress</p>
+  <strong><span id="prog-text">0 / 5</span></strong>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+
+<div class="collapsible-header" id="script-toggle" onclick="toggleScript()">
+  <span class="collapsible-title">Full Script</span>
+  <span class="collapsible-chevron">▼</span>
+</div>
+<div class="collapsible-body" id="script-body">
+  <div class="vo-line">
+    <span class="key">If you think a treadmill is gonna save you while you eat processed garbage made by some rich asshole in a lab that wants to keep you sick — you've lost your damn mind.</span><br><br>
+    The food, fitness, and pharmaceutical industries don't profit from healthy people. They profit from addicted ones.<br><br>
+    Just stop for a second. Look around you.<br><br>
+    We've been conditioned to be dependent. To remain at somebody else's mercy. And above all — to keep spending.<br><br>
+    I went from this — [before photo] — to this. Fourteen months. [current physique]<br><br>
+    No macros. No meal plan. No distractions.<br><br>
+    I had to rewire how I viewed food entirely. Not for comfort, pleasure, or convenience — but for fuel. First and foremost, fuel.<br><br>
+    Six eggs. Raw vegetables. Animal protein. Cut the sugar. No alcohol. No processed garbage.<br><br>
+    That's the whole diet. And you've seen what it built.<br><br>
+    But there are levels to this. Macros do not justify eating garbage.<br><br>
+    <span class="key">You don't have a body problem. You have a food problem.</span><br><br>
+    And the people selling you the solution are the ones who created it.<br><br>
+    <span class="key">But who am I?</span><br><br>
+    [cut to black]
+  </div>
+</div>
+
+<div class="section-label">Shot List</div>
+
+<div class="shot" data-id="s1">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 01</div>
+      <div class="shot-title">Hook — Ash walking on treadmill, shirt off, sweaty, dead to camera</div>
+      <div class="shot-detail">Treadmill at slow walking pace. Shirt off. Sweaty. Camera locked off at chest height, upper body portrait frame. Ash walks and delivers straight to lens — no looking away, no movement from Henry. The physique in motion is the entire production value. Hook line delivered with full conviction — no softening, no performance. This is a statement, not a pitch. Irony is implicit — he's on the treadmill telling you the treadmill won't save you.</div>
+      <div style="margin-top:8px"><span class="tag tag-hook">Hook</span><span class="tag tag-direct">Treadmill</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      <span class="key">If you think a treadmill is gonna save you while you eat processed garbage made by some rich asshole in a lab that wants to keep you sick — you've lost your damn mind.</span><br>
+      The food, fitness, and pharmaceutical industries don't profit from healthy people. They profit from addicted ones.<br>
+      Just stop for a second. Look around you.<br>
+      We've been conditioned to be dependent. To remain at somebody else's mercy. And above all — to keep spending.
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s2">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 02</div>
+      <div class="shot-title">The proof — before and after photo overlays, partial corner frame</div>
+      <div class="shot-detail">Ash continues walking and delivering. On "I went from this" — before photo drops as a partial overlay, corner of frame. Not full screen. Treadmill walk still visible. Holds two seconds then disappears. On "to this. Fourteen months." — current physique photo drops same way. Same duration. Then disappears. Ash keeps walking throughout. Photos appear and go — they don't stop the motion. Text overlay: "14 MONTHS" appears large and bold on screen as the after photo holds.</div>
+      <div style="margin-top:8px"><span class="tag tag-key">Proof</span><span class="tag tag-broll">Photo Overlay</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      I went from this — [before photo overlay] — to this. Fourteen months. [after photo overlay]<br>
+      No macros. No meal plan. No distractions.
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s3">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 03</div>
+      <div class="shot-title">The rewire — food list delivered as hard stops, text overlays one item at a time</div>
+      <div class="shot-detail">Ash still walking, still sweaty. "I had to rewire how I viewed food entirely" — deliver this slower than everything before it. It's the pivot. Then "Not for comfort, pleasure, or convenience — but for fuel. First and foremost, fuel." — the repetition of fuel is intentional. Hold the second "fuel" for a beat. Then the food list: each item gets its own text overlay appearing as Ash says it. Six eggs. [overlay] Raw vegetables. [overlay] Animal protein. [overlay] Cut the sugar. [overlay] No alcohol. [overlay] No processed garbage. [overlay] Hard stop between each one. No food photos — text only.</div>
+      <div style="margin-top:8px"><span class="tag tag-method">Food List</span><span class="tag tag-direct">Text Overlays</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      I had to rewire how I viewed food entirely. Not for comfort, pleasure, or convenience — but for fuel. First and foremost, fuel.<br>
+      Six eggs. Raw vegetables. Animal protein. Cut the sugar. No alcohol. No processed garbage.<br>
+      That's the whole diet. And you've seen what it built.<br>
+      But there are levels to this. Macros do not justify eating garbage.
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s4">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 04</div>
+      <div class="shot-title">The close — screenshottable lines, hard eye contact, no softening</div>
+      <div class="shot-detail">"You don't have a body problem. You have a food problem." — full stop between both sentences. Hard eye contact. This is the most important delivery in the script. Then "And the people selling you the solution are the ones who created it." — same energy. Then "But who am I?" — slight pause, almost a smirk, then hard cut to black MID-WALK. Do not stop the treadmill first. Do not fade. Hard cut while Ash is still in motion. The abruptness is intentional — it's the most disarming ending in the vault.</div>
+      <div style="margin-top:8px"><span class="tag tag-key">Screenshottable</span><span class="tag tag-direct">Cut To Black</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">
+      <span class="key">You don't have a body problem. You have a food problem.</span><br>
+      And the people selling you the solution are the ones who created it.<br>
+      <span class="key">But who am I?</span><br>
+      [hard cut to black — mid-walk, no fade]
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="s5">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Shot 05 — Backup</div>
+      <div class="shot-title">Clean talking head take — same script, stationary delivery</div>
+      <div class="shot-detail">Shoot one full clean stationary take of the entire script as a backup. Locked off, upper body portrait, shirt off, direct to camera. Same delivery. This gives Henry edit options if the treadmill audio has noise issues or if the motion creates sync problems with the text overlays. Do not use unless needed — the treadmill version is the primary.</div>
+      <div style="margin-top:8px"><span class="tag tag-direct">Backup Take</span></div>
+    </div>
+  </div>
+  <div class="script-section">
+    <div class="script-label">On-Camera Delivery — Ash</div>
+    <div class="script-lines">Full script — stationary backup take. Same delivery, same conviction.</div>
+  </div>
+</div>
+
+<div class="note-box">
+  <p><strong>The hook is the entire video.</strong> "You've lost your damn mind" has to land like a sucker punch. No warm-up, no setup. First word, full conviction.</p>
+  <p><strong>Hard cut to black mid-walk.</strong> Do not stop the treadmill. Do not fade. Hard cut while Ash is still in motion. The abruptness after "But who am I?" is the most disarming moment in the script. It makes them replay it.</p>
+  <p><strong>Screenshottable line: "You don't have a body problem. You have a food problem."</strong> Full stop between both sentences. Hard eye contact. This is the line that gets shared.</p>
+  <p><strong>Text overlays only for the food list.</strong> No food photos. Each item appears as spoken. Clean and fast.</p>
+  <p><strong>Eddie Abbew visual reference.</strong> Locked-off camera. Physique visible throughout. Bold high-contrast text on key lines. No production tricks — the conviction does the work.</p>
+  <p><strong>Audio note for Henry:</strong> Treadmill motor noise may require a lav mic or post-processing. Test audio levels before the primary takes.</p>
+</div>
+
+<div class="divider"></div>
+<div class="section-label">Editing Notes</div>
+
+<div class="shot" data-id="edit1">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Photo overlays — partial corner frame, 2 seconds each, no full screen</div>
+      <div class="shot-detail">Before and after photos drop as partial overlays in the corner of frame. Treadmill walk always visible. Each photo holds for 2 seconds then disappears cleanly. Text overlay "14 MONTHS" appears bold on screen during the after photo hold.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit2">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Food list text overlays — one item at a time, high contrast, large</div>
+      <div class="shot-detail">Each food item gets its own text overlay appearing and disappearing as Ash speaks it. Bold. High contrast. Same style as Eddie Abbew reference. No food photos. Text only.</div>
+    </div>
+  </div>
+</div>
+
+<div class="shot" data-id="edit3">
+  <div class="shot-header" onclick="toggle(this.parentElement)">
+    <div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div>
+    <div class="shot-body">
+      <div class="shot-num">Edit</div>
+      <div class="shot-title">Hard cut to black — no fade, no transition, mid-walk</div>
+      <div class="shot-detail">After "But who am I?" — hard cut to black immediately. Not after the treadmill stops. Not a fade. A hard cut while Ash is still walking. The motion freeze on black is the effect. Hold black for one full second before the video ends.</div>
+    </div>
+  </div>
+</div>
+
+<div class="complete-section">
+  <div class="complete-title">Completion</div>
+  <div class="complete-row" data-id="c1" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Audio levels tested — treadmill motor noise checked</div></div>
+  <div class="complete-row" data-id="c2" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Primary treadmill take captured — min 3 takes</div></div>
+  <div class="complete-row" data-id="c3" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Backup stationary take captured</div></div>
+  <div class="complete-row" data-id="c4" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Before photo sourced from archive</div></div>
+  <div class="complete-row" data-id="c5" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Edit complete</div></div>
+  <div class="complete-row" data-id="c6" onclick="toggleComplete(this)"><div class="cb"><svg class="check-icon" viewBox="0 0 13 13"><polyline points="2,6.5 5.5,10 11,3"/></svg></div><div class="complete-label">Posted</div></div>
+  <div class="date-label">COMPLETION DATE</div>
+  <input type="date" class="date-input" id="completion-date" onchange="saveDate(this.value)">
+</div>
+
+<button class="reset-btn" onclick="resetAll()">Reset checklist</button>
+
+<script>
+var KEY = 'wwa_food_lie_v1';
+function getState() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e) { return {}; } }
+function setState(s) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch(e) {} }
+function updateProgress() {
+  var shots = document.querySelectorAll('.shot');
+  var done = document.querySelectorAll('.shot.done').length;
+  document.getElementById('prog-fill').style.width = Math.round((done / shots.length) * 100) + '%';
+  document.getElementById('prog-text').textContent = done + ' / ' + shots.length;
+}
+function toggle(el) { el.classList.toggle('done'); var s = getState(); s[el.dataset.id] = el.classList.contains('done'); setState(s); updateProgress(); }
+function toggleComplete(el) { el.classList.toggle('done'); var s = getState(); s[el.dataset.id] = el.classList.contains('done'); setState(s); }
+function saveDate(val) { var s = getState(); s.completion_date = val; setState(s); }
+function resetAll() { document.querySelectorAll('.shot.done,.complete-row.done').forEach(function(el) { el.classList.remove('done'); }); document.getElementById('completion-date').value = ''; setState({}); updateProgress(); }
+function toggleScript() { var header = document.getElementById('script-toggle'); var body = document.getElementById('script-body'); header.classList.toggle('open'); body.classList.toggle('open'); }
+(function() {
+  var s = getState();
+  document.querySelectorAll('.shot,.complete-row').forEach(function(el) { if (s[el.dataset.id]) el.classList.add('done'); });
+  if (s.completion_date) document.getElementById('completion-date').value = s.completion_date;
+  updateProgress();
+})();
+</script>
+</body>
+</html>
